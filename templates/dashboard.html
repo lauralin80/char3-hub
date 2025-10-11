@@ -1,0 +1,2363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Char3 Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a; /* Dark background to match Char3 branding */
+            color: #ffffff; /* White text on dark background */
+        }
+        
+        .header {
+            background: #2a2a2a; /* Dark header background */
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .main-container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+        
+        .nav-sidebar {
+            width: 250px;
+            background: #2a2a2a; /* Match Char3 dark theme */
+            color: white;
+            padding: 1rem 0;
+        }
+        
+        .nav-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: #ff6b35; /* Char3 orange-red hover */
+        }
+        
+        .nav-item.active {
+            background: #f8f9fa; /* Off-white active state */
+            color: #1a1a1a; /* Dark text on light background */
+            border-left-color: #ff6b35; /* Keep orange accent border */
+        }
+        
+        .nav-item-icon {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+        
+        .content-area {
+            flex: 1;
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            overflow: hidden;
+            min-width: 0; /* Allow flex items to shrink below their content size */
+        }
+        
+        .weekly-board {
+            flex: 1;
+            background: #2a2a2a; /* Dark board background */
+            border-radius: 8px;
+            border: 1px solid #444;
+            overflow: hidden;
+            min-width: 0; /* Allow flex items to shrink */
+        }
+        
+        /* Shared Board Components */
+        .board-header {
+            background: #3a3a3a; /* Dark header background */
+            padding: 1rem;
+            border-bottom: 1px solid #444;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .board-row {
+            display: flex;
+            height: calc(100vh - 200px);
+        }
+        
+        .board-column {
+            flex: 1;
+            border-right: 1px solid #444;
+            padding: 1rem;
+            min-height: 400px;
+            background: #2a2a2a; /* Dark column background */
+        }
+        
+        .board-column:last-child {
+            border-right: none;
+        }
+        
+        /* Weekly Planning Specific - extends shared components */
+        .day-column {
+            /* Inherits from .board-column */
+        }
+        
+        .day-header {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+            text-align: center;
+        }
+        
+        .day-tasks {
+            min-height: 300px;
+        }
+        
+        .master-tasks-panel {
+            width: 350px;
+            background: #2a2a2a; /* Dark panel background */
+            border-radius: 8px;
+            border: 1px solid #444;
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            background: #3a3a3a; /* Dark header background */
+            padding: 1rem;
+            border-bottom: 1px solid #444;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-bar {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #444;
+            background: #3a3a3a; /* Dark search bar background */
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            background: #1a1a1a; /* Dark input background */
+            color: #ffffff; /* White text */
+        }
+        
+        .filters-section {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #444;
+            background: #3a3a3a; /* Dark filters background */
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .filter-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .filter-select {
+            flex: 1;
+            padding: 0.375rem;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            background: #1a1a1a; /* Dark select background */
+            color: #ffffff; /* White text */
+        }
+        
+        .clear-filters {
+            background: #ff6b35; /* Char3 orange-red */
+            color: white;
+            border: none;
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .clear-filters:hover {
+            background: #e55a2b; /* Darker Char3 orange-red on hover */
+        }
+        
+        .task-list {
+            padding: 1rem;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        
+        .task-item {
+            background: #3a3a3a; /* Dark task background */
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+        
+        .task-item:hover {
+            background: #4a4a4a; /* Darker on hover */
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .task-item:active {
+            cursor: grabbing;
+        }
+        
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .task-meta {
+            font-size: 0.875rem;
+            color: #666;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .task-board {
+            background: #95a5a6; /* Light gray for task type/team role */
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .task-effort {
+            background: #6c757d; /* Neutral gray instead of bright green */
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .task-project {
+            background: #6c757d; /* Default gray for projects */
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Project-specific colors */
+        .task-project.ilitigate {
+            background: #e74c3c; /* Soft red for iLitigate */
+        }
+        
+        .task-project.aurawell {
+            background: #f39c12; /* Soft orange for Aurawell */
+        }
+        
+        .task-project.ffa {
+            background: #2ecc71; /* Soft green for FFA Phase 2 */
+        }
+        
+        .task-project.parle {
+            background: #9b59b6; /* Soft purple for Parle */
+        }
+        
+        .task-project.roth {
+            background: #34495e; /* Soft dark blue for Roth River */
+        }
+        
+        .task-project.quartz {
+            background: #1abc9c; /* Soft teal for Quartz Network */
+        }
+        
+        .task-people {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .person-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .person-icon.designer {
+            background: #8e44ad; /* Soft purple for designer */
+        }
+        
+        .person-icon.ux {
+            background: #e67e22; /* Soft orange for UX */
+        }
+        
+        .person-icon.developer {
+            background: #3498db; /* Soft blue for developer */
+        }
+        
+        .person-icon.project-lead {
+            background: #27ae60; /* Soft green for project lead */
+        }
+        
+        .btn {
+            background: #28a745; /* Char3 green (like "Let's Talk" button) */
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+        
+        .btn:hover {
+            background: #1e7e34; /* Darker green on hover */
+        }
+        
+        .btn-secondary {
+            background: #ff6b35; /* Char3 orange-red */
+        }
+        
+        .btn-secondary:hover {
+            background: #e55a2b; /* Darker Char3 orange-red on hover */
+        }
+        
+        .page-content {
+            display: none;
+        }
+        
+        .page-content.active {
+            display: flex;
+        }
+        
+        .empty-day {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .view-toggle {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 0.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .toggle-btn {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: #f8f9fa; /* Light background for inactive state */
+            color: #1a1a1a; /* Dark text for inactive state */
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .toggle-btn.active {
+            background: #3a3a3a; /* Dark background for active state */
+            color: #ffffff; /* White text for active state */
+        }
+        
+        .toggle-btn:hover:not(.active) {
+            background: #e9ecef; /* Light gray hover for inactive buttons */
+        }
+        
+        .client-deliverables {
+            display: none;
+            flex: 1; /* Same as weekly-board - use available space */
+            background: #2a2a2a; /* Dark board background */
+            border-radius: 8px;
+            overflow: hidden; /* Prevent any overflow that could push other elements */
+            padding: 0; /* Remove any default padding */
+            margin: 0; /* Remove any default margin */
+            min-width: 0; /* Allow flex shrinking */
+            max-width: 100%; /* Ensure it doesn't exceed container */
+        }
+        
+        .client-deliverables.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        
+        .weekly-planning.active {
+            display: block;
+        }
+        
+        .weekly-planning {
+            display: none;
+        }
+        
+        /* Client Deliverables Specific */
+        .client-deliverables-content {
+            overflow-x: auto; /* Horizontal scrolling for many client columns */
+            overflow-y: hidden;
+            flex: 1;
+            min-width: 0; /* Allow flex shrinking */
+            max-width: 100%; /* Ensure it doesn't exceed container */
+        }
+        
+        .project-headers-row {
+            display: flex;
+            height: auto;
+            margin-bottom: 0;
+            margin-top: 0; /* Remove top margin to move up */
+            background: #2a2a2a; /* Darker gray background for headers */
+            width: 100%; /* Stay within container */
+        }
+        
+        .deliverables-row {
+            display: flex;
+            height: auto; /* Allow dynamic height */
+            min-height: calc(25vh - 50px);
+            max-height: calc(60vh - 100px); /* Maximum height before scrolling */
+            margin-bottom: 1rem; /* Add spacing between deliverables and admin tasks */
+            margin-top: 0; /* Remove top margin to reduce space */
+            overflow-y: auto; /* Add scroll when content exceeds max height */
+            transition: max-height 0.3s ease; /* Smooth transition */
+            width: 100%; /* Stay within container */
+        }
+        
+        .deliverables-row.expanded {
+            max-height: calc(60vh - 100px); /* Expanded height */
+        }
+        
+        .deliverables-row.condensed {
+            max-height: calc(25vh - 50px); /* Condensed height */
+        }
+        
+        .admin-tasks-row {
+            display: flex;
+            height: calc(75vh - 150px);
+            margin-top: 0.5rem; /* Add small padding between header and admin tasks */
+            width: 100%; /* Stay within container */
+        }
+        
+        .show-more-btn {
+            background: #ff6b35; /* Char3 orange */
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin: 0.5rem auto;
+            display: block;
+            transition: background-color 0.2s ease;
+        }
+        
+        .show-more-btn:hover {
+            background: #e55a2b; /* Darker orange on hover */
+        }
+        
+        .deliverable-item.hidden {
+            display: none;
+        }
+        
+        .deliverable-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            flex: 1;
+        }
+        
+        .project-bubble {
+            background: #ff6b35; /* Char3 orange */
+            color: white;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.75rem;
+            display: inline-block;
+            font-weight: 300;
+            max-width: fit-content;
+        }
+        
+        .row-header {
+            background: #3a3a3a; /* Dark header background */
+            padding: 0.5rem 1rem; /* Reduced top/bottom padding to move header up */
+            border-bottom: 1px solid #444;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 0; /* Remove bottom margin */
+            color: #ffffff; /* White text */
+            width: 100%; /* Stay within container */
+        }
+        
+        /* Client Deliverables Specific - extends shared components */
+        .project-column {
+            flex: 0 0 200px; /* Don't grow, don't shrink, fixed width */
+            min-width: 200px; /* Minimum width */
+            max-width: 200px; /* Maximum width */
+            padding: 0 1rem 1rem 1rem; /* No top padding */
+            overflow-y: auto;
+            border-right: 1px solid #444; /* Dark border between columns */
+            background: #2a2a2a; /* Dark column background */
+        }
+        
+        .project-column:last-child {
+            border-right: none; /* Remove border from last column */
+        }
+        
+        .project-header {
+            font-weight: 600;
+            margin-bottom: 0.25rem; /* Reduced margin */
+            padding-bottom: 0.25rem; /* Reduced padding */
+            text-align: center;
+            font-size: 1rem; /* Normal font size */
+            color: #ffffff; /* White text for dark theme */
+        }
+        
+        .project-section-header {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #ffffff;
+            margin-bottom: 0.25rem; /* Less space between project header and deliverables */
+            margin-top: 1rem; /* More space between deliverables header and first project */
+            text-align: left;
+        }
+        
+        .project-section-header:first-child {
+            margin-top: 1rem; /* Consistent spacing for first project too */
+        }
+        
+        .deliverables-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .deliverable-item {
+            background: transparent; /* No background for list style */
+            border: none; /* No border for list style */
+            border-radius: 0;
+            padding: 0.25rem 0 0.25rem 1rem; /* Add left indentation */
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center; /* Center align items vertically */
+            justify-content: space-between; /* Space between title and date */
+        }
+        
+        .deliverable-item:hover {
+            background: transparent; /* No background on hover */
+            transform: none; /* No transform for list style */
+            box-shadow: none;
+        }
+        
+        .deliverable-item:last-child {
+            border-bottom: none; /* Remove border from last item */
+        }
+        
+        .deliverable-title {
+            color: #b0b0b0; /* Light gray text for links */
+            text-decoration: none;
+            font-weight: 300;
+            font-size: 0.75rem; /* Even smaller font size for deliverable titles */
+            display: block; /* Block to allow wrapping */
+            line-height: 1.3; /* Better line height for wrapped text */
+            flex: 1; /* Take up available space */
+        }
+        
+        .deliverable-title:hover {
+            color: #ff6b35; /* Char3 orange on hover */
+            text-decoration: underline;
+        }
+        
+        .deliverable-date {
+            color: #808080 !important; /* Lighter gray color for normal dates */
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+            text-align: right; /* Right align the text */
+            line-height: 1.1; /* Tighter line height for stacked text */
+            flex-shrink: 0; /* Don't shrink the date */
+        }
+        
+        .deliverable-date.overdue {
+            color: #e74c3c !important; /* Red for overdue dates - force override */
+        }
+        
+        .deliverable-meta {
+            display: none; /* Hide the meta section since we're using inline date */
+        }
+        
+        .deliverable-title {
+            font-weight: 600;
+            margin-bottom: 0.125rem;
+            font-size: 0.875rem;
+        }
+        
+        .deliverable-meta {
+            font-size: 0.75rem;
+            color: #666;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .deliverable-client {
+            background: #6c757d;
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .deliverable-due {
+            background: #6c757d;
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .deliverable-due.overdue {
+            background: #dc3545;
+            color: white;
+        }
+        
+        
+        .admin-task-item {
+            background: #3a3a3a; /* Dark card background */
+            border: 1px solid #555; /* Dark border */
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+        
+        .admin-task-labels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-task-label {
+            padding: 0.1rem 0.25rem; /* Smaller padding */
+            border-radius: 0.25rem;
+            font-size: 0.5rem; /* Smaller font size */
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            display: inline-block; /* Ensure labels are visible */
+            margin-right: 0.25rem;
+        }
+        
+        /* Trello label colors */
+        .admin-task-label.red { background: #eb5a46; color: white; }
+        .admin-task-label.orange { background: #d29034; color: white; }
+        .admin-task-label.yellow { background: #f2d600; color: #2c3e50; }
+        .admin-task-label.green { background: #61bd4f; color: white; }
+        .admin-task-label.blue { background: #0079bf; color: white; }
+        .admin-task-label.purple { background: #c377e0; color: white; }
+        .admin-task-label.pink { background: #ff78cb; color: white; }
+        .admin-task-label.sky { background: #00c2e0; color: white; }
+        .admin-task-label.lime { background: #51e898; color: #2c3e50; }
+        .admin-task-label.grey { background: #838c91; color: white; }
+        
+        /* Placeholder cards - Notion style */
+        .placeholder-card {
+            background: transparent;
+            border: 2px dashed #555;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            color: #888;
+            font-size: 0.75rem;
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+        
+        /* Add spacing for deliverable placeholders to match admin task spacing */
+        .deliverable-placeholder {
+            margin-top: 0.5rem;
+        }
+        
+        .placeholder-card:hover {
+            border-color: #ff6b35;
+            color: #ff6b35;
+            background: rgba(255, 107, 53, 0.1);
+        }
+        
+        /* Show placeholder on column hover */
+        .project-column:hover .placeholder-card.deliverable-placeholder,
+        .project-column:hover .placeholder-card.task-placeholder {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Column hover effects */
+        .project-column:hover {
+            background: rgba(255, 107, 53, 0.02);
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #2a2a2a;
+            margin: 5% auto;
+            padding: 0;
+            border: 1px solid #444;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            color: #ffffff;
+        }
+        
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: #ffffff;
+        }
+        
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #ff6b35;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #444;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #555;
+            border-radius: 4px;
+            background: #1a1a1a;
+            color: #ffffff;
+            font-size: 0.875rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-primary {
+            background: #ff6b35;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #e55a2b;
+        }
+        
+        .admin-task-item:hover {
+            background: #4a4a4a; /* Darker on hover */
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .admin-task-title {
+            color: #b0b0b0; /* Light gray text for links */
+            text-decoration: none;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.75rem; /* Smaller font size */
+        }
+        
+        .admin-task-title:hover {
+            color: #ff6b35; /* Char3 orange on hover */
+            text-decoration: underline;
+        }
+        
+        .admin-task-meta {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            font-size: 0.625rem; /* Smaller font size */
+        }
+        
+        .admin-task-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .admin-task-meta {
+            font-size: 0.875rem;
+            color: #666;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .admin-due {
+            background: #6c757d; /* Neutral gray instead of bright red */
+            color: white;
+            padding: 0.1rem 0.375rem; /* Smaller padding */
+            border-radius: 8px; /* Smaller border radius */
+            font-size: 0.625rem; /* Smaller font size */
+            font-weight: 600;
+        }
+        
+        .admin-assignee {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .admin-assignee .person-icon {
+            width: 16px;
+            height: 16px;
+            font-size: 0.6rem;
+        }
+        
+        .deliverable-item {
+            background: transparent; /* No background for list style */
+            border: none; /* No border for list style */
+            border-radius: 0;
+            padding: 0.25rem 0 0.25rem 1rem; /* Add left indentation */
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center; /* Center align items vertically */
+            justify-content: space-between; /* Space between title and date */
+        }
+        
+        .deliverable-item:hover {
+            background: transparent; /* No background on hover */
+            transform: none; /* No transform for list style */
+            box-shadow: none;
+        }
+        
+        .deliverable-item:last-child {
+            border-bottom: none; /* Remove border from last item */
+        }
+        
+        .deliverable-title {
+            color: #b0b0b0; /* Light gray text for links */
+            text-decoration: none;
+            font-weight: 300;
+            font-size: 0.75rem; /* Even smaller font size for deliverable titles */
+            display: block; /* Block to allow wrapping */
+            line-height: 1.3; /* Better line height for wrapped text */
+            flex: 1; /* Take up available space */
+        }
+        
+        .deliverable-title:hover {
+            color: #ff6b35; /* Char3 orange on hover */
+            text-decoration: underline;
+        }
+        
+        .deliverable-date {
+            color: #808080 !important; /* Lighter gray color for normal dates */
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+            text-align: right; /* Right align the text */
+            line-height: 1.1; /* Tighter line height for stacked text */
+            flex-shrink: 0; /* Don't shrink the date */
+        }
+        
+        .deliverable-date.overdue {
+            color: #e74c3c !important; /* Red for overdue dates - force override */
+        }
+        
+        .deliverable-meta {
+            display: none; /* Hide the meta section since we're using inline date */
+        }
+        
+        .deliverable-title {
+            font-weight: 600;
+            margin-bottom: 0.125rem;
+            font-size: 0.875rem;
+        }
+        
+        .deliverable-meta {
+            font-size: 0.75rem;
+            color: #666;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .deliverable-client {
+            background: #6c757d;
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .deliverable-due {
+            background: #6c757d;
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .deliverable-due.overdue {
+            background: #dc3545;
+            color: white;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><span style="color: #ffffff;">char</span><span style="color: #ff6b35;">3</span> Hub</h1>
+        <div>
+            <button class="btn" onclick="refreshData()">Refresh</button>
+            <button class="btn btn-secondary" onclick="showAddTask()">Add Task</button>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="nav-sidebar">
+            <div class="nav-item active" onclick="showPage('team-collab')">
+                <span class="nav-item-icon">👥</span>
+                Team Collab
+            </div>
+            <div class="nav-item" onclick="showPage('team-boards')">
+                <span class="nav-item-icon">📋</span>
+                Team Boards
+            </div>
+            <div class="nav-item" onclick="showPage('account-management')">
+                <span class="nav-item-icon">👤</span>
+                Account Management
+            </div>
+            <div class="nav-item" onclick="showPage('project-management')">
+                <span class="nav-item-icon">📊</span>
+                Project Management
+            </div>
+            <div class="nav-item" onclick="showPage('client-portals')">
+                <span class="nav-item-icon">🌐</span>
+                Client Portals
+            </div>
+        </div>
+        
+        <!-- Team Collab Page (Default) -->
+        <div class="page-content active" id="team-collab">
+            <div class="content-area">
+                <div class="weekly-board">
+                    <div class="board-header">
+                        <h3>Team Collaboration</h3>
+                        <span id="current-week">Week of October 11, 2025</span>
+                    </div>
+                    
+                    <div class="view-toggle">
+                        <button class="toggle-btn active" onclick="toggleView('weekly')">Weekly Planning</button>
+                        <button class="toggle-btn" onclick="toggleView('deliverables')">Client Deliverables</button>
+                    </div>
+                    
+                    <!-- Weekly Planning View -->
+                    <div class="weekly-planning active">
+                        <div class="board-row">
+                            <div class="board-column day-column">
+                                <div class="day-header">Sunday</div>
+                                <div class="day-tasks" ondrop="dropTask(event)" ondragover="allowDrop(event)">
+                                    <div class="empty-day">Drop tasks here</div>
+                                </div>
+                            </div>
+                            <div class="board-column day-column">
+                                <div class="day-header">Monday</div>
+                                <div class="day-tasks" ondrop="dropTask(event)" ondragover="allowDrop(event)">
+                                    <div class="task-item" draggable="true" data-task-id="2">
+                                        <div class="task-title">Dashboard Components</div>
+                                        <div class="task-meta">
+                                            <span class="task-board">DESIGN</span>
+                                            <span class="task-effort">M</span>
+                                            <span class="task-project">iLitigate</span>
+                                            <span class="task-people">
+                                                <div class="person-icon designer">D</div>
+                                                Designer
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="board-column day-column">
+                                <div class="day-header">Tuesday</div>
+                                <div class="day-tasks" ondrop="dropTask(event)" ondragover="allowDrop(event)">
+                                    <div class="empty-day">Drop tasks here</div>
+                                </div>
+                            </div>
+                            <div class="board-column day-column">
+                                <div class="day-header">Wednesday</div>
+                                <div class="day-tasks" ondrop="dropTask(event)" ondragover="allowDrop(event)">
+                                    <div class="empty-day">Drop tasks here</div>
+                                </div>
+                            </div>
+                            <div class="board-column day-column">
+                                <div class="day-header">Thursday</div>
+                                <div class="day-tasks" ondrop="dropTask(event)" ondragover="allowDrop(event)">
+                                    <div class="empty-day">Drop tasks here</div>
+                                </div>
+                            </div>
+                            <div class="board-column day-column">
+                                <div class="day-header">Friday</div>
+                                <div class="day-tasks" ondrop="dropTask(event)" ondragover="allowDrop(event)">
+                                    <div class="empty-day">Drop tasks here</div>
+                                </div>
+                            </div>
+                            <div class="board-column day-column">
+                                <div class="day-header">Saturday</div>
+                                <div class="day-tasks" ondrop="dropTask(event)" ondragover="allowDrop(event)">
+                                    <div class="empty-day">Drop tasks here</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Client Deliverables View -->
+                    <div class="client-deliverables">
+                        <div class="client-deliverables-content">
+                            <!-- Project Headers Row -->
+                            <div class="project-headers-row">
+                            <div class="board-column project-column">
+                                <div class="project-header">iLitigate 2.0</div>
+                            </div>
+                            <div class="board-column project-column">
+                                <div class="project-header">Aurawell</div>
+                            </div>
+                            <div class="board-column project-column">
+                                <div class="project-header">FFA Phase 2</div>
+                            </div>
+                            <div class="board-column project-column">
+                                <div class="project-header">Parle</div>
+                            </div>
+                            <div class="board-column project-column">
+                                <div class="project-header">Roth River</div>
+                            </div>
+                            <div class="board-column project-column">
+                                <div class="project-header">Quartz Network</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Deliverables Section -->
+                        <div class="row-header">DELIVERABLES</div>
+                        <div class="deliverables-row">
+                            <div class="board-column project-column">
+                                <div class="deliverable-item" draggable="true" data-deliverable-id="1">
+                                    <a href="#" class="deliverable-title">User Authentication Demo</a>
+                                    <span class="deliverable-date">Feb<br>1</span>
+                                </div>
+                                <div class="deliverable-item" draggable="true" data-deliverable-id="2">
+                                    <a href="#" class="deliverable-title">Dashboard Prototype</a>
+                                    <span class="deliverable-date">Feb<br>15</span>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'iLitigate')">
+                                    + Add Deliverable
+                                </div>
+                            </div>
+                            
+                            <div class="board-column project-column">
+                                <div class="deliverable-item" draggable="true" data-deliverable-id="3">
+                                    <a href="#" class="deliverable-title">Wellness App MVP</a>
+                                    <span class="deliverable-date">Feb<br>8</span>
+                                </div>
+                                <div class="deliverable-item" draggable="true" data-deliverable-id="4">
+                                    <a href="#" class="deliverable-title">Health Tracking Features</a>
+                                    <span class="deliverable-date">Feb<br>22</span>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Aurawell')">
+                                    + Add Deliverable
+                                </div>
+                            </div>
+                            
+                            <div class="board-column project-column">
+                                <div class="deliverable-item" draggable="true" data-deliverable-id="5">
+                                    <a href="#" class="deliverable-title">Phase 2 Feature Set</a>
+                                    <span class="deliverable-date">Feb<br>20</span>
+                                </div>
+                                <div class="deliverable-item" draggable="true" data-deliverable-id="6">
+                                    <a href="#" class="deliverable-title">Integration Testing</a>
+                                    <span class="deliverable-date">Feb<br>25</span>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Parle')">
+                                    + Add Deliverable
+                                </div>
+                            </div>
+                            
+                            <div class="board-column project-column">
+                                <div class="deliverable-item" draggable="true" data-deliverable-id="7">
+                                    <a href="#" class="deliverable-title">Mobile App Launch</a>
+                                    <span class="deliverable-date">Feb<br>12</span>
+                                </div>
+                                <div class="deliverable-item" draggable="true" data-deliverable-id="8">
+                                    <a href="#" class="deliverable-title">User Onboarding Flow</a>
+                                    <span class="deliverable-date">Feb<br>28</span>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Fund for the Arts')">
+                                    + Add Deliverable
+                                </div>
+                            </div>
+                            
+                            <div class="board-column project-column">
+                                <div class="deliverable-item" draggable="true" data-deliverable-id="9">
+                                    <a href="#" class="deliverable-title">Roth River Analytics</a>
+                                    <span class="deliverable-date">Mar 5</span>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Roth River')">
+                                    + Add Deliverable
+                                </div>
+                            </div>
+                            
+                            <div class="board-column project-column">
+                                <div class="deliverable-item" draggable="true" data-deliverable-id="10">
+                                    <a href="#" class="deliverable-title">Quartz Network API</a>
+                                    <span class="deliverable-date">Mar 10</span>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Quartz Network')">
+                                    + Add Deliverable
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <!-- Admin Tasks Section -->
+                        <div class="row-header">ADMIN TASKS</div>
+                        <div class="admin-tasks-row">
+                            <div class="board-column project-column">
+                                <div class="admin-task-item" draggable="true" data-admin-id="1">
+                                    <a href="#" class="admin-task-title">Client Demo Prep</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Jan 30</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon project-lead">P</div>
+                                            Project Lead
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="admin-task-item" draggable="true" data-admin-id="2">
+                                    <a href="#" class="admin-task-title">Contract Review</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Feb 5</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon project-lead">P</div>
+                                            Project Lead
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="placeholder-card task-placeholder" onclick="openAddModal('admin-task', 'iLitigate')">
+                                    + Add Admin Task
+                                </div>
+                            </div>
+                            
+                            <div class="board-column project-column">
+                                <div class="admin-task-item" draggable="true" data-admin-id="3">
+                                    <a href="#" class="admin-task-title">Health Data Compliance</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Jan 28</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon project-lead">P</div>
+                                            Project Lead
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="admin-task-item" draggable="true" data-admin-id="4">
+                                    <a href="#" class="admin-task-title">App Store Submission</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Feb 12</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon developer">D</div>
+                                            Developer
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Aurawell')">
+                                    + Add Deliverable
+                                </div>
+                                <div class="placeholder-card task-placeholder" onclick="openAddModal('admin-task', 'Aurawell')">
+                                    + Add Admin Task
+                                </div>
+                            </div>
+                            
+                            <div class="board-column project-column">
+                                <div class="admin-task-item" draggable="true" data-admin-id="5">
+                                    <a href="#" class="admin-task-title">Phase 1 Retrospective</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Jan 25</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon project-lead">P</div>
+                                            Project Lead
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="admin-task-item" draggable="true" data-admin-id="6">
+                                    <a href="#" class="admin-task-title">Resource Planning</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Feb 3</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon project-lead">P</div>
+                                            Project Lead
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Parle')">
+                                    + Add Deliverable
+                                </div>
+                                <div class="placeholder-card task-placeholder" onclick="openAddModal('admin-task', 'Parle')">
+                                    + Add Admin Task
+                                </div>
+                            </div>
+                            
+                            <div class="board-column project-column">
+                                <div class="admin-task-item" draggable="true" data-admin-id="7">
+                                    <a href="#" class="admin-task-title">Brand Guidelines Review</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Jan 27</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon designer">D</div>
+                                            Designer
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="admin-task-item" draggable="true" data-admin-id="8">
+                                    <a href="#" class="admin-task-title">Launch Strategy Meeting</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Feb 10</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon project-lead">P</div>
+                                            Project Lead
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Fund for the Arts')">
+                                    + Add Deliverable
+                                </div>
+                                <div class="placeholder-card task-placeholder" onclick="openAddModal('admin-task', 'Fund for the Arts')">
+                                    + Add Admin Task
+                                </div>
+                            </div>
+                            
+                            <div class="board-column project-column">
+                                <div class="admin-task-item" draggable="true" data-admin-id="9">
+                                    <a href="#" class="admin-task-title">Data Pipeline Setup</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Jan 29</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon developer">D</div>
+                                            Developer
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="admin-task-item" draggable="true" data-admin-id="10">
+                                    <a href="#" class="admin-task-title">Client Training Session</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Feb 15</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon project-lead">P</div>
+                                            Project Lead
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Quartz Network')">
+                                    + Add Deliverable
+                                </div>
+                                <div class="placeholder-card task-placeholder" onclick="openAddModal('admin-task', 'Quartz Network')">
+                                    + Add Admin Task
+                                </div>
+                            </div>
+                            
+                            <div class="board-column project-column">
+                                <div class="admin-task-item" draggable="true" data-admin-id="11">
+                                    <a href="#" class="admin-task-title">Security Audit</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Jan 31</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon developer">D</div>
+                                            Developer
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="admin-task-item" draggable="true" data-admin-id="12">
+                                    <a href="#" class="admin-task-title">Infrastructure Review</a>
+                                    <div class="admin-task-meta">
+                                        <span class="admin-due">Feb 8</span>
+                                        <span class="admin-assignee">
+                                            <div class="person-icon project-lead">P</div>
+                                            Project Lead
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Roth River')">
+                                    + Add Deliverable
+                                </div>
+                                <div class="placeholder-card task-placeholder" onclick="openAddModal('admin-task', 'Roth River')">
+                                    + Add Admin Task
+                                </div>
+                            </div>
+                            
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div id="addItemModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Item</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addItemForm">
+                    <div class="form-group">
+                        <label for="itemTitle">Title *</label>
+                        <input type="text" id="itemTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemDueDate">Due Date *</label>
+                        <input type="date" id="itemDueDate" name="dueDate" required>
+                    </div>
+                    <div class="form-group" id="projectGroup">
+                        <label for="itemProject">Project *</label>
+                        <select id="itemProject" name="project" required>
+                            <option value="">Select a project...</option>
+                            <option value="iLitigate 2.0">iLitigate 2.0</option>
+                            <option value="Aurawell">Aurawell</option>
+                            <option value="FFA Phase 2">FFA Phase 2</option>
+                            <option value="Parle">Parle</option>
+                            <option value="Roth River">Roth River</option>
+                            <option value="Quartz Network">Quartz Network</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="assigneeGroup" style="display: none;">
+                        <label for="itemAssignee">Assignee</label>
+                        <select id="itemAssignee" name="assignee">
+                            <option value="Project Lead">Project Lead</option>
+                            <option value="Designer">Designer</option>
+                            <option value="UX">UX</option>
+                            <option value="Developer">Developer</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="priorityGroup" style="display: none;">
+                        <label for="itemPriority">Priority</label>
+                        <select id="itemPriority" name="priority">
+                            <option value="High">High</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="clientGroup" style="display: none;">
+                        <label for="itemClient">Client *</label>
+                        <select id="itemClient" name="client" required>
+                            <option value="">Select a client...</option>
+                            <option value="iLitigate">iLitigate</option>
+                            <option value="Aurawell">Aurawell</option>
+                            <option value="Parle">Parle</option>
+                            <option value="Fund for the Arts">Fund for the Arts</option>
+                            <option value="Quartz Network">Quartz Network</option>
+                            <option value="Roth River">Roth River</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemDescription">Description</label>
+                        <textarea id="itemDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <input type="hidden" id="itemType" name="type">
+                    <input type="hidden" id="itemProject" name="project">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveBtn">Add Item</button>
+            </div>
+        </div>
+    </div>
+                
+                <div class="master-tasks-panel">
+                    <div class="panel-header">
+                        <h3>Master Tasks</h3>
+                        <span id="task-count">4 tasks</span>
+                    </div>
+                    
+                    <div class="search-bar">
+                        <input type="text" class="search-input" placeholder="Search tasks..." id="task-search" onkeyup="filterTasks()">
+                    </div>
+                    
+                    <div class="filters-section">
+                        <div class="filter-row">
+                            <select class="filter-select" id="project-filter" onchange="filterTasks()">
+                                <option value="">All Projects</option>
+                                <option value="iLitigate 2.0">iLitigate 2.0</option>
+                                <option value="Aurawell">Aurawell</option>
+                                <option value="FFA Phase 2">FFA Phase 2</option>
+                                <option value="Parle">Parle</option>
+                                <option value="Roth River">Roth River</option>
+                                <option value="Quartz Network">Quartz Network</option>
+                            </select>
+                            <select class="filter-select" id="people-filter" onchange="filterTasks()">
+                                <option value="">All People</option>
+                                <option value="Designer">Designer</option>
+                                <option value="UX">UX</option>
+                                <option value="Developer">Developer</option>
+                                <option value="Project Lead">Project Lead</option>
+                            </select>
+                        </div>
+                        <div class="filter-row">
+                            <select class="filter-select" id="task-type-filter" onchange="filterTasks()">
+                                <option value="">All Task Types</option>
+                                <option value="Design">Design</option>
+                                <option value="UX">UX</option>
+                                <option value="Development">Development</option>
+                                <option value="Account">Account</option>
+                            </select>
+                            <button class="clear-filters" onclick="clearFilters()">Clear</button>
+                        </div>
+                    </div>
+                    
+                    <div class="task-list" id="master-task-list">
+                        <div class="task-item" draggable="true" data-task-id="1" data-project="iLitigate 2.0" data-people="Developer" data-task-type="Development">
+                            <div class="task-title">User Authentication System</div>
+                            <div class="task-meta">
+                                <span class="task-board">DEV</span>
+                                <span class="task-effort">L</span>
+                                <span class="task-project">iLitigate 2.0</span>
+                                <span class="task-people">
+                                    <div class="person-icon developer">D</div>
+                                    Developer
+                                </span>
+                            </div>
+                        </div>
+                        <div class="task-item" draggable="true" data-task-id="2" data-project="iLitigate 2.0" data-people="Designer" data-task-type="Design">
+                            <div class="task-title">Dashboard Components</div>
+                            <div class="task-meta">
+                                <span class="task-board">DESIGN</span>
+                                <span class="task-effort">M</span>
+                                <span class="task-project">iLitigate 2.0</span>
+                                <span class="task-people">
+                                    <div class="person-icon designer">D</div>
+                                    Designer
+                                </span>
+                            </div>
+                        </div>
+                        <div class="task-item" draggable="true" data-task-id="3" data-project="Aurawell" data-people="UX" data-task-type="UX">
+                            <div class="task-title">Wellness App UX Flow</div>
+                            <div class="task-meta">
+                                <span class="task-board">UX</span>
+                                <span class="task-effort">M</span>
+                                <span class="task-project">Aurawell</span>
+                                <span class="task-people">
+                                    <div class="person-icon ux">U</div>
+                                    UX
+                                </span>
+                            </div>
+                        </div>
+                        <div class="task-item" draggable="true" data-task-id="4" data-project="FFA Phase 2" data-people="Project Lead" data-task-type="Account">
+                            <div class="task-title">Phase 2 Planning</div>
+                            <div class="task-meta">
+                                <span class="task-board">ACCOUNT</span>
+                                <span class="task-effort">S</span>
+                                <span class="task-project">FFA Phase 2</span>
+                                <span class="task-people">
+                                    <div class="person-icon project-lead">P</div>
+                                    Project Lead
+                                </span>
+                            </div>
+                        </div>
+                        <div class="task-item" draggable="true" data-task-id="5" data-project="Roth River" data-people="Developer" data-task-type="Development">
+                            <div class="task-title">Data Analytics Platform</div>
+                            <div class="task-meta">
+                                <span class="task-board">DEV</span>
+                                <span class="task-effort">XL</span>
+                                <span class="task-project">Roth River</span>
+                                <span class="task-people">
+                                    <div class="person-icon developer">D</div>
+                                    Developer
+                                </span>
+                            </div>
+                        </div>
+                        <div class="task-item" draggable="true" data-task-id="6" data-project="Parle" data-people="Designer" data-task-type="Design">
+                            <div class="task-title">Mobile App Wireframes</div>
+                            <div class="task-meta">
+                                <span class="task-board">DESIGN</span>
+                                <span class="task-effort">M</span>
+                                <span class="task-project">Parle</span>
+                                <span class="task-people">
+                                    <div class="person-icon designer">D</div>
+                                    Designer
+                                </span>
+                            </div>
+                        </div>
+                        <div class="task-item" draggable="true" data-task-id="7" data-project="Quartz Network" data-people="UX" data-task-type="UX">
+                            <div class="task-title">Network Security UX</div>
+                            <div class="task-meta">
+                                <span class="task-board">UX</span>
+                                <span class="task-effort">L</span>
+                                <span class="task-project">Quartz Network</span>
+                                <span class="task-people">
+                                    <div class="person-icon ux">U</div>
+                                    UX
+                                </span>
+                            </div>
+                        </div>
+                        <div class="task-item" draggable="true" data-task-id="8" data-project="Aurawell" data-people="Project Lead" data-task-type="Account">
+                            <div class="task-title">Health Compliance Review</div>
+                            <div class="task-meta">
+                                <span class="task-board">ACCOUNT</span>
+                                <span class="task-effort">XS</span>
+                                <span class="task-project">Aurawell</span>
+                                <span class="task-people">
+                                    <div class="person-icon project-lead">P</div>
+                                    Project Lead
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Team Boards Page -->
+        <div class="page-content" id="team-boards">
+            <div class="content-area">
+                <div style="flex: 1; background: white; border-radius: 8px; padding: 2rem; text-align: center;">
+                    <h2>Team Boards</h2>
+                    <p>Individual team boards will be displayed here</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Account Management Page -->
+        <div class="page-content" id="account-management">
+            <div class="content-area">
+                <div style="flex: 1; background: white; border-radius: 8px; padding: 2rem; text-align: center;">
+                    <h2>Account Management</h2>
+                    <p>Client deliverables and account management tools will be displayed here</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Project Management Page -->
+        <div class="page-content" id="project-management">
+            <div class="content-area">
+                <div style="flex: 1; background: white; border-radius: 8px; padding: 2rem; text-align: center;">
+                    <h2>Project Management</h2>
+                    <p>Project timelines, milestones, and progress tracking will be displayed here</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Client Portals Page -->
+        <div class="page-content" id="client-portals">
+            <div class="content-area">
+                <div style="flex: 1; background: white; border-radius: 8px; padding: 2rem; text-align: center;">
+                    <h2>Client Portals</h2>
+                    <p>Client-facing dashboards and progress reports will be displayed here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Navigation functionality
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+        }
+        
+        // View toggle functionality
+        function toggleView(viewType) {
+            // Update toggle buttons
+            const toggleBtns = document.querySelectorAll('.toggle-btn');
+            toggleBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide views
+            const weeklyView = document.querySelector('.weekly-planning');
+            const deliverablesView = document.querySelector('.client-deliverables');
+            
+            if (viewType === 'weekly') {
+                weeklyView.classList.add('active');
+                deliverablesView.classList.remove('active');
+            } else {
+                weeklyView.classList.remove('active');
+                deliverablesView.classList.add('active');
+                // Load real data when switching to deliverables view
+                loadAccountManagementData();
+            }
+        }
+        
+        // Drag and drop functionality
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+        
+        function dragTask(ev) {
+            ev.dataTransfer.setData("text", ev.target.dataset.taskId);
+            ev.dataTransfer.effectAllowed = "move";
+        }
+        
+        function dropTask(ev) {
+            ev.preventDefault();
+            const taskId = ev.dataTransfer.getData("text");
+            const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+            
+            if (taskElement && ev.target.classList.contains('day-tasks')) {
+                // Remove empty day message if it exists
+                const emptyDay = ev.target.querySelector('.empty-day');
+                if (emptyDay) {
+                    emptyDay.remove();
+                }
+                
+                // Clone the task element to keep original in master list
+                const clonedTask = taskElement.cloneNode(true);
+                
+                // Ensure the cloned task has all the metadata from the original
+                const originalMeta = taskElement.querySelector('.task-meta');
+                const clonedMeta = clonedTask.querySelector('.task-meta');
+                
+                // Copy all the metadata spans
+                if (originalMeta && clonedMeta) {
+                    clonedMeta.innerHTML = originalMeta.innerHTML;
+                }
+                
+                ev.target.appendChild(clonedTask);
+                
+                // Get task data for API call
+                const taskTitle = taskElement.querySelector('.task-title').textContent;
+                const taskType = taskElement.querySelector('.task-type').textContent;
+                const taskProject = taskElement.querySelector('.task-project').textContent;
+                const taskEffort = taskElement.querySelector('.task-effort').textContent;
+                const dayColumn = ev.target.closest('.day-column');
+                const dayName = dayColumn.id;
+                
+                // Send to Trello API
+                const taskData = {
+                    title: taskTitle,
+                    type: taskType.toLowerCase(),
+                    project: taskProject.toLowerCase().replace(' ', ''),
+                    effort: taskEffort,
+                    day: dayName,
+                    target_board: 'weekly_planning',
+                    target_list: dayName.charAt(0).toUpperCase() + dayName.slice(1)
+                };
+                
+                // Move task to weekly planning board via API
+                fetch('/api/tasks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(taskData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Task moved to Trello:', data);
+                        // Update the cloned task with Trello card ID
+                        clonedTask.dataset.cardId = data.card_id;
+                    } else {
+                        console.error('Failed to move task:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error moving task:', error);
+                });
+                
+                console.log(`Task ${taskId} added to ${ev.target.previousElementSibling.textContent}`);
+            }
+        }
+        
+        // Filter functionality
+        function filterTasks() {
+            const searchTerm = document.getElementById('task-search').value.toLowerCase();
+            const projectFilter = document.getElementById('project-filter').value;
+            const peopleFilter = document.getElementById('people-filter').value;
+            const taskTypeFilter = document.getElementById('task-type-filter').value;
+            
+            const taskItems = document.querySelectorAll('#master-task-list .task-item');
+            let visibleCount = 0;
+            
+            taskItems.forEach(task => {
+                const title = task.querySelector('.task-title').textContent.toLowerCase();
+                const project = task.dataset.project;
+                const people = task.dataset.people;
+                const taskType = task.dataset.taskType;
+                
+                const matchesSearch = title.includes(searchTerm);
+                const matchesProject = !projectFilter || project === projectFilter;
+                const matchesPeople = !peopleFilter || people === peopleFilter;
+                const matchesTaskType = !taskTypeFilter || taskType === taskTypeFilter;
+                
+                if (matchesSearch && matchesProject && matchesPeople && matchesTaskType) {
+                    task.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    task.style.display = 'none';
+                }
+            });
+            
+            // Update task count
+            document.getElementById('task-count').textContent = `${visibleCount} tasks`;
+        }
+        
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('task-search').value = '';
+            document.getElementById('project-filter').value = '';
+            document.getElementById('people-filter').value = '';
+            document.getElementById('task-type-filter').value = '';
+            filterTasks();
+        }
+        
+        // Data refresh
+        function refreshData() {
+            console.log('Refreshing data...');
+            loadAccountManagementData();
+        }
+        
+        // Load real data from Account Management board
+        function loadAccountManagementData() {
+            fetch('/api/account-management')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        updateClientDeliverablesView(data.deliverables, data.account_tasks);
+                        console.log('Loaded Account Management data:', data);
+                    } else {
+                        console.error('Failed to load Account Management data:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading Account Management data:', error);
+                });
+        }
+        
+        // Update the Client Deliverables view with real data
+        function updateClientDeliverablesView(deliverables, accountTasks) {
+            console.log('Received deliverables:', deliverables);
+            console.log('Received account tasks:', accountTasks);
+            
+            // Debug: Log the first admin task to see its structure
+            if (accountTasks.length > 0) {
+                console.log('First admin task structure:', accountTasks[0]);
+                console.log('First admin task members:', accountTasks[0].members);
+                console.log('First admin task labels:', accountTasks[0].labels);
+            }
+            
+            // Get all available clients from the custom field options
+            // For now, we'll use the known client list from the custom fields
+            // Later this can be made dynamic by fetching from the API
+            const allClients = ['iLitigate', 'Aurawell', 'Parle', 'Fund for the Arts', 'Quartz Network', 'Roth River'];
+            
+            // Also collect clients that have actual deliverables or tasks
+            const clientsWithData = new Set();
+            deliverables.forEach(deliverable => {
+                if (deliverable.customFields && deliverable.customFields.Client) {
+                    clientsWithData.add(deliverable.customFields.Client);
+                }
+            });
+            accountTasks.forEach(task => {
+                if (task.customFields && task.customFields.Client) {
+                    clientsWithData.add(task.customFields.Client);
+                }
+            });
+            
+            // Use all clients, but prioritize those with data first
+            const clientList = allClients.sort((a, b) => {
+                const aHasData = clientsWithData.has(a);
+                const bHasData = clientsWithData.has(b);
+                if (aHasData && !bHasData) return -1;
+                if (!aHasData && bHasData) return 1;
+                return a.localeCompare(b);
+            });
+            console.log('Found clients:', clientList);
+            
+            // Group deliverables by client
+            const deliverablesByClient = {};
+            const tasksByClient = {};
+            
+            // Initialize client groups
+            clientList.forEach(client => {
+                deliverablesByClient[client] = [];
+                tasksByClient[client] = [];
+            });
+            
+            // Helper function to check if date is within a reasonable range (past week to next 2 weeks)
+            function isWithinRelevantRange(dateString) {
+                if (!dateString) return false;
+                const deliverableDate = new Date(dateString);
+                const today = new Date();
+                const startOfRange = new Date(today);
+                startOfRange.setDate(today.getDate() - 7); // Start from 1 week ago
+                const endOfRange = new Date(today);
+                endOfRange.setDate(today.getDate() + 14); // End 2 weeks from now
+                
+                console.log('Checking date:', dateString, 'Parsed:', deliverableDate, 'In range:', deliverableDate >= startOfRange && deliverableDate <= endOfRange);
+                
+                return deliverableDate >= startOfRange && deliverableDate <= endOfRange;
+            }
+            
+            // Group deliverables by client (only show non-completed)
+            deliverables.forEach(deliverable => {
+                // Only show deliverables that are not completed
+                const isCompleted = deliverable.labels.some(label => 
+                    label.toLowerCase().includes('completed') || 
+                    label.toLowerCase().includes('done') ||
+                    label.toLowerCase().includes('finished')
+                );
+                
+                if (!isCompleted) {
+                    const clientName = deliverable.customFields && deliverable.customFields.Client;
+                    if (clientName && deliverablesByClient[clientName]) {
+                        deliverablesByClient[clientName].push(deliverable);
+                    } else if (clientList.length > 0) {
+                        // Default to first client if no client field
+                        deliverablesByClient[clientList[0]].push(deliverable);
+                    }
+                }
+            });
+            
+            // Group account tasks by client
+            accountTasks.forEach(task => {
+                const clientName = task.customFields && task.customFields.Client;
+                if (clientName && tasksByClient[clientName]) {
+                    tasksByClient[clientName].push(task);
+                } else if (clientList.length > 0) {
+                    // Default to first client if no client field
+                    tasksByClient[clientList[0]].push(task);
+                }
+            });
+            
+            // Update project headers row
+            const projectHeadersRow = document.querySelector('.project-headers-row');
+            if (projectHeadersRow) {
+                projectHeadersRow.innerHTML = '';
+                clientList.forEach(client => {
+                    const headerColumn = document.createElement('div');
+                    headerColumn.className = 'project-column';
+                    headerColumn.innerHTML = `<div class="project-header">${client}</div>`;
+                    projectHeadersRow.appendChild(headerColumn);
+                });
+            }
+            
+            // Update deliverables section
+            const deliverablesRow = document.querySelector('.deliverables-row');
+            if (deliverablesRow) {
+                deliverablesRow.innerHTML = '';
+                deliverablesRow.className = 'deliverables-row condensed'; // Start in condensed mode
+                
+                let hasMoreThanThree = false;
+                
+                clientList.forEach(client => {
+                    const clientColumn = document.createElement('div');
+                    clientColumn.className = 'project-column';
+                    
+                    const clientDeliverables = deliverablesByClient[client];
+                    
+                    // Sort deliverables by due date (earliest first)
+                    const sortedDeliverables = clientDeliverables.sort((a, b) => {
+                        if (!a.due && !b.due) return 0;
+                        if (!a.due) return 1; // No date goes to end
+                        if (!b.due) return -1; // No date goes to end
+                        return new Date(a.due) - new Date(b.due);
+                    });
+                    
+                    const relevantDeliverables = sortedDeliverables.filter(d => isWithinRelevantRange(d.due));
+                    const otherDeliverables = sortedDeliverables.filter(d => !isWithinRelevantRange(d.due));
+                    
+                    // Group deliverables by project
+                    const deliverablesByProject = {};
+                    relevantDeliverables.forEach(deliverable => {
+                        const projectName = deliverable.customFields && deliverable.customFields.Project ? deliverable.customFields.Project : 'Other';
+                        if (!deliverablesByProject[projectName]) {
+                            deliverablesByProject[projectName] = [];
+                        }
+                        deliverablesByProject[projectName].push(deliverable);
+                    });
+                    
+                    // Render deliverables grouped by project
+                    Object.keys(deliverablesByProject).forEach(projectName => {
+                        // Add project header
+                        const projectHeader = document.createElement('div');
+                        projectHeader.className = 'project-section-header';
+                        projectHeader.textContent = projectName;
+                        clientColumn.appendChild(projectHeader);
+                        
+                        // Add deliverables for this project
+                        deliverablesByProject[projectName].forEach((deliverable, index) => {
+                            const dueDate = deliverable.due ? (() => {
+                                const date = new Date(deliverable.due);
+                                const month = date.toLocaleDateString('en-US', { month: 'short' });
+                                const day = date.toLocaleDateString('en-US', { day: 'numeric' });
+                                return `${month}<br>${day}`;
+                            })() : 'No date';
+                            const isOverdue = deliverable.due && new Date(deliverable.due) < new Date();
+                            
+                            const deliverableItem = document.createElement('div');
+                            deliverableItem.className = 'deliverable-item';
+                            deliverableItem.draggable = true;
+                            deliverableItem.dataset.deliverableId = deliverable.id;
+                            deliverableItem.innerHTML = `
+                                <div class="deliverable-content">
+                                    <a href="${deliverable.url}" target="_blank" class="deliverable-title">${deliverable.name}</a>
+                                </div>
+                                <span class="deliverable-date ${isOverdue ? 'overdue' : ''}">${dueDate}</span>
+                            `;
+                            clientColumn.appendChild(deliverableItem);
+                        });
+                    });
+                    
+                    // Show other deliverables (hidden by default)
+                    otherDeliverables.forEach((deliverable, index) => {
+                        const dueDate = deliverable.due ? (() => {
+                            const date = new Date(deliverable.due);
+                            const month = date.toLocaleDateString('en-US', { month: 'short' });
+                            const day = date.toLocaleDateString('en-US', { day: 'numeric' });
+                            return `${month}<br>${day}`;
+                        })() : 'No date';
+                        const isOverdue = deliverable.due && new Date(deliverable.due) < new Date();
+                        
+                        // Get project name for bubble
+                        const projectName = deliverable.customFields && deliverable.customFields.Project ? deliverable.customFields.Project : '';
+                        
+                        const deliverableItem = document.createElement('div');
+                        deliverableItem.className = 'deliverable-item hidden';
+                        deliverableItem.draggable = true;
+                        deliverableItem.dataset.deliverableId = deliverable.id;
+                        deliverableItem.innerHTML = `
+                            <div class="deliverable-content">
+                                <a href="${deliverable.url}" target="_blank" class="deliverable-title">${deliverable.name}</a>
+                                ${projectName ? `<span class="project-bubble">${projectName}</span>` : ''}
+                            </div>
+                            <span class="deliverable-date ${isOverdue ? 'overdue' : ''}">${dueDate}</span>
+                        `;
+                        clientColumn.appendChild(deliverableItem);
+                    });
+                    
+                    // Check if this client has more than 3 deliverables total
+                    if (clientDeliverables.length > 3) {
+                        hasMoreThanThree = true;
+                    }
+                    
+                    // Add deliverable placeholder to this column
+                    const deliverablePlaceholder = document.createElement('div');
+                    deliverablePlaceholder.className = 'placeholder-card deliverable-placeholder';
+                    deliverablePlaceholder.textContent = '+ Add Deliverable';
+                    deliverablePlaceholder.onclick = () => openAddModal('deliverable', client);
+                    clientColumn.appendChild(deliverablePlaceholder);
+                    
+                    deliverablesRow.appendChild(clientColumn);
+                });
+                
+                // Add Show More/Less button if there are more than 3 deliverables
+                if (hasMoreThanThree) {
+                    const showMoreBtn = document.createElement('button');
+                    showMoreBtn.className = 'show-more-btn';
+                    showMoreBtn.textContent = 'Show More';
+                    showMoreBtn.onclick = function() {
+                        const isExpanded = deliverablesRow.classList.contains('expanded');
+                        const hiddenItems = deliverablesRow.querySelectorAll('.deliverable-item.hidden');
+                        
+                        if (isExpanded) {
+                            // Collapse
+                            deliverablesRow.classList.remove('expanded');
+                            deliverablesRow.classList.add('condensed');
+                            hiddenItems.forEach(item => item.classList.add('hidden'));
+                            showMoreBtn.textContent = 'Show More';
+                        } else {
+                            // Expand
+                            deliverablesRow.classList.remove('condensed');
+                            deliverablesRow.classList.add('expanded');
+                            hiddenItems.forEach(item => item.classList.remove('hidden'));
+                            showMoreBtn.textContent = 'Show Less';
+                        }
+                    };
+                    deliverablesRow.appendChild(showMoreBtn);
+                }
+                
+            }
+            
+            // Update admin tasks section
+            const adminTasksRow = document.querySelector('.admin-tasks-row');
+            if (adminTasksRow) {
+                adminTasksRow.innerHTML = '';
+                clientList.forEach(client => {
+                    const clientColumn = document.createElement('div');
+                    clientColumn.className = 'project-column';
+                    
+                    tasksByClient[client].forEach(task => {
+                        const dueDate = task.due ? new Date(task.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No date';
+                        const isOverdue = task.due && new Date(task.due) < new Date();
+                        
+                        const taskItem = document.createElement('div');
+                        taskItem.className = 'admin-task-item';
+                        taskItem.draggable = true;
+                        taskItem.dataset.adminId = task.id;
+                        // Determine assignee from members or labels or default to Project Lead
+                        let assigneeLabel = 'Project Lead';
+                        
+                        // Debug: Log task data
+                        console.log('Processing admin task:', task.name);
+                        console.log('Task members:', task.members);
+                        console.log('Task labels:', task.labels);
+                        
+                        // First try to get from members (actual Trello assignees)
+                        if (task.members && task.members.length > 0) {
+                            // For now, just use the first member as the assignee
+                            // You could map member names to roles here if needed
+                            assigneeLabel = task.members[0];
+                            console.log('Using member as assignee:', assigneeLabel);
+                        } else {
+                            // Fallback to labels if no members assigned
+                            assigneeLabel = task.labels.find(label => 
+                                ['Designer', 'UX', 'Developer', 'Project Lead'].includes(label)
+                            ) || 'Project Lead';
+                            console.log('Using label as assignee:', assigneeLabel);
+                        }
+                        
+                        // Get assignee initials and class
+                        const assigneeInfo = {
+                            'Designer': { initials: 'D', class: 'designer' },
+                            'UX': { initials: 'U', class: 'ux' },
+                            'Developer': { initials: 'D', class: 'developer' },
+                            'Project Lead': { initials: 'P', class: 'project-lead' },
+                            // Add actual member names here
+                            'Laura Lin': { initials: 'L', class: 'project-lead' },
+                            'Laura': { initials: 'L', class: 'project-lead' }
+                        };
+                        
+                        const assignee = assigneeInfo[assigneeLabel] || assigneeInfo['Project Lead'];
+                        
+                        // Create labels HTML
+                        const labelsHtml = task.labels && task.labels.length > 0 ? `
+                            <div class="admin-task-labels">
+                                ${task.labels.map(label => {
+                                    // Map Trello label colors to our CSS classes
+                                    // Trello uses these exact color values
+                                    const colorMap = {
+                                        'red': 'red',
+                                        'red_dark': 'red', // Dark red maps to red
+                                        'orange': 'orange', 
+                                        'yellow': 'yellow',
+                                        'green': 'green',
+                                        'blue': 'blue',
+                                        'purple': 'purple',
+                                        'pink': 'pink',
+                                        'sky': 'sky',
+                                        'lime': 'lime',
+                                        'black': 'grey', // Trello's black maps to our grey
+                                        'null': 'grey'   // Default/empty color
+                                    };
+                                    const colorClass = colorMap[label.color] || 'grey';
+                                    return `<span class="admin-task-label ${colorClass}">${label.name}</span>`;
+                                }).join('')}
+                            </div>
+                        ` : '';
+                        
+                        taskItem.innerHTML = `
+                            ${labelsHtml}
+                            <a href="${task.url}" target="_blank" class="admin-task-title">${task.name}</a>
+                            <div class="admin-task-meta">
+                                <span class="admin-due ${isOverdue ? 'overdue' : ''}">${dueDate}</span>
+                                <span class="admin-assignee">
+                                    <div class="person-icon ${assignee.class}">${assignee.initials}</div>
+                                    ${assigneeLabel}
+                                </span>
+                            </div>
+                        `;
+                        clientColumn.appendChild(taskItem);
+                    });
+                    
+                    // Add placeholder card to this column (admin tasks only)
+                    const taskPlaceholder = document.createElement('div');
+                    taskPlaceholder.className = 'placeholder-card task-placeholder';
+                    taskPlaceholder.textContent = '+ Add Admin Task';
+                    taskPlaceholder.onclick = () => openAddModal('admin-task', client);
+                    clientColumn.appendChild(taskPlaceholder);
+                    
+                    adminTasksRow.appendChild(clientColumn);
+                });
+                
+            }
+        }
+        
+        // Modal functions (placeholder)
+        function showAddTask() {
+            alert('Add Task modal would open here');
+        }
+        
+        function showAddDeliverable() {
+            alert('Add Deliverable modal would open here');
+        }
+        
+        // Initialize drag and drop
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskItems = document.querySelectorAll('.task-item');
+            taskItems.forEach(item => {
+                item.addEventListener('dragstart', dragTask);
+            });
+            
+            // Add drag and drop to all day columns
+            const dayTasks = document.querySelectorAll('.day-tasks');
+            dayTasks.forEach(day => {
+                day.addEventListener('drop', dropTask);
+                day.addEventListener('dragover', allowDrop);
+            });
+            
+            // Load initial data
+            loadAccountManagementData();
+            
+            // Modal event listeners
+            const modal = document.getElementById('addItemModal');
+            const closeBtn = document.querySelector('.close');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            
+            closeBtn.onclick = closeModal;
+            cancelBtn.onclick = closeModal;
+            saveBtn.onclick = saveItem;
+            
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            }
+        });
+
+        // Modal functions
+        function openAddModal(type, client) {
+            const modal = document.getElementById('addItemModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const assigneeGroup = document.getElementById('assigneeGroup');
+            const priorityGroup = document.getElementById('priorityGroup');
+            const clientGroup = document.getElementById('clientGroup');
+            const projectGroup = document.getElementById('projectGroup');
+            const itemType = document.getElementById('itemType');
+            const itemClient = document.getElementById('itemClient');
+            
+            // Set modal title and show/hide relevant fields
+            if (type === 'deliverable') {
+                modalTitle.textContent = 'Add Deliverable';
+                assigneeGroup.style.display = 'none';
+                priorityGroup.style.display = 'none';
+                clientGroup.style.display = 'none'; // Hide client dropdown for deliverables
+                projectGroup.style.display = 'block'; // Show project dropdown for deliverables
+            } else {
+                modalTitle.textContent = 'Add Admin Task';
+                assigneeGroup.style.display = 'block';
+                priorityGroup.style.display = 'block';
+                clientGroup.style.display = 'block'; // Show client dropdown for admin tasks
+                projectGroup.style.display = 'none'; // Hide project dropdown for admin tasks
+            }
+            
+            // Set hidden values
+            itemType.value = type;
+            
+            // Clear form first
+            document.getElementById('addItemForm').reset();
+            
+            // For deliverables, automatically set the client
+            if (type === 'deliverable' && client) {
+                itemClient.value = client;
+            }
+            
+            // For admin tasks, pre-select client in dropdown if provided
+            if (type === 'admin-task' && client) {
+                const clientSelect = document.getElementById('itemClient');
+                clientSelect.value = client;
+            }
+            
+            // Show modal
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('addItemModal').style.display = 'none';
+        }
+
+        function saveItem() {
+            const form = document.getElementById('addItemForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Validate required fields
+            if (!data.title.trim()) {
+                alert('Please enter a title');
+                return;
+            }
+            
+            // For deliverables, validate project and due date
+            if (data.type === 'deliverable') {
+                if (!data.project) {
+                    alert('Please select a project');
+                    return;
+                }
+                if (!data.dueDate) {
+                    alert('Please select a due date');
+                    return;
+                }
+            }
+            
+            // For admin tasks, validate client
+            if (data.type === 'admin-task' && !data.client) {
+                alert('Please select a client');
+                return;
+            }
+            
+            // Prepare data for API
+            const apiData = {
+                title: data.title,
+                description: data.description || '',
+                due_date: data.dueDate || null,
+                client: data.client,
+                project: data.project || data.client, // Use project if available, fallback to client
+                type: data.type
+            };
+            
+            // Add admin task specific fields
+            if (data.type === 'admin-task') {
+                apiData.assignee = data.assignee;
+                apiData.priority = data.priority;
+            }
+            
+            // Send to API
+            const endpoint = data.type === 'deliverable' ? '/api/deliverables' : '/api/tasks';
+            
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(apiData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    closeModal();
+                    // Refresh the data
+                    if (document.querySelector('.client-deliverables').classList.contains('active')) {
+                        loadAccountManagementData();
+                    }
+                } else {
+                    alert('Error creating item: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error creating item');
+            });
+        }
+    </script>
+</body>
+</html>

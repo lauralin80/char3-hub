@@ -41,10 +41,16 @@ class TrelloService {
         params: this.getAuthParams(),
       });
 
+      // Get board members
+      const membersResponse = await axios.get(`${TRELLO_API_BASE}/boards/${this.boardId}/members`, {
+        params: this.getAuthParams(),
+      });
+
       return {
         lists: listsResponse.data,
         cards: cardsResponse.data,
         customFields: customFieldsResponse.data,
+        members: membersResponse.data,
       };
     } catch (error) {
       console.error('Error fetching Trello data:', error);
@@ -56,6 +62,7 @@ class TrelloService {
     name: string;
     desc?: string;
     due?: string;
+    idMembers?: string[];
   }) {
     try {
       const response = await axios.post(`${TRELLO_API_BASE}/cards`, {
@@ -87,10 +94,32 @@ class TrelloService {
     }
   }
 
-  async setCustomField(cardId: string, customFieldId: string, value: string) {
+  async setCustomField(cardId: string, customFieldName: string, value: string) {
     try {
-      const response = await axios.put(`${TRELLO_API_BASE}/cards/${cardId}/customField/${customFieldId}/item`, {
-        idValue: value,
+      // First, get the custom field ID by name
+      const customFieldsResponse = await axios.get(`${TRELLO_API_BASE}/boards/${this.boardId}/customFields`, {
+        params: this.getAuthParams(),
+      });
+      
+      const customField = customFieldsResponse.data.find((cf: any) => cf.name === customFieldName);
+      if (!customField) {
+        throw new Error(`Custom field "${customFieldName}" not found`);
+      }
+      
+      // For dropdown fields, we need to find the option ID
+      let fieldValue;
+      if (customField.type === 'list') {
+        const option = customField.options.find((opt: any) => opt.value.text === value);
+        if (!option) {
+          throw new Error(`Option "${value}" not found for custom field "${customFieldName}"`);
+        }
+        fieldValue = { idValue: option.id };
+      } else {
+        fieldValue = { value: value };
+      }
+      
+      const response = await axios.put(`${TRELLO_API_BASE}/cards/${cardId}/customField/${customField.id}/item`, {
+        ...fieldValue,
         ...this.getAuthParams(),
       });
       return response.data;

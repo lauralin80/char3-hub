@@ -21,15 +21,35 @@ export function WeeklyPlanningBoard() {
       display: 'flex', 
       flexDirection: 'column',
       bgcolor: '#1a1a1a',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      borderRadius: 2
     }}>
-      {/* Calendar Grid */}
+      {/* Scrollable Calendar Grid */}
       <Box sx={{ 
         flex: 1,
-        display: 'flex',
-        bgcolor: '#1a1a1a',
-        minHeight: 'calc(100vh - 200px)'
+        overflowX: 'auto',
+        overflowY: 'auto',
+        '&::-webkit-scrollbar': {
+          width: '8px',
+          height: '8px',
+        },
+        '&::-webkit-scrollbar-track': {
+          background: '#2a2a2a',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: '#555',
+          borderRadius: '4px',
+        },
+        '&::-webkit-scrollbar-thumb:hover': {
+          background: '#666',
+        },
       }}>
+        <Box sx={{ 
+          display: 'flex',
+          bgcolor: '#1a1a1a',
+          minHeight: 'calc(100vh - 200px)',
+          minWidth: '100%'
+        }}>
         {days.map((day, index) => (
           <Box
             key={day}
@@ -148,6 +168,7 @@ export function WeeklyPlanningBoard() {
             </Box>
           </Box>
         ))}
+        </Box>
       </Box>
     </Box>
   );

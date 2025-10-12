@@ -31,12 +31,23 @@ interface DashboardStore {
     projects: string[];
     clients: string[];
   };
+  members: Array<{
+    id: string;
+    fullName: string;
+    username: string;
+  }>;
+  listIds: {
+    deliverables: string;
+    adminTasks: string;
+  };
   isLoading: boolean;
   error: string | null;
   
   // Actions
   setClients: (clients: Client[]) => void;
   setCustomFields: (fields: { projects: string[]; clients: string[] }) => void;
+  setMembers: (members: Array<{ id: string; fullName: string; username: string }>) => void;
+  setListIds: (listIds: { deliverables: string; adminTasks: string }) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   
@@ -52,11 +63,15 @@ interface DashboardStore {
 export const useStore = create<DashboardStore>((set, get) => ({
   clients: [],
   customFields: { projects: [], clients: [] },
+  members: [],
+  listIds: { deliverables: '', adminTasks: '' },
   isLoading: false,
   error: null,
 
   setClients: (clients) => set({ clients }),
   setCustomFields: (customFields) => set({ customFields }),
+  setMembers: (members) => set({ members }),
+  setListIds: (listIds) => set({ listIds }),
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
 

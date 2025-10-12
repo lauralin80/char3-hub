@@ -42,19 +42,27 @@ export function AdminTaskCard({ task }: AdminTaskCardProps) {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
+  const handleCardClick = () => {
+    // Open Trello card in new tab
+    window.open(`https://trello.com/c/${task.id}`, '_blank');
+  };
+
   return (
-    <Box sx={{ 
-      p: 1,
-      bgcolor: '#2a2a2a',
-      borderRadius: 1,
-      border: '1px solid #444',
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-      '&:hover': {
-        bgcolor: '#333',
-        borderColor: '#555'
-      }
-    }}>
+    <Box 
+      onClick={handleCardClick}
+      sx={{ 
+        p: 1,
+        bgcolor: '#2a2a2a',
+        borderRadius: 1,
+        border: '1px solid #444',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          bgcolor: '#333',
+          borderColor: '#555'
+        }
+      }}
+    >
       {/* Labels */}
       {task.labels.length > 0 && (
         <Box sx={{ display: 'flex', gap: 0.5, mb: 0.5, flexWrap: 'wrap' }}>

@@ -32,7 +32,7 @@ function TabPanel(props: TabPanelProps) {
 
 export default function Dashboard() {
   const [tabValue, setTabValue] = useState(0);
-  const { isLoading, error, setLoading, setError, setClients, setCustomFields } = useStore();
+  const { isLoading, error, setLoading, setError, setClients, setCustomFields, setMembers, setListIds } = useStore();
 
   const loadData = React.useCallback(async () => {
     setLoading(true);
@@ -168,16 +168,35 @@ export default function Dashboard() {
         ?.options?.map((opt: { value: { text: string } }) => opt.value.text) || [];
 
       setCustomFields({ projects, clients: clientsList });
+
+      // Process members data
+      const members = data.members.map((member: any) => ({
+        id: member.id,
+        fullName: member.fullName,
+        username: member.username
+      }));
+      setMembers(members);
+
+      // Store list IDs
+      setListIds({
+        deliverables: deliverablesList?.id || '',
+        adminTasks: adminTasksList?.id || ''
+      });
       
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setLoading(false);
     }
-  }, [setLoading, setError, setClients, setCustomFields]);
+  }, [setLoading, setError, setClients, setCustomFields, setMembers, setListIds]);
 
   useEffect(() => {
     loadData();
+  }, [loadData]);
+
+  // Expose refresh function globally for use by other components
+  useEffect(() => {
+    (window as any).refreshDashboardData = loadData;
   }, [loadData]);
 
   if (isLoading) {
@@ -199,24 +218,26 @@ export default function Dashboard() {
     <Box sx={{ 
       width: '100%', 
       height: '100vh', 
-      bgcolor: '#1a1a1a', 
+      bgcolor: '#000000', 
       color: 'white',
       display: 'flex',
       flexDirection: 'column',
+      p: 2,
+      gap: 2,
       overflow: 'hidden'
     }}>
       {/* Top Header Bar */}
       <Box sx={{ 
-        height: 40,
+        height: 60,
         bgcolor: '#2a2a2a',
-        borderBottom: '1px solid #444',
+        borderRadius: 2,
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         px: 2
       }}>
         <Typography variant="h6" sx={{ color: 'white', fontSize: '1rem' }}>
-          char3 Hub
+          char<span style={{ color: '#ff6b35' }}>3</span> Hub
         </Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button
@@ -253,19 +274,16 @@ export default function Dashboard() {
       </Box>
 
       {/* Main Content Area */}
-      <Box sx={{ display: 'flex', flex: 1, minHeight: 0 }}>
+      <Box sx={{ display: 'flex', flex: 1, minHeight: 0, gap: 2 }}>
         {/* Left Navigation Menu */}
         <Box sx={{ 
           width: 200, 
           bgcolor: '#2a2a2a', 
-          borderRight: '1px solid #444',
+          borderRadius: 2,
           p: 2,
           display: 'flex',
           flexDirection: 'column'
         }}>
-          <Typography variant="h6" sx={{ color: 'white', mb: 2, fontSize: '1rem' }}>
-            char3 Hub
-          </Typography>
           
           {/* Navigation Items */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
@@ -358,17 +376,16 @@ export default function Dashboard() {
         </Box>
 
         {/* Main Content */}
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, bgcolor: '#2a2a2a', borderRadius: 2, overflow: 'hidden' }}>
           {/* Team Collaboration Header */}
           <Box sx={{ 
             bgcolor: '#2a2a2a',
-            borderBottom: '1px solid #444',
             p: 2,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'
           }}>
-            <Typography variant="h5" sx={{ color: 'white', fontSize: '1.25rem', fontWeight: 'bold' }}>
+            <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold' }}>
               Team Collaboration
             </Typography>
             <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem' }}>
@@ -379,7 +396,6 @@ export default function Dashboard() {
           {/* Tabs */}
           <Box sx={{ 
             bgcolor: '#2a2a2a',
-            borderBottom: '1px solid #444',
             display: 'flex',
             p: 1
           }}>
@@ -390,14 +406,14 @@ export default function Dashboard() {
                 py: 1.5,
                 px: 2,
                 cursor: 'pointer',
-                bgcolor: tabValue === 0 ? 'white' : 'transparent',
-                color: tabValue === 0 ? '#1a1a1a' : '#888',
+                bgcolor: tabValue === 0 ? '#f5f5f5' : 'transparent',
+                color: tabValue === 0 ? '#1a1a1a' : '#e0e0e0',
                 fontSize: '0.875rem',
                 fontWeight: tabValue === 0 ? 'bold' : 'normal',
                 borderRadius: 1,
                 textAlign: 'center',
                 '&:hover': {
-                  bgcolor: tabValue === 0 ? 'white' : '#333',
+                  bgcolor: tabValue === 0 ? '#f5f5f5' : '#333',
                 },
                 transition: 'all 0.2s ease'
               }}
@@ -411,14 +427,14 @@ export default function Dashboard() {
                 py: 1.5,
                 px: 2,
                 cursor: 'pointer',
-                bgcolor: tabValue === 1 ? 'white' : 'transparent',
-                color: tabValue === 1 ? '#1a1a1a' : '#888',
+                bgcolor: tabValue === 1 ? '#f5f5f5' : 'transparent',
+                color: tabValue === 1 ? '#1a1a1a' : '#e0e0e0',
                 fontSize: '0.875rem',
                 fontWeight: tabValue === 1 ? 'bold' : 'normal',
                 borderRadius: 1,
                 textAlign: 'center',
                 '&:hover': {
-                  bgcolor: tabValue === 1 ? 'white' : '#333',
+                  bgcolor: tabValue === 1 ? '#f5f5f5' : '#333',
                 },
                 transition: 'all 0.2s ease'
               }}
@@ -447,7 +463,7 @@ export default function Dashboard() {
         <Box sx={{ 
           width: 300, 
           bgcolor: '#2a2a2a', 
-          borderLeft: '1px solid #444',
+          borderRadius: 2,
           p: 2,
           display: 'flex',
           flexDirection: 'column'

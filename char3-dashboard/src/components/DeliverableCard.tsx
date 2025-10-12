@@ -24,27 +24,35 @@ export function DeliverableCard({ deliverable }: DeliverableCardProps) {
     return date < new Date();
   };
 
+  const handleCardClick = () => {
+    // Open Trello card in new tab
+    window.open(`https://trello.com/c/${deliverable.id}`, '_blank');
+  };
+
   return (
-    <Box sx={{ 
-      p: 1,
-      bgcolor: '#2a2a2a',
-      borderRadius: 1,
-      border: '1px solid #444',
-      cursor: 'pointer',
-      transition: 'all 0.2s ease',
-      '&:hover': {
-        bgcolor: '#333',
-        borderColor: '#555'
-      }
-    }}>
+    <Box 
+      onClick={handleCardClick}
+      sx={{ 
+        p: 0.75,
+        bgcolor: '#2a2a2a',
+        borderRadius: 1,
+        border: '1px solid #444',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          bgcolor: '#333',
+          borderColor: '#555'
+        }
+      }}
+    >
       {/* Deliverable Title */}
       <Typography 
         variant="body2" 
         sx={{ 
           color: '#b0b0b0',
           fontSize: '0.75rem',
-          mb: 0.5,
-          ml: 1,
+          mb: 0.25,
+          ml: 0.5,
           fontWeight: 'normal'
         }}
       >
@@ -53,7 +61,7 @@ export function DeliverableCard({ deliverable }: DeliverableCardProps) {
       
       {/* Due Date */}
       {deliverable.dueDate && (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 0.5 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Typography 
             variant="caption" 
             sx={{ 

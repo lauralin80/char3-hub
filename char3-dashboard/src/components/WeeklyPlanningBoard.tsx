@@ -455,7 +455,7 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
       flex: 1, 
       display: 'flex', 
       flexDirection: 'column',
-      bgcolor: '#1a1a1a',
+      bgcolor: '#0d0d0d',
       overflow: 'hidden',
       borderRadius: 2
     }}>
@@ -481,7 +481,7 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
       }}>
         <Box sx={{ 
           display: 'flex',
-          bgcolor: '#1a1a1a',
+          bgcolor: '#0d0d0d',
           minHeight: 'calc(100vh - 200px)',
           minWidth: '100%'
         }}>
@@ -499,8 +499,8 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
           >
             {/* Day Header */}
             <Box sx={{ 
-              bgcolor: '#2a2a2a',
-              borderBottom: '1px solid #444',
+              bgcolor: '#141414',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
               py: 1,
               px: 2,
               textAlign: 'center',
@@ -553,9 +553,9 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                   sx={{
                     p: 1,
                     mb: 0.75,
-                    bgcolor: isTaskCompleted(task) ? '#2a2a2a' : '#3a3a3a',
+                    bgcolor: isTaskCompleted(task) ? '#141414' : 'rgba(255, 255, 255, 0.06)',
                     borderRadius: 1,
-                    border: '1px solid #555',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                     position: 'relative',
@@ -563,8 +563,8 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                     userSelect: 'none',
                     opacity: isTaskCompleted(task) ? 0.6 : 1,
                     '&:hover': {
-                      bgcolor: isTaskCompleted(task) ? '#2a2a2a' : '#444',
-                      borderColor: '#666'
+                      bgcolor: isTaskCompleted(task) ? '#141414' : 'rgba(255, 255, 255, 0.08)',
+                      borderColor: 'rgba(255, 255, 255, 0.12)'
                     },
                     '&:active': {
                       cursor: 'grabbing'

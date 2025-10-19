@@ -734,31 +734,34 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                   {/* Labels */}
                   {task.labels && task.labels.length > 0 && (
                     <Box sx={{ display: 'flex', gap: 0.5, mb: 0.5, flexWrap: 'wrap' }}>
-                      {(task.labels || []).map((label: any, labelIndex: number) => (
-                        <Box
-                          key={labelIndex}
-                          sx={{
-                            px: 0.5,
-                            py: 0.25,
-                            bgcolor: getLabelColor(label.color, label.name),
-                            borderRadius: 0.25,
-                            fontSize: '0.5rem',
-                            color: 'white',
-                            fontWeight: 'bold',
-                            textTransform: 'uppercase'
-                          }}
-                        >
-                          {label.name}
-                        </Box>
-                      ))}
+                      {(task.labels || []).map((label: any, labelIndex: number) => {
+                        const labelColor = getLabelColor(label.color, label.name);
+                        return (
+                          <Box
+                            key={labelIndex}
+                            sx={{
+                              px: 1,
+                              py: 0.375,
+                              borderRadius: 1.5,
+                              bgcolor: `${labelColor}1a`,  // 10% opacity
+                              fontSize: '0.6875rem',
+                              color: labelColor,
+                              fontWeight: typography.fontWeights.normal,
+                              letterSpacing: typography.letterSpacing.normal
+                            }}
+                          >
+                            {label.name}
+                          </Box>
+                        );
+                      })}
                     </Box>
                   )}
                   
                   <Typography 
                     variant="body2" 
                     sx={{ 
-                      color: '#fff', 
-                      fontWeight: 'bold',
+                      color: colors.text.cardTitle,
+                      fontWeight: typography.fontWeights.normal,
                       mb: 0.5,
                       wordWrap: 'break-word',
                       overflowWrap: 'break-word',
@@ -796,17 +799,18 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                     <Box
                       sx={{
                         px: 1,
-                        py: 0.25,
-                        bgcolor: '#555',
-                        borderRadius: 0.5,
-                        fontSize: '0.625rem',
-                        color: 'white',
-                        fontWeight: 'bold',
+                        py: 0.375,
+                        borderRadius: 1.5,
+                        bgcolor: 'rgba(255, 255, 255, 0.06)',
+                        fontSize: '0.6875rem',
+                        color: colors.text.secondary,
+                        fontWeight: typography.fontWeights.normal,
+                        letterSpacing: typography.letterSpacing.normal,
                         mb: 0.5,
                         display: 'inline-block'
                       }}
                     >
-                      {task.boardTag || 'ACCT MGMT'}
+                      {task.boardName || task.boardTag || 'Acct Mgmt'}
                     </Box>
                   )}
                   

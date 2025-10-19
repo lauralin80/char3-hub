@@ -417,20 +417,24 @@ class TrelloService {
   }
 
   // Weekly Planning Board Methods
-  async getWeeklyPlanningBoardData() {
+  async getWeeklyPlanningBoardData(retryCount = 0) {
     try {
       const [boardResponse, listsResponse, cardsResponse, customFieldsResponse] = await Promise.all([
         axios.get(`${TRELLO_API_BASE}/boards/${this.weeklyPlanningBoardId}`, {
-          params: this.getAuthParams()
+          params: this.getAuthParams(),
+          timeout: 10000
         }),
         axios.get(`${TRELLO_API_BASE}/boards/${this.weeklyPlanningBoardId}/lists`, {
-          params: this.getAuthParams()
+          params: this.getAuthParams(),
+          timeout: 10000
         }),
         axios.get(`${TRELLO_API_BASE}/boards/${this.weeklyPlanningBoardId}/cards`, {
-          params: { ...this.getAuthParams(), customFieldItems: true }
+          params: { ...this.getAuthParams(), customFieldItems: true },
+          timeout: 10000
         }),
         axios.get(`${TRELLO_API_BASE}/boards/${this.weeklyPlanningBoardId}/customFields`, {
-          params: this.getAuthParams()
+          params: this.getAuthParams(),
+          timeout: 10000
         })
       ]);
 
@@ -440,9 +444,24 @@ class TrelloService {
         cards: cardsResponse.data,
         customFields: customFieldsResponse.data
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching weekly planning board data:', error);
-      throw error;
+      
+      // Retry on 503 or network errors (up to 2 retries)
+      if (retryCount < 2 && (error.response?.status === 503 || error.code === 'ECONNABORTED')) {
+        console.log(`Retrying weekly planning board data fetch (attempt ${retryCount + 1})...`);
+        await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1))); // Exponential backoff
+        return this.getWeeklyPlanningBoardData(retryCount + 1);
+      }
+      
+      // Return empty data instead of throwing to prevent app crash
+      console.warn('Returning empty weekly planning data due to API error');
+      return {
+        board: { id: this.weeklyPlanningBoardId, name: 'Weekly Planning' },
+        lists: [],
+        cards: [],
+        customFields: []
+      };
     }
   }
 

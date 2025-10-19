@@ -1330,7 +1330,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                 <Typography variant="caption" sx={{ 
                                   color: (!card.dueComplete && new Date(card.due) < new Date()) ? '#ff6b35' : '#888',
                                   fontSize: '0.6875rem',
-,
                                   lineHeight: 1.2
                                 }}>
                                   {new Date(card.due).toLocaleDateString('en-US', { 

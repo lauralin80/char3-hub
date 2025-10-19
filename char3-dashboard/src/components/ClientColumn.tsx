@@ -260,6 +260,32 @@ export function ClientColumn({ client, type }: ClientColumnProps) {
     }
   };
 
+  const handleUpdateDeliverable = async (id: string, updates: { completed?: boolean }) => {
+    try {
+      // Update the card in Trello in the background
+      if (updates.completed !== undefined) {
+        if (updates.completed) {
+          await trelloService.addLabelByName(id, 'Completed', 'green');
+        } else {
+          await trelloService.removeLabelByName(id, 'Completed');
+        }
+      }
+      // No refresh needed - the UI updates immediately
+    } catch (error) {
+      console.error('Error updating deliverable:', error);
+    }
+  };
+
+  const handleArchiveDeliverable = async (id: string) => {
+    try {
+      // Archive the card in Trello in the background
+      await trelloService.updateCard(id, { closed: true });
+      // No refresh needed - the UI updates immediately
+    } catch (error) {
+      console.error('Error archiving deliverable:', error);
+    }
+  };
+
   return (
     <Box 
       ref={columnRef}
@@ -291,9 +317,17 @@ export function ClientColumn({ client, type }: ClientColumnProps) {
                 {item.name}
               </Typography>
             ) : type === 'deliverable' ? (
-              <DeliverableCard deliverable={item} />
+              <DeliverableCard 
+                deliverable={item} 
+                onUpdate={handleUpdateDeliverable}
+                onArchive={handleArchiveDeliverable}
+              />
             ) : (
-              <AdminTaskCard task={item} />
+              <AdminTaskCard 
+                task={item} 
+                onUpdate={handleUpdateDeliverable}
+                onArchive={handleArchiveDeliverable}
+              />
             )}
           </Box>
         ))}

@@ -399,7 +399,8 @@
             flex: 1; /* Same as weekly-board - use available space */
             background: #2a2a2a; /* Dark board background */
             border-radius: 8px;
-            overflow: hidden; /* Prevent any overflow that could push other elements */
+            overflow-x: hidden; /* Prevent horizontal overflow */
+            overflow-y: visible; /* Allow vertical expansion for forms */
             padding: 0; /* Remove any default padding */
             margin: 0; /* Remove any default margin */
             min-width: 0; /* Allow flex shrinking */
@@ -441,9 +442,9 @@
         .deliverables-row {
             display: flex;
             height: auto; /* Allow dynamic height */
-            min-height: calc(25vh - 50px);
-            max-height: calc(60vh - 100px); /* Maximum height before scrolling */
-            margin-bottom: 1rem; /* Add spacing between deliverables and admin tasks */
+            min-height: calc(35vh - 50px);
+            max-height: calc(75vh - 100px); /* Increased maximum height */
+            margin-bottom: -0.25rem; /* Negative margin to move admin tasks section up */
             margin-top: 0; /* Remove top margin to reduce space */
             overflow-y: auto; /* Add scroll when content exceeds max height */
             transition: max-height 0.3s ease; /* Smooth transition */
@@ -451,18 +452,20 @@
         }
         
         .deliverables-row.expanded {
-            max-height: calc(60vh - 100px); /* Expanded height */
+            max-height: calc(75vh - 100px); /* Increased expanded height */
         }
         
         .deliverables-row.condensed {
-            max-height: calc(25vh - 50px); /* Condensed height */
+            max-height: calc(35vh - 50px); /* Increased condensed height */
         }
         
         .admin-tasks-row {
             display: flex;
-            height: calc(75vh - 150px);
-            margin-top: 0.5rem; /* Add small padding between header and admin tasks */
+            min-height: calc(100vh - 400px); /* Minimum height, but allow expansion */
+            max-height: none; /* Remove height restriction */
+            margin-top: 0; /* Remove margin to eliminate gap in gridlines */
             width: 100%; /* Stay within container */
+            overflow-y: visible; /* Allow content to expand beyond viewport */
         }
         
         .show-more-btn {
@@ -480,6 +483,20 @@
         
         .show-more-btn:hover {
             background: #e55a2b; /* Darker orange on hover */
+        }
+
+        .load-more-link {
+            color: #ff6b35;
+            cursor: pointer;
+            font-size: 0.75rem;
+            padding: 0.5rem 0;
+            text-align: left;
+            margin-top: 0.5rem;
+            transition: color 0.2s ease;
+        }
+
+        .load-more-link:hover {
+            color: #e55a2b;
         }
         
         .deliverable-item.hidden {
@@ -506,7 +523,7 @@
         
         .row-header {
             background: #3a3a3a; /* Dark header background */
-            padding: 0.5rem 1rem; /* Reduced top/bottom padding to move header up */
+            padding: 0.5rem 1rem; /* Restored normal padding */
             border-bottom: 1px solid #444;
             font-weight: 600;
             text-align: center;
@@ -524,6 +541,7 @@
             overflow-y: auto;
             border-right: 1px solid #444; /* Dark border between columns */
             background: #2a2a2a; /* Dark column background */
+            position: relative; /* For absolute positioning of inline forms */
         }
         
         .project-column:last-child {
@@ -664,6 +682,7 @@
             border-radius: 6px;
             padding: 0.75rem;
             margin-bottom: 0.5rem;
+            margin-top: 0.5rem; /* Add top margin for spacing from header */
             cursor: grab;
             transition: all 0.2s ease;
         }
@@ -710,8 +729,7 @@
             text-align: center;
             color: #888;
             font-size: 0.75rem;
-            opacity: 0;
-            transform: translateY(-5px);
+            display: none;
         }
         
         /* Add spacing for deliverable placeholders to match admin task spacing */
@@ -728,8 +746,260 @@
         /* Show placeholder on column hover */
         .project-column:hover .placeholder-card.deliverable-placeholder,
         .project-column:hover .placeholder-card.task-placeholder {
-            opacity: 1;
-            transform: translateY(0);
+            display: block;
+        }
+
+        /* Inline form styles */
+        .inline-form {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin-top: 0.75rem;
+            display: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .inline-form.active {
+            display: block;
+        }
+
+        /* Form expansion behavior - smooth transitions */
+        body.form-expanded .deliverables-row {
+            max-height: none;
+            overflow-y: visible;
+        }
+
+        body.form-expanded .row-header {
+            margin-top: 1rem;
+            transition: margin-top 0.3s ease;
+        }
+
+        body.form-expanded .admin-tasks-row {
+            margin-top: 0.5rem;
+            transition: margin-top 0.3s ease;
+        }
+        
+        /* Adjust spacing when admin task form is active */
+        body.form-expanded .project-headers-row {
+            margin-bottom: -1rem;
+            transition: margin-bottom 0.3s ease;
+        }
+        
+        body.form-expanded .deliverables-row {
+            margin-bottom: -1rem;
+            transition: margin-bottom 0.3s ease;
+        }
+        
+        /* Ensure admin tasks section can expand fully */
+        body.form-expanded .admin-tasks-row {
+            min-height: calc(100vh - 300px);
+            max-height: none;
+        }
+
+        .inline-form input,
+        .inline-form select {
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background: #2a2a2a;
+            color: #ffffff;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+            height: 2.5rem;
+            box-sizing: border-box;
+        }
+
+        .inline-form input[type="date"] {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            cursor: pointer;
+            position: relative;
+            color: transparent;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit {
+            color: transparent;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+            color: transparent;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit-text {
+            color: transparent;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit-month-field {
+            color: transparent;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit-day-field {
+            color: transparent;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit-year-field {
+            color: transparent;
+        }
+
+        .inline-form input[type="date"]:focus {
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.15);
+            outline: none;
+        }
+
+        .inline-form input[type="date"]:valid {
+            color: #ffffff;
+        }
+
+        .inline-form input[type="date"]:valid::-webkit-datetime-edit,
+        .inline-form input[type="date"]:valid::-webkit-datetime-edit-fields-wrapper,
+        .inline-form input[type="date"]:valid::-webkit-datetime-edit-text,
+        .inline-form input[type="date"]:valid::-webkit-datetime-edit-month-field,
+        .inline-form input[type="date"]:valid::-webkit-datetime-edit-day-field,
+        .inline-form input[type="date"]:valid::-webkit-datetime-edit-year-field {
+            color: #ffffff;
+        }
+
+        .inline-form input[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+        }
+
+        /* Show placeholder as gray like other inputs */
+        .inline-form input[type="date"]:invalid {
+            color: #888;
+        }
+
+        .inline-form input[type="date"]:invalid::-webkit-datetime-edit {
+            color: #888;
+        }
+
+        .inline-form input[type="date"]:invalid::-webkit-datetime-edit-fields-wrapper {
+            color: #888;
+        }
+
+        .inline-form input[type="date"]:invalid::-webkit-datetime-edit-text {
+            color: #888;
+        }
+
+        .inline-form input[type="date"]:invalid::-webkit-datetime-edit-month-field {
+            color: #888;
+        }
+
+        .inline-form input[type="date"]:invalid::-webkit-datetime-edit-day-field {
+            color: #888;
+        }
+
+        .inline-form input[type="date"]:invalid::-webkit-datetime-edit-year-field {
+            color: #888;
+        }
+
+        /* Force gray placeholder for date input */
+        .inline-form input[type="date"] {
+            color: #888 !important;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit {
+            color: #888 !important;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+            color: #888 !important;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit-text {
+            color: #888 !important;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit-month-field {
+            color: #888 !important;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit-day-field {
+            color: #888 !important;
+        }
+
+        .inline-form input[type="date"]::-webkit-datetime-edit-year-field {
+            color: #888 !important;
+        }
+
+        .inline-form input:focus,
+        .inline-form select:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1);
+        }
+
+        /* Style placeholder options in dropdowns */
+        .inline-form select option.placeholder-option {
+            color: #888 !important;
+        }
+
+        .inline-form select option:disabled {
+            color: #888 !important;
+        }
+
+        .inline-form select option:first-child {
+            color: #888 !important;
+        }
+
+        /* Alternative: Style the select itself to show gray when placeholder is selected */
+        .inline-form select:invalid {
+            color: #888;
+        }
+
+        .inline-form select option:not(.placeholder-option) {
+            color: #ffffff;
+        }
+
+        .inline-form .form-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 0.75rem;
+            width: 100%;
+            box-sizing: border-box;
+            flex-wrap: nowrap;
+        }
+
+        .inline-form button {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            min-width: fit-content;
+            white-space: nowrap;
+        }
+
+        .inline-form .btn-save {
+            background: #ff6b35;
+            color: white;
+            box-shadow: 0 2px 4px rgba(255, 107, 53, 0.2);
+        }
+
+        .inline-form .btn-save:hover {
+            background: #e55a2b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
+        }
+
+        .inline-form .btn-cancel {
+            background: #444;
+            color: #ccc;
+            border: 1px solid #555;
+        }
+
+        .inline-form .btn-cancel:hover {
+            background: #555;
+            color: white;
+            border-color: #666;
         }
         
         /* Column hover effects */
@@ -747,6 +1017,56 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
+        }
+        
+        /* Edit modal styles */
+        .edit-modal {
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .edit-modal-content {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        
+        .edit-modal-content h3 {
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+        
+        .edit-modal-content input,
+        .edit-modal-content select {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background: #2a2a2a;
+            color: #ffffff;
+            font-size: 0.875rem;
+            box-sizing: border-box;
+        }
+        
+        .edit-modal-content input:focus,
+        .edit-modal-content select:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1);
         }
         
         .modal-content {
@@ -1153,8 +1473,23 @@
                                     <a href="#" class="deliverable-title">Dashboard Prototype</a>
                                     <span class="deliverable-date">Feb<br>15</span>
                                 </div>
-                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'iLitigate')">
+                                <div class="placeholder-card deliverable-placeholder" onclick="showInlineForm('deliverable', 'iLitigate', this)">
                                     + Add Deliverable
+                                </div>
+                                <div class="inline-form" id="deliverable-form-iLitigate">
+                                    <input type="text" placeholder="Deliverable title" id="deliverable-title-iLitigate">
+                                    <input type="date" id="deliverable-date-iLitigate">
+                                    <select id="deliverable-project-iLitigate">
+                                        <option value="iLitigate 2.0">iLitigate 2.0</option>
+                                        <option value="Aurawell Branding">Aurawell Branding</option>
+                                        <option value="Parle Presentation">Parle Presentation</option>
+                                        <option value="FFA 2.0">FFA 2.0</option>
+                                        <option value="Ongoing Support">Ongoing Support</option>
+                                    </select>
+                                    <div class="form-actions">
+                                        <button class="btn-cancel" onclick="hideInlineForm('deliverable-form-iLitigate')">Cancel</button>
+                                        <button class="btn-save" onclick="saveInlineDeliverable('iLitigate')">Save</button>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -1167,8 +1502,23 @@
                                     <a href="#" class="deliverable-title">Health Tracking Features</a>
                                     <span class="deliverable-date">Feb<br>22</span>
                                 </div>
-                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Aurawell')">
+                                <div class="placeholder-card deliverable-placeholder" onclick="showInlineForm('deliverable', 'Aurawell', this)">
                                     + Add Deliverable
+                                </div>
+                                <div class="inline-form" id="deliverable-form-Aurawell">
+                                    <input type="text" placeholder="Deliverable title" id="deliverable-title-Aurawell">
+                                    <input type="date" id="deliverable-date-Aurawell">
+                                    <select id="deliverable-project-Aurawell">
+                                        <option value="iLitigate 2.0">iLitigate 2.0</option>
+                                        <option value="Aurawell Branding">Aurawell Branding</option>
+                                        <option value="Parle Presentation">Parle Presentation</option>
+                                        <option value="FFA 2.0">FFA 2.0</option>
+                                        <option value="Ongoing Support">Ongoing Support</option>
+                                    </select>
+                                    <div class="form-actions">
+                                        <button class="btn-cancel" onclick="hideInlineForm('deliverable-form-Aurawell')">Cancel</button>
+                                        <button class="btn-save" onclick="saveInlineDeliverable('Aurawell')">Save</button>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -1181,8 +1531,23 @@
                                     <a href="#" class="deliverable-title">Integration Testing</a>
                                     <span class="deliverable-date">Feb<br>25</span>
                                 </div>
-                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Parle')">
+                                <div class="placeholder-card deliverable-placeholder" onclick="showInlineForm('deliverable', 'Parle', this)">
                                     + Add Deliverable
+                                </div>
+                                <div class="inline-form" id="deliverable-form-Parle">
+                                    <input type="text" placeholder="Deliverable title" id="deliverable-title-Parle">
+                                    <input type="date" id="deliverable-date-Parle">
+                                    <select id="deliverable-project-Parle">
+                                        <option value="iLitigate 2.0">iLitigate 2.0</option>
+                                        <option value="Aurawell Branding">Aurawell Branding</option>
+                                        <option value="Parle Presentation">Parle Presentation</option>
+                                        <option value="FFA 2.0">FFA 2.0</option>
+                                        <option value="Ongoing Support">Ongoing Support</option>
+                                    </select>
+                                    <div class="form-actions">
+                                        <button class="btn-cancel" onclick="hideInlineForm('deliverable-form-Parle')">Cancel</button>
+                                        <button class="btn-save" onclick="saveInlineDeliverable('Parle')">Save</button>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -1195,8 +1560,23 @@
                                     <a href="#" class="deliverable-title">User Onboarding Flow</a>
                                     <span class="deliverable-date">Feb<br>28</span>
                                 </div>
-                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Fund for the Arts')">
+                                <div class="placeholder-card deliverable-placeholder" onclick="showInlineForm('deliverable', 'Fund for the Arts', this)">
                                     + Add Deliverable
+                                </div>
+                                <div class="inline-form" id="deliverable-form-Fund for the Arts">
+                                    <input type="text" placeholder="Deliverable title" id="deliverable-title-Fund for the Arts">
+                                    <input type="date" id="deliverable-date-Fund for the Arts">
+                                    <select id="deliverable-project-Fund for the Arts">
+                                        <option value="iLitigate 2.0">iLitigate 2.0</option>
+                                        <option value="Aurawell Branding">Aurawell Branding</option>
+                                        <option value="Parle Presentation">Parle Presentation</option>
+                                        <option value="FFA 2.0">FFA 2.0</option>
+                                        <option value="Ongoing Support">Ongoing Support</option>
+                                    </select>
+                                    <div class="form-actions">
+                                        <button class="btn-cancel" onclick="hideInlineForm('deliverable-form-Fund for the Arts')">Cancel</button>
+                                        <button class="btn-save" onclick="saveInlineDeliverable('Fund for the Arts')">Save</button>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -1205,8 +1585,23 @@
                                     <a href="#" class="deliverable-title">Roth River Analytics</a>
                                     <span class="deliverable-date">Mar 5</span>
                                 </div>
-                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Roth River')">
+                                <div class="placeholder-card deliverable-placeholder" onclick="showInlineForm('deliverable', 'Roth River', this)">
                                     + Add Deliverable
+                                </div>
+                                <div class="inline-form" id="deliverable-form-Roth River">
+                                    <input type="text" placeholder="Deliverable title" id="deliverable-title-Roth River">
+                                    <input type="date" id="deliverable-date-Roth River">
+                                    <select id="deliverable-project-Roth River">
+                                        <option value="iLitigate 2.0">iLitigate 2.0</option>
+                                        <option value="Aurawell Branding">Aurawell Branding</option>
+                                        <option value="Parle Presentation">Parle Presentation</option>
+                                        <option value="FFA 2.0">FFA 2.0</option>
+                                        <option value="Ongoing Support">Ongoing Support</option>
+                                    </select>
+                                    <div class="form-actions">
+                                        <button class="btn-cancel" onclick="hideInlineForm('deliverable-form-Roth River')">Cancel</button>
+                                        <button class="btn-save" onclick="saveInlineDeliverable('Roth River')">Save</button>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -1215,8 +1610,23 @@
                                     <a href="#" class="deliverable-title">Quartz Network API</a>
                                     <span class="deliverable-date">Mar 10</span>
                                 </div>
-                                <div class="placeholder-card deliverable-placeholder" onclick="openAddModal('deliverable', 'Quartz Network')">
+                                <div class="placeholder-card deliverable-placeholder" onclick="showInlineForm('deliverable', 'Quartz Network', this)">
                                     + Add Deliverable
+                                </div>
+                                <div class="inline-form" id="deliverable-form-Quartz Network">
+                                    <input type="text" placeholder="Deliverable title" id="deliverable-title-Quartz Network">
+                                    <input type="date" id="deliverable-date-Quartz Network">
+                                    <select id="deliverable-project-Quartz Network">
+                                        <option value="iLitigate 2.0">iLitigate 2.0</option>
+                                        <option value="Aurawell Branding">Aurawell Branding</option>
+                                        <option value="Parle Presentation">Parle Presentation</option>
+                                        <option value="FFA 2.0">FFA 2.0</option>
+                                        <option value="Ongoing Support">Ongoing Support</option>
+                                    </select>
+                                    <div class="form-actions">
+                                        <button class="btn-cancel" onclick="hideInlineForm('deliverable-form-Quartz Network')">Cancel</button>
+                                        <button class="btn-save" onclick="saveInlineDeliverable('Quartz Network')">Save</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1831,7 +2241,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        updateClientDeliverablesView(data.deliverables, data.account_tasks);
+                        updateClientDeliverablesView(data.deliverables, data.account_tasks, data.custom_fields);
                         console.log('Loaded Account Management data:', data);
                     } else {
                         console.error('Failed to load Account Management data:', data.message);
@@ -1843,7 +2253,7 @@
         }
         
         // Update the Client Deliverables view with real data
-        function updateClientDeliverablesView(deliverables, accountTasks) {
+        function updateClientDeliverablesView(deliverables, accountTasks, customFields) {
             console.log('Received deliverables:', deliverables);
             console.log('Received account tasks:', accountTasks);
             
@@ -1993,7 +2403,10 @@
                         projectHeader.textContent = projectName;
                         clientColumn.appendChild(projectHeader);
                         
-                        // Add deliverables for this project
+                        // Add deliverables for this project (show only first 3 initially)
+                        const maxInitialItems = 3;
+                        const shouldShowLoadMore = deliverablesByProject[projectName].length > maxInitialItems;
+                        
                         deliverablesByProject[projectName].forEach((deliverable, index) => {
                             const dueDate = deliverable.due ? (() => {
                                 const date = new Date(deliverable.due);
@@ -2007,6 +2420,12 @@
                             deliverableItem.className = 'deliverable-item';
                             deliverableItem.draggable = true;
                             deliverableItem.dataset.deliverableId = deliverable.id;
+                            
+                            // Hide items beyond the first 3 initially
+                            if (index >= maxInitialItems) {
+                                deliverableItem.classList.add('hidden');
+                            }
+                            
                             deliverableItem.innerHTML = `
                                 <div class="deliverable-content">
                                     <a href="${deliverable.url}" target="_blank" class="deliverable-title">${deliverable.name}</a>
@@ -2015,6 +2434,39 @@
                             `;
                             clientColumn.appendChild(deliverableItem);
                         });
+                        
+                        // Add "Load More" link if there are more than 3 items
+                        if (shouldShowLoadMore) {
+                            const loadMoreLink = document.createElement('div');
+                            loadMoreLink.className = 'load-more-link';
+                            loadMoreLink.textContent = `Load ${deliverablesByProject[projectName].length - maxInitialItems} more`;
+                            
+                            // Store references to items that should be hidden/shown
+                            const itemsToToggle = deliverablesByProject[projectName].slice(maxInitialItems);
+                            
+                            loadMoreLink.onclick = function() {
+                                const isExpanded = loadMoreLink.classList.contains('expanded');
+                                
+                                if (!isExpanded) {
+                                    // Show all items
+                                    itemsToToggle.forEach(item => {
+                                        const element = clientColumn.querySelector(`[data-deliverable-id="${item.id}"]`);
+                                        if (element) element.classList.remove('hidden');
+                                    });
+                                    loadMoreLink.textContent = 'Show less';
+                                    loadMoreLink.classList.add('expanded');
+                                } else {
+                                    // Hide items beyond first 3
+                                    itemsToToggle.forEach(item => {
+                                        const element = clientColumn.querySelector(`[data-deliverable-id="${item.id}"]`);
+                                        if (element) element.classList.add('hidden');
+                                    });
+                                    loadMoreLink.textContent = `Load ${deliverablesByProject[projectName].length - maxInitialItems} more`;
+                                    loadMoreLink.classList.remove('expanded');
+                                }
+                            };
+                            clientColumn.appendChild(loadMoreLink);
+                        }
                     });
                     
                     // Show other deliverables (hidden by default)
@@ -2049,41 +2501,96 @@
                         hasMoreThanThree = true;
                     }
                     
-                    // Add deliverable placeholder to this column
+                    // Add deliverable placeholder at the bottom (after all deliverables and Load More)
                     const deliverablePlaceholder = document.createElement('div');
                     deliverablePlaceholder.className = 'placeholder-card deliverable-placeholder';
                     deliverablePlaceholder.textContent = '+ Add Deliverable';
-                    deliverablePlaceholder.onclick = () => openAddModal('deliverable', client);
+                    deliverablePlaceholder.onclick = () => showInlineForm('deliverable', client, deliverablePlaceholder);
                     clientColumn.appendChild(deliverablePlaceholder);
+                    
+                    // Add inline form for deliverables
+                    const deliverableForm = document.createElement('div');
+                    deliverableForm.className = 'inline-form';
+                    deliverableForm.id = `deliverable-form-${client}`;
+                    
+                    const titleInput = document.createElement('input');
+                    titleInput.type = 'text';
+                    titleInput.placeholder = 'Deliverable title';
+                    titleInput.id = `deliverable-title-${client}`;
+                    
+                    const dateInput = document.createElement('input');
+                    dateInput.type = 'text';
+                    dateInput.id = `deliverable-date-${client}`;
+                    dateInput.placeholder = 'mm/dd/yyyy';
+                    dateInput.readOnly = true;
+                    dateInput.addEventListener('click', function() {
+                        const hiddenDateInput = document.createElement('input');
+                        hiddenDateInput.type = 'date';
+                        hiddenDateInput.style.position = 'absolute';
+                        hiddenDateInput.style.left = '-9999px';
+                        document.body.appendChild(hiddenDateInput);
+                        hiddenDateInput.showPicker();
+                        hiddenDateInput.addEventListener('change', function() {
+                            if (this.value) {
+                                const date = new Date(this.value);
+                                const formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + '/' + 
+                                                    date.getDate().toString().padStart(2, '0') + '/' + 
+                                                    date.getFullYear();
+                                dateInput.value = formattedDate;
+                                dateInput.dataset.dateValue = this.value;
+                            }
+                            document.body.removeChild(hiddenDateInput);
+                        });
+                    });
+                    
+                    const projectSelect = document.createElement('select');
+                    projectSelect.id = `deliverable-project-${client}`;
+                    
+                    // Add placeholder option
+                    const placeholderOption = document.createElement('option');
+                    placeholderOption.value = '';
+                    placeholderOption.textContent = 'Select Project';
+                    placeholderOption.disabled = true;
+                    placeholderOption.selected = true;
+                    placeholderOption.className = 'placeholder-option';
+                    projectSelect.appendChild(placeholderOption);
+                    
+                    // Add project options from Trello custom fields
+                    const projects = customFields?.projects || [];
+                    projects.forEach(project => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = project;
+                        optionElement.textContent = project;
+                        projectSelect.appendChild(optionElement);
+                    });
+                    
+                    const formActions = document.createElement('div');
+                    formActions.className = 'form-actions';
+                    
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.className = 'btn-cancel';
+                    cancelBtn.textContent = 'Cancel';
+                    cancelBtn.onclick = () => hideInlineForm(`deliverable-form-${client}`);
+                    
+                    const saveBtn = document.createElement('button');
+                    saveBtn.className = 'btn-save';
+                    saveBtn.textContent = 'Save';
+                    saveBtn.onclick = () => saveInlineDeliverable(client);
+                    
+                    formActions.appendChild(cancelBtn);
+                    formActions.appendChild(saveBtn);
+                    
+                    deliverableForm.appendChild(titleInput);
+                    deliverableForm.appendChild(dateInput);
+                    deliverableForm.appendChild(projectSelect);
+                    deliverableForm.appendChild(formActions);
+                    
+                    clientColumn.appendChild(deliverableForm);
                     
                     deliverablesRow.appendChild(clientColumn);
                 });
                 
-                // Add Show More/Less button if there are more than 3 deliverables
-                if (hasMoreThanThree) {
-                    const showMoreBtn = document.createElement('button');
-                    showMoreBtn.className = 'show-more-btn';
-                    showMoreBtn.textContent = 'Show More';
-                    showMoreBtn.onclick = function() {
-                        const isExpanded = deliverablesRow.classList.contains('expanded');
-                        const hiddenItems = deliverablesRow.querySelectorAll('.deliverable-item.hidden');
-                        
-                        if (isExpanded) {
-                            // Collapse
-                            deliverablesRow.classList.remove('expanded');
-                            deliverablesRow.classList.add('condensed');
-                            hiddenItems.forEach(item => item.classList.add('hidden'));
-                            showMoreBtn.textContent = 'Show More';
-                        } else {
-                            // Expand
-                            deliverablesRow.classList.remove('condensed');
-                            deliverablesRow.classList.add('expanded');
-                            hiddenItems.forEach(item => item.classList.remove('hidden'));
-                            showMoreBtn.textContent = 'Show Less';
-                        }
-                    };
-                    deliverablesRow.appendChild(showMoreBtn);
-                }
+                // Global Show More button removed - now using per-column Load More links
                 
             }
             
@@ -2103,6 +2610,8 @@
                         taskItem.className = 'admin-task-item';
                         taskItem.draggable = true;
                         taskItem.dataset.adminId = task.id;
+                        taskItem.style.cursor = 'pointer';
+                        taskItem.onclick = () => editAdminTask(task);
                         // Determine assignee from members or labels or default to Project Lead
                         let assigneeLabel = 'Project Lead';
                         
@@ -2182,8 +2691,130 @@
                     const taskPlaceholder = document.createElement('div');
                     taskPlaceholder.className = 'placeholder-card task-placeholder';
                     taskPlaceholder.textContent = '+ Add Admin Task';
-                    taskPlaceholder.onclick = () => openAddModal('admin-task', client);
+                    taskPlaceholder.onclick = () => showInlineForm('admin-task', client, taskPlaceholder);
                     clientColumn.appendChild(taskPlaceholder);
+                    
+                    // Add inline form for admin tasks
+                    const adminTaskForm = document.createElement('div');
+                    adminTaskForm.className = 'inline-form';
+                    adminTaskForm.id = `admin-task-form-${client}`;
+                    
+                    const titleInput = document.createElement('input');
+                    titleInput.type = 'text';
+                    titleInput.placeholder = 'Task title';
+                    titleInput.id = `admin-task-title-${client}`;
+                    
+                    const dateInput = document.createElement('input');
+                    dateInput.type = 'text';
+                    dateInput.id = `admin-task-date-${client}`;
+                    dateInput.placeholder = 'mm/dd/yyyy';
+                    dateInput.readOnly = true;
+                    dateInput.addEventListener('click', function() {
+                        const hiddenDateInput = document.createElement('input');
+                        hiddenDateInput.type = 'date';
+                        hiddenDateInput.style.position = 'absolute';
+                        hiddenDateInput.style.left = '-9999px';
+                        document.body.appendChild(hiddenDateInput);
+                        hiddenDateInput.showPicker();
+                        hiddenDateInput.addEventListener('change', function() {
+                            if (this.value) {
+                                const date = new Date(this.value);
+                                const formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + '/' + 
+                                                    date.getDate().toString().padStart(2, '0') + '/' + 
+                                                    date.getFullYear();
+                                dateInput.value = formattedDate;
+                                dateInput.dataset.dateValue = this.value;
+                            }
+                            document.body.removeChild(hiddenDateInput);
+                        });
+                    });
+                    
+                    const assigneeSelect = document.createElement('select');
+                    assigneeSelect.id = `admin-task-assignee-${client}`;
+                    
+                    // Add placeholder option
+                    const placeholderOption = document.createElement('option');
+                    placeholderOption.value = '';
+                    placeholderOption.textContent = 'Select Assignee';
+                    placeholderOption.disabled = true;
+                    placeholderOption.selected = true;
+                    placeholderOption.className = 'placeholder-option';
+                    assigneeSelect.appendChild(placeholderOption);
+                    
+                    const assigneeOptions = ['Project Lead', 'Designer', 'UX Designer', 'Developer'];
+                    assigneeOptions.forEach(option => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = option;
+                        optionElement.textContent = option;
+                        assigneeSelect.appendChild(optionElement);
+                    });
+                    
+                    const projectSelect = document.createElement('select');
+                    projectSelect.id = `admin-task-project-${client}`;
+                    
+                    // Add placeholder option
+                    const projectPlaceholderOption = document.createElement('option');
+                    projectPlaceholderOption.value = '';
+                    projectPlaceholderOption.textContent = 'Select Project';
+                    projectPlaceholderOption.disabled = true;
+                    projectPlaceholderOption.selected = true;
+                    projectPlaceholderOption.className = 'placeholder-option';
+                    projectSelect.appendChild(projectPlaceholderOption);
+                    
+                    // Add project options from Trello custom fields
+                    const projects = customFields?.projects || [];
+                    projects.forEach(project => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = project;
+                        optionElement.textContent = project;
+                        projectSelect.appendChild(optionElement);
+                    });
+                    
+                    const labelSelect = document.createElement('select');
+                    labelSelect.id = `admin-task-label-${client}`;
+                    
+                    // Add placeholder option
+                    const labelPlaceholderOption = document.createElement('option');
+                    labelPlaceholderOption.value = '';
+                    labelPlaceholderOption.textContent = 'Select Label (Optional)';
+                    labelPlaceholderOption.disabled = true;
+                    labelPlaceholderOption.selected = true;
+                    labelPlaceholderOption.className = 'placeholder-option';
+                    labelSelect.appendChild(labelPlaceholderOption);
+                    
+                    // Add common label options
+                    const labelOptions = ['Waiting on Decision', 'Blocked', 'In Progress', 'Review', 'Done'];
+                    labelOptions.forEach(label => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = label;
+                        optionElement.textContent = label;
+                        labelSelect.appendChild(optionElement);
+                    });
+                    
+                    const formActions = document.createElement('div');
+                    formActions.className = 'form-actions';
+                    
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.className = 'btn-cancel';
+                    cancelBtn.textContent = 'Cancel';
+                    cancelBtn.onclick = () => hideInlineForm(`admin-task-form-${client}`);
+                    
+                    const saveBtn = document.createElement('button');
+                    saveBtn.className = 'btn-save';
+                    saveBtn.textContent = 'Save';
+                    saveBtn.onclick = () => saveInlineAdminTask(client);
+                    
+                    formActions.appendChild(cancelBtn);
+                    formActions.appendChild(saveBtn);
+                    
+                    adminTaskForm.appendChild(titleInput);
+                    adminTaskForm.appendChild(dateInput);
+                    adminTaskForm.appendChild(assigneeSelect);
+                    adminTaskForm.appendChild(projectSelect);
+                    adminTaskForm.appendChild(labelSelect);
+                    adminTaskForm.appendChild(formActions);
+                    
+                    clientColumn.appendChild(adminTaskForm);
                     
                     adminTasksRow.appendChild(clientColumn);
                 });
@@ -2356,6 +2987,274 @@
             .catch(error => {
                 console.error('Error:', error);
                 alert('Error creating item');
+            });
+        }
+
+        // Inline form functions
+        function showInlineForm(type, client, placeholderElement) {
+            // Hide the placeholder
+            placeholderElement.style.display = 'none';
+            
+            // Show the inline form
+            const formId = type === 'deliverable' ? `deliverable-form-${client}` : `admin-task-form-${client}`;
+            const form = document.getElementById(formId);
+            if (form) {
+                form.classList.add('active');
+                
+                // Add form-expanded class for smooth transitions
+                document.body.classList.add('form-expanded');
+                
+                // Auto-populate client and project for deliverables
+                if (type === 'deliverable') {
+                    const projectSelect = document.getElementById(`deliverable-project-${client}`);
+                    if (projectSelect && projectSelect.options.length > 0) {
+                        projectSelect.selectedIndex = 0; // Select first project option
+                    }
+                }
+                
+                // Focus on the title input
+                const titleInput = document.getElementById(`${type === 'deliverable' ? 'deliverable' : 'admin-task'}-title-${client}`);
+                if (titleInput) {
+                    titleInput.focus();
+                }
+            }
+        }
+
+        function hideInlineForm(formId) {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.classList.remove('active');
+                
+                // Remove form-expanded class to return to normal layout
+                document.body.classList.remove('form-expanded');
+                
+                // Clear form fields
+                const inputs = form.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    if (input.type === 'text') {
+                        input.value = '';
+                    } else if (input.type === 'date') {
+                        input.value = '';
+                    } else if (input.tagName === 'SELECT') {
+                        input.selectedIndex = 0;
+                    }
+                });
+                
+                // Show the placeholder again
+                const placeholder = form.previousElementSibling;
+                if (placeholder && placeholder.classList.contains('placeholder-card')) {
+                    placeholder.style.display = 'block';
+                }
+            }
+        }
+
+        function saveInlineDeliverable(client) {
+            const titleInput = document.getElementById(`deliverable-title-${client}`);
+            const dateInput = document.getElementById(`deliverable-date-${client}`);
+            const projectSelect = document.getElementById(`deliverable-project-${client}`);
+            
+            // Validate required fields
+            if (!titleInput.value.trim()) {
+                alert('Please enter a deliverable title');
+                titleInput.focus();
+                return;
+            }
+            
+            if (!dateInput.value) {
+                alert('Please select a due date');
+                dateInput.focus();
+                return;
+            }
+            
+            if (!projectSelect.value) {
+                alert('Please select a project');
+                projectSelect.focus();
+                return;
+            }
+            
+            // Prepare data for API
+            const apiData = {
+                title: titleInput.value.trim(),
+                description: '',
+                due_date: dateInput.value,
+                client: client,
+                project: projectSelect.value,
+                type: 'deliverable'
+            };
+            
+            // Create the deliverable in Trello
+            fetch('/api/create-deliverable', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(apiData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    hideInlineForm(`deliverable-form-${client}`);
+                    // Refresh the deliverables view to show the new deliverable
+                    loadAccountManagementData();
+                } else {
+                    alert('Error creating deliverable: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error creating deliverable');
+            });
+        }
+
+        function editAdminTask(task) {
+            // Create a modal or inline form for editing
+            const editModal = document.createElement('div');
+            editModal.className = 'edit-modal';
+            editModal.innerHTML = `
+                <div class="edit-modal-content">
+                    <h3>Edit Admin Task</h3>
+                    <form id="edit-admin-task-form">
+                        <input type="text" id="edit-title" value="${task.name}" placeholder="Task title" required>
+                        <input type="date" id="edit-due-date" value="${task.due ? task.due.split('T')[0] : ''}" placeholder="Due date">
+                        <select id="edit-assignee" required>
+                            <option value="">Select Assignee</option>
+                            <option value="Project Lead" ${task.members && task.members.includes('Project Lead') ? 'selected' : ''}>Project Lead</option>
+                            <option value="Designer" ${task.members && task.members.includes('Designer') ? 'selected' : ''}>Designer</option>
+                            <option value="UX Designer" ${task.members && task.members.includes('UX Designer') ? 'selected' : ''}>UX Designer</option>
+                            <option value="Developer" ${task.members && task.members.includes('Developer') ? 'selected' : ''}>Developer</option>
+                            <option value="Laura Lin" ${task.members && task.members.includes('Laura Lin') ? 'selected' : ''}>Laura Lin</option>
+                        </select>
+                        <select id="edit-project">
+                            <option value="">Select Project</option>
+                            <option value="${task.customFields?.Project || ''}" selected>${task.customFields?.Project || 'Current Project'}</option>
+                        </select>
+                        <select id="edit-label">
+                            <option value="">Select Label (Optional)</option>
+                            <option value="Waiting on Decision" ${task.labels && task.labels.some(l => l.name === 'Waiting on Decision') ? 'selected' : ''}>Waiting on Decision</option>
+                            <option value="Blocked" ${task.labels && task.labels.some(l => l.name === 'Blocked') ? 'selected' : ''}>Blocked</option>
+                            <option value="In Progress" ${task.labels && task.labels.some(l => l.name === 'In Progress') ? 'selected' : ''}>In Progress</option>
+                            <option value="Review" ${task.labels && task.labels.some(l => l.name === 'Review') ? 'selected' : ''}>Review</option>
+                            <option value="Done" ${task.labels && task.labels.some(l => l.name === 'Done') ? 'selected' : ''}>Done</option>
+                        </select>
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                            <button type="submit" class="btn-save">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(editModal);
+            
+            // Handle form submission
+            document.getElementById('edit-admin-task-form').onsubmit = (e) => {
+                e.preventDefault();
+                saveEditedAdminTask(task.id);
+            };
+        }
+        
+        function closeEditModal() {
+            const modal = document.querySelector('.edit-modal');
+            if (modal) {
+                document.body.removeChild(modal);
+            }
+        }
+        
+        function saveEditedAdminTask(taskId) {
+            const title = document.getElementById('edit-title').value;
+            const dueDate = document.getElementById('edit-due-date').value;
+            const assignee = document.getElementById('edit-assignee').value;
+            const project = document.getElementById('edit-project').value;
+            const label = document.getElementById('edit-label').value;
+            
+            // Send update to API
+            fetch(`/api/update-admin-task/${taskId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title,
+                    due_date: dueDate,
+                    assignee,
+                    project,
+                    label
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    closeEditModal();
+                    loadAccountManagementData(); // Refresh the view
+                } else {
+                    alert('Error updating admin task: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating admin task');
+            });
+        }
+
+        function saveInlineAdminTask(client) {
+            const titleInput = document.getElementById(`admin-task-title-${client}`);
+            const dateInput = document.getElementById(`admin-task-date-${client}`);
+            const assigneeSelect = document.getElementById(`admin-task-assignee-${client}`);
+            const projectSelect = document.getElementById(`admin-task-project-${client}`);
+            const labelSelect = document.getElementById(`admin-task-label-${client}`);
+            
+            // Validate required fields
+            if (!titleInput.value.trim()) {
+                alert('Please enter a task title');
+                titleInput.focus();
+                return;
+            }
+            
+            if (!dateInput.value) {
+                alert('Please select a due date');
+                dateInput.focus();
+                return;
+            }
+            
+            if (!assigneeSelect.value) {
+                alert('Please select an assignee');
+                assigneeSelect.focus();
+                return;
+            }
+            
+            if (!projectSelect.value) {
+                alert('Please select a project');
+                projectSelect.focus();
+                return;
+            }
+            
+            // Prepare data for API
+            const apiData = {
+                title: titleInput.value.trim(),
+                description: '',
+                due_date: dateInput.value,
+                client: client,
+                project: projectSelect.value,
+                type: 'admin-task',
+                assignee: assigneeSelect.value,
+                label: labelSelect.value || null
+            };
+            
+            // Create the admin task in Trello
+            fetch('/api/create-admin-task', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(apiData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    hideInlineForm(`admin-task-form-${client}`);
+                    // Refresh the deliverables view to show the new admin task
+                    loadAccountManagementData();
+                } else {
+                    alert('Error creating admin task: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error creating admin task');
             });
         }
     </script>

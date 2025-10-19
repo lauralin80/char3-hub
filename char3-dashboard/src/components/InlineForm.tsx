@@ -167,16 +167,18 @@ export function InlineForm({ type, projects, members, onSave, onCancel }: Inline
       )}
 
       {/* Buttons */}
-      <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+      <Box sx={{ display: 'flex', gap: 0.5, mt: 1, justifyContent: 'flex-end' }}>
         <Button
           type="submit"
           size="small"
           sx={{
-            flex: 1,
             bgcolor: '#ff6b35',
             color: 'white',
-            fontSize: '0.75rem',
-            py: 0.5,
+            fontSize: '0.625rem',
+            py: 0.25,
+            px: 1,
+            minWidth: 'auto',
+            height: '24px',
             '&:hover': {
               bgcolor: '#e55a2b',
             },
@@ -189,11 +191,13 @@ export function InlineForm({ type, projects, members, onSave, onCancel }: Inline
           onClick={onCancel}
           size="small"
           sx={{
-            flex: 1,
             bgcolor: '#555',
             color: 'white',
-            fontSize: '0.75rem',
-            py: 0.5,
+            fontSize: '0.625rem',
+            py: 0.25,
+            px: 1,
+            minWidth: 'auto',
+            height: '24px',
             '&:hover': {
               bgcolor: '#666',
             },

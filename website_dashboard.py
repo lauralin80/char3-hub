@@ -239,11 +239,192 @@ def get_account_management_data():
             'deliverables': deliverables,
             'account_tasks': account_tasks,
             'board_name': board['name'],
-            'board_url': board['url']
+            'board_url': board['url'],
+            'custom_fields': {
+                'projects': [opt['value']['text'] for cf in custom_fields if cf['name'] == 'Project' for opt in cf.get('options', [])],
+                'clients': [opt['value']['text'] for cf in custom_fields if cf['name'] == 'Client' for opt in cf.get('options', [])]
+            }
         })
         
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/api/create-deliverable', methods=['POST'])
+def create_deliverable_inline():
+    """Create a new deliverable in Trello from inline form"""
+    try:
+        from trello_client import TrelloClient
+        client = TrelloClient()
+        
+        data = request.get_json()
+        board_id = '68e95255081b416a51143bc6'  # Account Management board
+        
+        # Find the Deliverables list
+        lists = client.get_board_lists(board_id)
+        deliverables_list = next((lst for lst in lists if 'Deliverables' in lst['name']), None)
+        
+        if not deliverables_list:
+            return jsonify({'status': 'error', 'message': 'Deliverables list not found'}), 400
+        
+        # Create the card
+        card_data = {
+            'name': data['title'],
+            'desc': data.get('description', ''),
+            'idList': deliverables_list['id'],
+            'due': data.get('due_date')
+        }
+        
+        # Create the card in Trello
+        new_card = client._make_request('cards', method='POST', data=card_data)
+        
+        # Set custom fields for the card
+        if new_card:
+            # Get custom fields
+            custom_fields = client._make_request(f'boards/{board_id}/customFields')
+            
+            # Set Client custom field
+            client_field = next((cf for cf in custom_fields if cf['name'] == 'Client'), None)
+            if client_field:
+                client_option = next((opt for opt in client_field['options'] if opt['value']['text'] == data['client']), None)
+                if client_option:
+                    client._make_request(f'cards/{new_card["id"]}/customField/{client_field["id"]}/item', 
+                                       method='PUT', 
+                                       data={'idValue': client_option['id']})
+            
+            # Set Project custom field
+            project_field = next((cf for cf in custom_fields if cf['name'] == 'Project'), None)
+            if project_field:
+                project_option = next((opt for opt in project_field['options'] if opt['value']['text'] == data['project']), None)
+                if project_option:
+                    client._make_request(f'cards/{new_card["id"]}/customField/{project_field["id"]}/item', 
+                                       method='PUT', 
+                                       data={'idValue': project_option['id']})
+        
+        return jsonify({'success': True, 'message': 'Deliverable created', 'card_id': new_card['id']})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/create-admin-task', methods=['POST'])
+def create_admin_task_inline():
+    """Create a new admin task in Trello from inline form"""
+    try:
+        from trello_client import TrelloClient
+        client = TrelloClient()
+        
+        data = request.get_json()
+        board_id = '68e95255081b416a51143bc6'  # Account Management board
+        
+        # Find the Account Tasks list
+        lists = client.get_board_lists(board_id)
+        admin_tasks_list = next((lst for lst in lists if 'Account Tasks' in lst['name']), None)
+        
+        if not admin_tasks_list:
+            return jsonify({'status': 'error', 'message': 'Account Tasks list not found'}), 400
+        
+        # Create the card
+        card_data = {
+            'name': data['title'],
+            'desc': data.get('description', ''),
+            'idList': admin_tasks_list['id'],
+            'due': data.get('due_date')
+        }
+        
+        # Create the card in Trello
+        new_card = client._make_request('cards', method='POST', data=card_data)
+        
+        # Set custom fields for the card
+        if new_card:
+            # Get custom fields
+            custom_fields = client._make_request(f'boards/{board_id}/customFields')
+            
+            # Set Client custom field
+            client_field = next((cf for cf in custom_fields if cf['name'] == 'Client'), None)
+            if client_field:
+                client_option = next((opt for opt in client_field['options'] if opt['value']['text'] == data['client']), None)
+                if client_option:
+                    client._make_request(f'cards/{new_card["id"]}/customField/{client_field["id"]}/item', 
+                                       method='PUT', 
+                                       data={'idValue': client_option['id']})
+            
+            # Set Project custom field
+            project_field = next((cf for cf in custom_fields if cf['name'] == 'Project'), None)
+            if project_field:
+                project_option = next((opt for opt in project_field['options'] if opt['value']['text'] == data['project']), None)
+                if project_option:
+                    client._make_request(f'cards/{new_card["id"]}/customField/{project_field["id"]}/item', 
+                                       method='PUT', 
+                                       data={'idValue': project_option['id']})
+            
+            # Add label if provided
+            if data.get('label'):
+                # Get board labels
+                board_labels = client._make_request(f'boards/{board_id}/labels')
+                label = next((lbl for lbl in board_labels if lbl['name'] == data['label']), None)
+                if label:
+                    client._make_request(f'cards/{new_card["id"]}/idLabels', 
+                                       method='POST', 
+                                       data={'value': label['id']})
+        
+        return jsonify({'success': True, 'message': 'Admin task created', 'card_id': new_card['id']})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/update-admin-task/<task_id>', methods=['PUT'])
+def update_admin_task(task_id):
+    """Update an existing admin task in Trello"""
+    try:
+        from trello_client import TrelloClient
+        client = TrelloClient()
+        
+        data = request.get_json()
+        board_id = '68e95255081b416a51143bc6'  # Account Management board
+        
+        # Update the card
+        card_data = {}
+        if 'title' in data:
+            card_data['name'] = data['title']
+        if 'due_date' in data and data['due_date']:
+            card_data['due'] = data['due_date']
+        
+        if card_data:
+            client._make_request(f'cards/{task_id}', method='PUT', data=card_data)
+        
+        # Update custom fields
+        custom_fields = client._make_request(f'boards/{board_id}/customFields')
+        
+        # Update Project custom field
+        if 'project' in data and data['project']:
+            project_field = next((cf for cf in custom_fields if cf['name'] == 'Project'), None)
+            if project_field:
+                project_option = next((opt for opt in project_field['options'] if opt['value']['text'] == data['project']), None)
+                if project_option:
+                    client._make_request(f'cards/{task_id}/customField/{project_field["id"]}/item', 
+                                       method='PUT', 
+                                       data={'idValue': project_option['id']})
+        
+        # Update labels
+        if 'label' in data:
+            # Remove all existing labels first
+            card = client._make_request(f'cards/{task_id}')
+            if card.get('labels'):
+                for label in card['labels']:
+                    client._make_request(f'cards/{task_id}/idLabels/{label["id"]}', method='DELETE')
+            
+            # Add new label if provided
+            if data['label']:
+                board_labels = client._make_request(f'boards/{board_id}/labels')
+                label = next((lbl for lbl in board_labels if lbl['name'] == data['label']), None)
+                if label:
+                    client._make_request(f'cards/{task_id}/idLabels', 
+                                       method='POST', 
+                                       data={'value': label['id']})
+        
+        return jsonify({'success': True, 'message': 'Admin task updated'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 # Webhook endpoint for Trello
 @app.route('/webhook/trello', methods=['POST'])

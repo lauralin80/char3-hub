@@ -347,12 +347,12 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
     const sortedAssignedCards = sortCards(assignedCards);
 
     return (
-      <Box sx={{ height: '100vh', bgcolor: '#1a1a1a', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <Box sx={{ height: '100vh', bgcolor: '#0d0d0d', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {/* Header */}
         <Box sx={{ 
           height: 60,
-          bgcolor: '#2a2a2a',
-          borderBottom: '1px solid #444',
+          bgcolor: '#141414',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
           display: 'flex',
           alignItems: 'center',
           px: 2
@@ -374,7 +374,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
         </Box>
 
         {/* Main Content */}
-        <Box sx={{ flex: 1, overflow: 'auto', bgcolor: '#2a2a2a', m: 2, borderRadius: 2 }}>
+        <Box sx={{ flex: 1, overflow: 'auto', bgcolor: '#141414', m: 2, borderRadius: 2 }}>
           <Box sx={{ p: 3 }}>
             {/* Title and Task Count */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
@@ -508,8 +508,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             <TableContainer 
               component={Paper} 
               sx={{ 
-                bgcolor: '#1a1a1a', 
-                border: '1px solid #444',
+                bgcolor: '#0d0d0d', 
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 borderRadius: 2,
                 '& .MuiTable-root': {
                   borderSpacing: 0
@@ -630,7 +630,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                           cursor: 'pointer',
                           '&:hover': { bgcolor: '#3a3a3a' },
                           '&:last-child td': { borderBottom: 0 },
-                          '& td': { borderBottom: '1px solid #444', color: '#e0e0e0' }
+                          '& td': { borderBottom: '1px solid rgba(255, 255, 255, 0.06)', color: '#e0e0e0' }
                         }}
                       >
                         {/* Title */}
@@ -796,7 +796,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
 
   if (!boardData) {
     return (
-      <Box sx={{ p: 3, height: '100vh', bgcolor: '#1a1a1a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Box sx={{ p: 3, height: '100vh', bgcolor: '#0d0d0d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Typography variant="h5" sx={{ color: '#e0e0e0' }}>
           {boardName} board not found
         </Typography>
@@ -843,12 +843,12 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
   const sortedFilteredCards = sortCards(filteredCards);
 
   return (
-    <Box sx={{ height: '100vh', bgcolor: '#1a1a1a', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <Box sx={{ height: '100vh', bgcolor: '#0d0d0d', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Header */}
       <Box sx={{ 
         height: 60,
-        bgcolor: '#2a2a2a',
-        borderBottom: '1px solid #444',
+        bgcolor: '#141414',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
         display: 'flex',
         alignItems: 'center',
         px: 2
@@ -870,7 +870,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
       </Box>
 
       {/* Main Content */}
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', bgcolor: '#2a2a2a', m: 2, borderRadius: 2 }}>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', bgcolor: '#141414', m: 2, borderRadius: 2 }}>
         {/* Fixed Header Section */}
         <Box sx={{ p: 2, pb: 0 }}>
           {/* Title, View Toggle, and Task Count */}
@@ -1074,8 +1074,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             <Box sx={{ 
               display: 'flex',
               flex: 1,
-              bgcolor: '#1a1a1a',
-              border: '1px solid #444',
+              bgcolor: '#0d0d0d',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: 2,
               overflow: 'auto',
               p: 1.5
@@ -1097,8 +1097,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   >
                     {/* List Header */}
                     <Box sx={{ 
-                      bgcolor: '#1a1a1a',
-                      borderBottom: '1px solid #444',
+                      bgcolor: '#0d0d0d',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
                       py: 0.75,
                       px: 1.5,
                       display: 'flex',
@@ -1152,9 +1152,9 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             onClick={() => window.open(`https://trello.com/c/${card.id}`, '_blank')}
                             sx={{
                               p: 1,
-                              bgcolor: '#2a2a2a',
+                              bgcolor: '#141414',
                               borderRadius: 1,
-                              border: '1px solid #444',
+                              border: '1px solid rgba(255, 255, 255, 0.08)',
                               cursor: 'pointer',
                               transition: 'all 0.2s ease',
                               display: 'flex',
@@ -1323,8 +1323,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             <TableContainer 
               component={Paper} 
               sx={{ 
-                bgcolor: '#1a1a1a', 
-                border: '1px solid #444',
+                bgcolor: '#0d0d0d', 
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 borderRadius: 2,
                 '& .MuiTable-root': {
                   borderSpacing: 0
@@ -1427,7 +1427,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                           cursor: 'pointer',
                           '&:hover': { bgcolor: '#3a3a3a' },
                           '&:last-child td': { borderBottom: 0 },
-                          '& td': { borderBottom: '1px solid #444', color: '#e0e0e0' }
+                          '& td': { borderBottom: '1px solid rgba(255, 255, 255, 0.06)', color: '#e0e0e0' }
                         }}
                       >
                         {/* Title */}
@@ -1597,7 +1597,7 @@ export default function TeamBoards() {
     return (
       <Box sx={{ 
         height: '100vh', 
-        bgcolor: '#1a1a1a', 
+        bgcolor: '#0d0d0d', 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center' 
@@ -1620,16 +1620,16 @@ export default function TeamBoards() {
   }
 
   return (
-    <Box sx={{ height: '100vh', bgcolor: '#1a1a1a', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <Box sx={{ height: '100vh', bgcolor: '#0d0d0d', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Header - Empty */}
       <Box sx={{ 
         height: 60,
-        bgcolor: '#2a2a2a',
-        borderBottom: '1px solid #444'
+        bgcolor: '#141414',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
       }} />
 
       {/* Main Content */}
-      <Box sx={{ flex: 1, overflow: 'auto', bgcolor: '#2a2a2a', m: 2, borderRadius: 2 }}>
+      <Box sx={{ flex: 1, overflow: 'auto', bgcolor: '#141414', m: 2, borderRadius: 2 }}>
         <Box sx={{ p: 3 }}>
           {/* Title */}
           <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold', mb: 1 }}>
@@ -1647,9 +1647,9 @@ export default function TeamBoards() {
               sx={{
                 width: 240,
                 height: 140,
-                bgcolor: '#2a2a2a',
+                bgcolor: '#141414',
                 borderRadius: 2,
-                border: '1px solid #444',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -1679,9 +1679,9 @@ export default function TeamBoards() {
               sx={{
                 width: 240,
                 height: 140,
-                bgcolor: '#2a2a2a',
+                bgcolor: '#141414',
                 borderRadius: 2,
-                border: '1px solid #444',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -1711,9 +1711,9 @@ export default function TeamBoards() {
               sx={{
                 width: 240,
                 height: 140,
-                bgcolor: '#2a2a2a',
+                bgcolor: '#141414',
                 borderRadius: 2,
-                border: '1px solid #444',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',

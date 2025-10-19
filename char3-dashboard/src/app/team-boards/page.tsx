@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
 import { trelloService } from '@/services/trelloService';
 import { useAuth } from '@/contexts/AuthContext';
+import { colors, typography, transitions } from '@/styles/theme';
 
 // Board View Component
 interface BoardViewProps {
@@ -378,7 +379,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
           <Box sx={{ p: 3 }}>
             {/* Title and Task Count */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold' }}>
+              <Typography variant="h5" sx={{ color: colors.text.title, fontSize: '1.25rem', fontWeight: typography.fontWeights.semibold }}>
                 Assigned to Me
               </Typography>
               <Chip 
@@ -875,7 +876,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
         <Box sx={{ p: 2, pb: 0 }}>
           {/* Title, View Toggle, and Task Count */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold' }}>
+            <Typography variant="h5" sx={{ color: colors.text.title, fontSize: '1.25rem', fontWeight: typography.fontWeights.semibold }}>
               {boardName} Board
             </Typography>
             
@@ -1152,17 +1153,17 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             onClick={() => window.open(`https://trello.com/c/${card.id}`, '_blank')}
                             sx={{
                               p: 1,
-                              bgcolor: 'rgba(255, 255, 255, 0.06)',
+                              bgcolor: colors.background.card,
                               borderRadius: 1,
-                              border: '1px solid rgba(255, 255, 255, 0.08)',
+                              border: `1px solid ${colors.border.default}`,
                               cursor: 'pointer',
-                              transition: 'all 0.2s ease',
+                              transition: transitions.default,
                               display: 'flex',
                               flexDirection: 'column',
                               gap: 0.375,
                               '&:hover': { 
-                                bgcolor: 'rgba(255, 255, 255, 0.08)',
-                                borderColor: 'rgba(255, 107, 53, 0.5)',
+                                bgcolor: colors.background.cardHover,
+                                borderColor: colors.accent.orange,
                                 transform: 'translateY(-1px)',
                                 boxShadow: '0 2px 8px rgba(255, 107, 53, 0.2)'
                               }
@@ -1614,10 +1615,10 @@ export default function TeamBoards() {
           }} 
         />
         <Typography variant="h6" sx={{ 
-          color: 'rgba(255, 255, 255, 0.7)', 
+          color: colors.text.secondary, 
           fontSize: '0.9375rem',
-          fontWeight: 500,
-          letterSpacing: '-0.01em'
+          fontWeight: typography.fontWeights.medium,
+          letterSpacing: typography.letterSpacing.normal
         }}>
           Loading Team Boards...
         </Typography>
@@ -1648,7 +1649,7 @@ export default function TeamBoards() {
       <Box sx={{ flex: 1, overflow: 'auto', bgcolor: '#141414', m: 2, borderRadius: 2 }}>
         <Box sx={{ p: 3 }}>
           {/* Title */}
-          <Typography variant="h5" sx={{ color: 'rgba(255, 255, 255, 0.95)', fontSize: '1.5rem', fontWeight: 600, letterSpacing: '-0.02em', mb: 1 }}>
+          <Typography variant="h5" sx={{ color: colors.text.title, fontSize: '1.5rem', fontWeight: typography.fontWeights.semibold, letterSpacing: typography.letterSpacing.tight, mb: 1 }}>
             Team Boards
           </Typography>
           <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.875rem', fontWeight: 400, mb: 4 }}>

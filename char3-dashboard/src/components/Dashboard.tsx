@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Alert } from '@mui/material';
-import { Refresh as RefreshIcon, Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
 import { useStore } from '@/store/useStore';
 import { trelloService } from '@/services/trelloService';
 import { DeliverablesBoard } from './DeliverablesBoard';
@@ -1106,8 +1106,7 @@ export default function Dashboard() {
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button
             size="small"
-            startIcon={<RefreshIcon />}
-            onClick={loadData}
+            startIcon={<AddIcon />}
             sx={{
               bgcolor: '#4caf50',
               color: 'white',
@@ -1116,21 +1115,6 @@ export default function Dashboard() {
               py: 0.5,
               minWidth: 'auto',
               '&:hover': { bgcolor: '#45a049' }
-            }}
-          >
-            Refresh
-          </Button>
-          <Button
-            size="small"
-            startIcon={<AddIcon />}
-            sx={{
-              bgcolor: '#444',
-              color: 'white',
-              fontSize: '0.75rem',
-              px: 1,
-              py: 0.5,
-              minWidth: 'auto',
-              '&:hover': { bgcolor: '#555' }
             }}
           >
             Add Task
@@ -1417,14 +1401,14 @@ export default function Dashboard() {
               onClick={clearAllFilters}
               size="small"
               sx={{
-                bgcolor: '#ff6b35',
+                bgcolor: '#4caf50',
                 color: 'white',
                 fontSize: '0.75rem',
                 px: 1,
                 py: 0.5,
                 minWidth: 'auto',
                 height: '32px',
-                '&:hover': { bgcolor: '#e55a2b' }
+                '&:hover': { bgcolor: '#45a049' }
               }}
             >
               Clear

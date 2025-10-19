@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { Check, Archive } from '@mui/icons-material';
+import { colors, typography } from '@/styles/theme';
 
 interface AdminTaskCardProps {
   task: {
@@ -204,9 +205,9 @@ export function AdminTaskCard({ task, onUpdate, onArchive }: AdminTaskCardProps)
             <Typography 
               variant="body2" 
               sx={{ 
-                color: localCompleted ? '#666' : '#b0b0b0',
+                color: localCompleted ? '#666' : colors.text.cardTitle,
                 fontSize: '0.75rem',
-                fontWeight: 'bold',
+                fontWeight: typography.fontWeights.normal,
                 mb: 0.5,
                 textDecoration: localCompleted ? 'line-through' : 'none',
                 wordWrap: 'break-word',

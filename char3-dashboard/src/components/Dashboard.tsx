@@ -1424,7 +1424,7 @@ export default function Dashboard() {
                   '&:active': { cursor: 'grabbing' }
                 }}
               >
-                <Typography variant="body2" sx={{ color: 'white', fontSize: '0.75rem', mb: 0.5, fontWeight: 'bold', pointerEvents: 'none' }}>
+                <Typography variant="body2" sx={{ color: colors.text.cardTitle, fontSize: '0.75rem', mb: 0.5, fontWeight: typography.fontWeights.normal, pointerEvents: 'none' }}>
                   {task.title}
                 </Typography>
                 

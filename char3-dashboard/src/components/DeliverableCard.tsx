@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { Check, Archive } from '@mui/icons-material';
+import { colors, typography } from '@/styles/theme';
 
 interface DeliverableCardProps {
   deliverable: {
@@ -122,11 +123,11 @@ export function DeliverableCard({ deliverable, onUpdate, onArchive }: Deliverabl
             <Typography 
               variant="body2" 
               sx={{ 
-                color: localCompleted ? '#666' : '#b0b0b0',
+                color: localCompleted ? '#666' : colors.text.cardTitle,
                 fontSize: '0.75rem',
                 mb: 0.25,
                 textDecoration: localCompleted ? 'line-through' : 'none',
-                fontWeight: 'normal',
+                fontWeight: typography.fontWeights.normal,
                 wordWrap: 'break-word',
                 overflowWrap: 'break-word',
                 whiteSpace: 'normal',

@@ -1194,9 +1194,9 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             
                             {/* Card Title */}
                             <Typography variant="body2" sx={{ 
-                              color: '#e0e0e0', 
-                              fontWeight: 'bold', 
-                              fontSize: '0.8125rem',
+                              color: colors.text.cardTitle, 
+                              fontWeight: typography.fontWeights.normal, 
+                              fontSize: '0.75rem',
                               lineHeight: 1.2,
                               mb: 0.25
                             }}>

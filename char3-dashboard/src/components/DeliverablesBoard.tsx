@@ -111,8 +111,8 @@ export function DeliverablesBoard() {
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    color: '#e0e0e0',
-                    fontWeight: 'bold',
+                    color: colors.text.title,
+                    fontWeight: typography.fontWeights.semibold,
                     fontSize: '0.875rem'
                   }}
                 >
@@ -153,8 +153,8 @@ export function DeliverablesBoard() {
                       top: '50%',
                       left: `${(displayClients.length * 200) / 2}px`,
                       transform: 'translate(-50%, -50%)',
-                      color: '#e0e0e0',
-                      fontWeight: 'bold',
+                      color: colors.text.title,
+                      fontWeight: typography.fontWeights.semibold,
                       fontSize: '0.75rem',
                       textTransform: 'uppercase',
                       letterSpacing: '0.5px',
@@ -231,8 +231,8 @@ export function DeliverablesBoard() {
                       top: '50%',
                       left: `${(displayClients.length * 200) / 2}px`,
                       transform: 'translate(-50%, -50%)',
-                      color: '#e0e0e0',
-                      fontWeight: 'bold',
+                      color: colors.text.title,
+                      fontWeight: typography.fontWeights.semibold,
                       fontSize: '0.75rem',
                       textTransform: 'uppercase',
                       letterSpacing: '0.5px',

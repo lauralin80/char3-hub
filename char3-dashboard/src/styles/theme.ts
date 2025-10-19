@@ -27,7 +27,8 @@ export const colors = {
     secondary: 'rgba(255, 255, 255, 0.7)',  // Secondary text
     tertiary: 'rgba(255, 255, 255, 0.5)',   // Tertiary text (labels, counts)
     disabled: 'rgba(255, 255, 255, 0.4)',   // Disabled text
-    title: '#e0e0e0',      // Section titles (matches client deliverables)
+    title: '#e0e0e0',      // Section/column headers
+    cardTitle: '#b0b0b0',  // Card titles (softer, matches deliverable cards)
   },
 
   // Accent colors

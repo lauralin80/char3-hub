@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Box, Typography, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
 import { trelloService } from '@/services/trelloService';
 import { useAuth } from '@/contexts/AuthContext';
@@ -1723,9 +1724,18 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
 
 // Main Team Boards Component
 export default function TeamBoards() {
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const router = useRouter();
   const [allBoardsData, setAllBoardsData] = useState<any>(null);
   const [selectedBoard, setSelectedBoard] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Redirect to sign-in if not authenticated
+  useEffect(() => {
+    if (!isAuthLoading && !user) {
+      router.push('/auth/signin');
+    }
+  }, [user, isAuthLoading, router]);
 
   const loadData = async () => {
     try {

@@ -70,18 +70,13 @@ export function AdminTaskCard({ task, onUpdate, onArchive }: AdminTaskCardProps)
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
     
-    // Refined color palette with good contrast
+    // Refined color palette - 5 colors that cycle
     const colors = [
       '#4caf50', // Green
       '#2196f3', // Blue
       '#9c27b0', // Purple
-      '#f44336', // Red
-      '#ff9800', // Amber
       '#00bcd4', // Cyan
-      '#00e5ff', // Bright Cyan
-      '#3f51b5', // Indigo
-      '#009688', // Teal
-      '#ffc107', // Yellow
+      '#e91e63', // Magenta
     ];
     
     return colors[Math.abs(hash) % colors.length];

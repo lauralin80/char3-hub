@@ -181,23 +181,26 @@ export function AdminTaskCard({ task, onUpdate, onArchive }: AdminTaskCardProps)
       {/* Labels */}
       {safeLabels.length > 0 && (
         <Box sx={{ display: 'flex', gap: 0.5, mb: 0.5, flexWrap: 'wrap' }}>
-          {safeLabels.map((label, index) => (
-            <Box
-              key={index}
-              sx={{
-                px: 0.5,
-                py: 0.25,
-                bgcolor: getLabelColor(label.color, label.name),
-                borderRadius: 0.25,
-                fontSize: '0.5rem',
-                color: 'white',
-                fontWeight: 'bold',
-                textTransform: 'uppercase'
-              }}
-            >
-              {label.name}
-            </Box>
-          ))}
+          {safeLabels.map((label, index) => {
+            const labelColor = getLabelColor(label.color, label.name);
+            return (
+              <Box
+                key={index}
+                sx={{
+                  px: 1,
+                  py: 0.375,
+                  borderRadius: 1.5,
+                  bgcolor: `${labelColor}1a`,  // 10% opacity
+                  fontSize: '0.6875rem',
+                  color: labelColor,
+                  fontWeight: typography.fontWeights.normal,
+                  letterSpacing: typography.letterSpacing.normal
+                }}
+              >
+                {label.name}
+              </Box>
+            );
+          })}
         </Box>
       )}
       

@@ -1433,15 +1433,16 @@ export default function Dashboard() {
                   <Box
                     sx={{
                       px: 1,
-                      py: 0.25,
-                      bgcolor: '#555',
-                      borderRadius: 0.5,
-                      fontSize: '0.625rem',
-                      color: 'white',
-                      fontWeight: 'bold'
+                      py: 0.375,
+                      borderRadius: 1.5,
+                      bgcolor: 'rgba(255, 255, 255, 0.06)',
+                      fontSize: '0.6875rem',
+                      color: colors.text.secondary,
+                      fontWeight: typography.fontWeights.normal,
+                      letterSpacing: typography.letterSpacing.normal
                     }}
                   >
-                    {task.boardTag}
+                    {task.boardName}
                   </Box>
                   
                   {/* Effort tag if available */}
@@ -1449,12 +1450,13 @@ export default function Dashboard() {
                     <Box
                       sx={{
                         px: 1,
-                        py: 0.25,
-                        bgcolor: '#555',
-                        borderRadius: 0.5,
-                        fontSize: '0.625rem',
-                        color: 'white',
-                        fontWeight: 'bold',
+                        py: 0.375,
+                        borderRadius: 1.5,
+                        bgcolor: 'rgba(255, 255, 255, 0.06)',
+                        fontSize: '0.6875rem',
+                        color: colors.text.secondary,
+                        fontWeight: typography.fontWeights.normal,
+                        letterSpacing: typography.letterSpacing.normal,
                         pointerEvents: 'none'
                       }}
                     >
@@ -1467,12 +1469,13 @@ export default function Dashboard() {
                     <Box
                       sx={{
                         px: 1,
-                        py: 0.25,
-                        bgcolor: '#555',
-                        borderRadius: 0.5,
-                        fontSize: '0.625rem',
-                        color: 'white',
-                        fontWeight: 'bold',
+                        py: 0.375,
+                        borderRadius: 1.5,
+                        bgcolor: 'rgba(255, 255, 255, 0.06)',
+                        fontSize: '0.6875rem',
+                        color: colors.text.secondary,
+                        fontWeight: typography.fontWeights.normal,
+                        letterSpacing: typography.letterSpacing.normal,
                         pointerEvents: 'none'
                       }}
                     >
@@ -1482,23 +1485,27 @@ export default function Dashboard() {
                   
                   
                   {/* Labels */}
-                  {task.labels && task.labels.length > 0 && (task.labels || []).map((label: any, labelIndex: number) => (
-                    <Box
-                      key={labelIndex}
-                      sx={{
-                        px: 1,
-                        py: 0.25,
-                        bgcolor: '#666',
-                        borderRadius: 0.5,
-                        fontSize: '0.625rem',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        pointerEvents: 'none'
-                      }}
-                    >
-                      {label.name}
-                    </Box>
-                  ))}
+                  {task.labels && task.labels.length > 0 && (task.labels || []).map((label: any, labelIndex: number) => {
+                    const labelColor = getLabelColor(label.color, label.name);
+                    return (
+                      <Box
+                        key={labelIndex}
+                        sx={{
+                          px: 1,
+                          py: 0.375,
+                          borderRadius: 1.5,
+                          bgcolor: `${labelColor}1a`,  // 10% opacity
+                          fontSize: '0.6875rem',
+                          color: labelColor,
+                          fontWeight: typography.fontWeights.normal,
+                          letterSpacing: typography.letterSpacing.normal,
+                          pointerEvents: 'none'
+                        }}
+                      >
+                        {label.name}
+                      </Box>
+                    );
+                  })}
                 </Box>
                 
                 {/* Client - Project Name */}

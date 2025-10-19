@@ -719,23 +719,29 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                         {/* Labels */}
                         <TableCell>
                           {card.labels && card.labels.length > 0 && (
-                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
-                              {card.labels.slice(0, 2).map((label: any) => (
-                                <Typography
-                                  key={label.id}
-                                  variant="body2"
-                                  sx={{
-                                    color: getLabelColor(label.color, label.name),
-                                    fontSize: '0.75rem',
-                                    fontWeight: 'bold',
-                                    textTransform: 'uppercase'
-                                  }}
-                                >
-                                  {label.name}
-                                </Typography>
-                              ))}
+                            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', alignItems: 'center' }}>
+                              {card.labels.slice(0, 2).map((label: any) => {
+                                const labelColor = getLabelColor(label.color, label.name);
+                                return (
+                                  <Box
+                                    key={label.id}
+                                    sx={{
+                                      px: 1,
+                                      py: 0.375,
+                                      borderRadius: 1.5,
+                                      bgcolor: `${labelColor}1a`,  // 10% opacity
+                                      fontSize: '0.75rem',
+                                      color: labelColor,
+                                      fontWeight: typography.fontWeights.normal,
+                                      letterSpacing: typography.letterSpacing.normal
+                                    }}
+                                  >
+                                    {label.name}
+                                  </Box>
+                                );
+                              })}
                               {card.labels.length > 2 && (
-                                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.75rem' }}>
+                                <Typography variant="caption" sx={{ color: colors.text.tertiary, fontSize: '0.75rem' }}>
                                   +{card.labels.length - 2}
                                 </Typography>
                               )}
@@ -770,22 +776,18 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                         </TableCell>
                         {/* Board */}
                         <TableCell>
-                          <Box
+                          <Typography
+                            variant="body2"
                             sx={{
-                              px: 0.75,
-                              py: 0.5,
-                              bgcolor: '#555',
-                              borderRadius: 0.25,
-                              fontSize: '0.625rem',
-                              color: 'white',
-                              fontWeight: 'bold',
-                              textTransform: 'uppercase',
-                              display: 'inline-block'
+                              fontSize: '0.75rem',
+                              color: colors.text.secondary,
+                              fontWeight: typography.fontWeights.normal,
+                              letterSpacing: typography.letterSpacing.normal
                             }}
                           >
-                            {boardName === 'Design/UX' ? 'DESIGN/UX' :
-                             boardName === 'Development' ? 'DEV' : 'ACCT MGMT'}
-                          </Box>
+                            {boardName === 'Design/UX' ? 'Design/UX' :
+                             boardName === 'Development' ? 'Development' : 'Acct Mgmt'}
+                          </Typography>
                         </TableCell>
                       </TableRow>
                     );
@@ -1189,24 +1191,27 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                           >
                             {/* Labels at top */}
                             {card.labels && card.labels.length > 0 && (
-                              <Box sx={{ display: 'flex', gap: 0.375, flexWrap: 'wrap', mb: 0.25 }}>
-                                {card.labels.map((label: any) => (
-                                  <Box
-                                    key={label.id}
-                                    sx={{
-                                      px: 0.5,
-                                      py: 0.25,
-                                      bgcolor: getLabelColor(label.color, label.name),
-                                      borderRadius: 0.375,
-                                      fontSize: '0.5rem',
-                                      color: 'white',
-                                      fontWeight: 'bold',
-                                      textTransform: 'uppercase'
-                                    }}
-                                  >
-                                    {label.name}
-                                  </Box>
-                                ))}
+                              <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 0.25 }}>
+                                {card.labels.map((label: any) => {
+                                  const labelColor = getLabelColor(label.color, label.name);
+                                  return (
+                                    <Box
+                                      key={label.id}
+                                      sx={{
+                                        px: 1,
+                                        py: 0.375,
+                                        borderRadius: 1.5,
+                                        bgcolor: `${labelColor}1a`,  // 10% opacity
+                                        fontSize: '0.6875rem',
+                                        color: labelColor,
+                                        fontWeight: typography.fontWeights.normal,
+                                        letterSpacing: typography.letterSpacing.normal
+                                      }}
+                                    >
+                                      {label.name}
+                                    </Box>
+                                  );
+                                })}
                               </Box>
                             )}
                             
@@ -1524,23 +1529,29 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                         {/* Labels */}
                         <TableCell>
                           {card.labels && card.labels.length > 0 && (
-                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
-                              {card.labels.slice(0, 2).map((label: any) => (
-                                <Typography
-                                  key={label.id}
-                                  variant="body2"
-                                  sx={{
-                                    color: getLabelColor(label.color, label.name),
-                                    fontSize: '0.75rem',
-                                    fontWeight: 'bold',
-                                    textTransform: 'uppercase'
-                                  }}
-                                >
-                                  {label.name}
-                                </Typography>
-                              ))}
+                            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', alignItems: 'center' }}>
+                              {card.labels.slice(0, 2).map((label: any) => {
+                                const labelColor = getLabelColor(label.color, label.name);
+                                return (
+                                  <Box
+                                    key={label.id}
+                                    sx={{
+                                      px: 1,
+                                      py: 0.375,
+                                      borderRadius: 1.5,
+                                      bgcolor: `${labelColor}1a`,  // 10% opacity
+                                      fontSize: '0.75rem',
+                                      color: labelColor,
+                                      fontWeight: typography.fontWeights.normal,
+                                      letterSpacing: typography.letterSpacing.normal
+                                    }}
+                                  >
+                                    {label.name}
+                                  </Box>
+                                );
+                              })}
                               {card.labels.length > 2 && (
-                                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.75rem' }}>
+                                <Typography variant="caption" sx={{ color: colors.text.tertiary, fontSize: '0.75rem' }}>
                                   +{card.labels.length - 2}
                                 </Typography>
                               )}

@@ -732,11 +732,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                   <Box
                                     key={label.id}
                                     sx={{
-                                      px: 1,
-                                      py: 0.375,
+                                      px: 0.75,
+                                      py: 0.25,
                                       borderRadius: 1.5,
                                       bgcolor: `${labelColor}1a`,  // 10% opacity
-                                      fontSize: '0.75rem',
+                                      fontSize: '0.625rem',
                                       color: labelColor,
                                       fontWeight: typography.fontWeights.normal,
                                       letterSpacing: typography.letterSpacing.normal
@@ -1211,11 +1211,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                     <Box
                                       key={label.id}
                                       sx={{
-                                        px: 1,
-                                        py: 0.375,
+                                        px: 0.75,
+                                        py: 0.25,
                                         borderRadius: 1.5,
                                         bgcolor: `${labelColor}1a`,  // 10% opacity
-                                        fontSize: '0.6875rem',
+                                        fontSize: '0.625rem',
                                         color: labelColor,
                                         fontWeight: typography.fontWeights.normal,
                                         letterSpacing: typography.letterSpacing.normal
@@ -1555,11 +1555,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                   <Box
                                     key={label.id}
                                     sx={{
-                                      px: 1,
-                                      py: 0.375,
+                                      px: 0.75,
+                                      py: 0.25,
                                       borderRadius: 1.5,
                                       bgcolor: `${labelColor}1a`,  // 10% opacity
-                                      fontSize: '0.75rem',
+                                      fontSize: '0.625rem',
                                       color: labelColor,
                                       fontWeight: typography.fontWeights.normal,
                                       letterSpacing: typography.letterSpacing.normal

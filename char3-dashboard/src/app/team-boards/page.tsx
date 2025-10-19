@@ -372,10 +372,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 label={`${sortedAssignedCards.length} tasks`} 
                 size="small" 
                 sx={{ 
-                  bgcolor: '#ff6b35', 
-                  color: '#fff', 
+                  bgcolor: 'rgba(255, 255, 255, 0.06)', 
+                  color: colors.text.tertiary,
                   fontSize: '0.75rem',
-                  height: '24px'
+                  height: '24px',
+                  border: '1px solid rgba(255, 255, 255, 0.08)'
                 }} 
               />
             </Box>
@@ -923,10 +924,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
               label={`${sortedFilteredCards.length} tasks`} 
               size="small" 
               sx={{ 
-                bgcolor: '#ff6b35', 
-                color: '#fff', 
+                bgcolor: 'rgba(255, 255, 255, 0.06)', 
+                color: colors.text.tertiary,
                 fontSize: '0.75rem',
-                height: '24px'
+                height: '24px',
+                border: '1px solid rgba(255, 255, 255, 0.08)'
               }} 
             />
           </Box>

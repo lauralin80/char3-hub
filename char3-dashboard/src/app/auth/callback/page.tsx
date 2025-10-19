@@ -21,8 +21,6 @@ export default function CallbackPage() {
           return;
         }
 
-        console.log('Token received:', token);
-
         // Send the token to our server to create the session
         const response = await fetch('/api/auth/token-login', {
           method: 'POST',
@@ -33,8 +31,8 @@ export default function CallbackPage() {
         });
 
         if (response.ok) {
-          // Successfully authenticated, redirect to dashboard
-          router.push('/');
+          // Successfully authenticated, use window.location for faster redirect
+          window.location.href = '/';
         } else {
           const errorData = await response.json();
           console.error('Authentication failed:', errorData.error);

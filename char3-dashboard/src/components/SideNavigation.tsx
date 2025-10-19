@@ -57,8 +57,6 @@ export function SideNavigation() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, signOut } = useAuth();
-  
-  console.log('SideNavigation - User:', user);
 
   const handleNavigation = (path: string) => {
     router.push(path);
@@ -67,51 +65,51 @@ export function SideNavigation() {
   return (
     <Box
       sx={{
-        width: 250,
+        width: 240,
         height: '100vh',
-        bgcolor: '#2a2a2a',
+        bgcolor: '#0f0f0f',
         color: 'white',
         display: 'flex',
         flexDirection: 'column',
-        borderRight: '1px solid #444'
+        borderRight: '1px solid rgba(255, 255, 255, 0.06)'
       }}
     >
       {/* Logo/Brand */}
-      <Box sx={{ p: 2, borderBottom: '1px solid #444' }}>
-        <Typography variant="h6" sx={{ color: 'white', fontSize: '1.2rem', fontWeight: 'bold' }}>
+      <Box sx={{ px: 2.5, py: 2.5, mb: 1 }}>
+        <Typography variant="h6" sx={{ color: '#e0e0e0', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '-0.02em' }}>
           char<span style={{ color: '#ff6b35' }}>3</span> Hub
         </Typography>
       </Box>
 
       {/* Navigation Items */}
-      <List sx={{ flex: 1, p: 0 }}>
+      <List sx={{ flex: 1, px: 1.5, py: 0 }}>
         {navigationItems.map((item) => {
           const isActive = pathname === item.path;
           
           return (
-            <ListItem key={item.id} disablePadding>
+            <ListItem key={item.id} disablePadding sx={{ mb: 0.5 }}>
               <ListItemButton
                 onClick={() => handleNavigation(item.path)}
                 sx={{
-                  px: 2,
-                  py: 1.5,
-                  borderLeft: isActive ? '3px solid #ff6b35' : '3px solid transparent',
-                  bgcolor: isActive ? '#1a1a1a' : 'transparent',
-                  color: isActive ? '#ff6b35' : '#e0e0e0',
+                  px: 1.5,
+                  py: 1,
+                  borderRadius: 1.5,
+                  border: 'none',
+                  bgcolor: isActive ? 'rgba(255, 107, 53, 0.12)' : 'transparent',
+                  color: isActive ? '#ff6b35' : 'rgba(255, 255, 255, 0.7)',
                   '&:hover': {
-                    bgcolor: '#ff6b35',
-                    color: 'white',
-                    borderLeft: '3px solid #ff6b35'
+                    bgcolor: isActive ? 'rgba(255, 107, 53, 0.16)' : 'rgba(255, 255, 255, 0.04)',
+                    color: isActive ? '#ff6b35' : 'rgba(255, 255, 255, 0.9)'
                   },
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
               >
                 <ListItemIcon
                   sx={{
                     color: 'inherit',
-                    minWidth: 40,
+                    minWidth: 36,
                     '& .MuiSvgIcon-root': {
-                      fontSize: '1.2rem'
+                      fontSize: '1.1rem'
                     }
                   }}
                 >
@@ -120,8 +118,9 @@ export function SideNavigation() {
                 <ListItemText 
                   primary={item.label}
                   primaryTypographyProps={{
-                    fontSize: '0.9rem',
-                    fontWeight: isActive ? 'bold' : 'normal'
+                    fontSize: '0.875rem',
+                    fontWeight: isActive ? 600 : 400,
+                    letterSpacing: '-0.01em'
                   }}
                 />
               </ListItemButton>
@@ -131,19 +130,40 @@ export function SideNavigation() {
       </List>
 
       {/* User Info & Sign Out */}
-      <Box sx={{ p: 2, borderTop: '1px solid #444' }}>
+      <Box sx={{ px: 2, py: 2, borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
         {user && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5, px: 0.5 }}>
             <Avatar
-              sx={{ width: 32, height: 32, bgcolor: '#ff6b35' }}
+              sx={{ 
+                width: 28, 
+                height: 28, 
+                bgcolor: '#ff6b35',
+                fontSize: '0.875rem',
+                fontWeight: 600
+              }}
             >
               {user.name?.charAt(0).toUpperCase()}
             </Avatar>
             <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography variant="body2" sx={{ color: '#e0e0e0', fontWeight: 'bold', fontSize: '0.875rem' }}>
+              <Typography variant="body2" sx={{ 
+                color: 'rgba(255, 255, 255, 0.9)', 
+                fontWeight: 600, 
+                fontSize: '0.8125rem',
+                letterSpacing: '-0.01em',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}>
                 {user.name}
               </Typography>
-              <Typography variant="caption" sx={{ color: '#888', fontSize: '0.75rem' }}>
+              <Typography variant="caption" sx={{ 
+                color: 'rgba(255, 255, 255, 0.5)', 
+                fontSize: '0.6875rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                display: 'block'
+              }}>
                 {user.email}
               </Typography>
             </Box>
@@ -152,15 +172,21 @@ export function SideNavigation() {
         
         <Button
           onClick={signOut}
-          startIcon={<LogoutIcon />}
+          startIcon={<LogoutIcon sx={{ fontSize: '1rem' }} />}
           sx={{
             width: '100%',
-            color: '#888',
-            fontSize: '0.875rem',
+            color: 'rgba(255, 255, 255, 0.6)',
+            fontSize: '0.8125rem',
+            fontWeight: 400,
             justifyContent: 'flex-start',
+            px: 1.5,
+            py: 1,
+            borderRadius: 1.5,
+            textTransform: 'none',
+            letterSpacing: '-0.01em',
             '&:hover': {
-              color: '#ff6b35',
-              bgcolor: 'rgba(255, 107, 53, 0.1)'
+              color: 'rgba(255, 255, 255, 0.9)',
+              bgcolor: 'rgba(255, 255, 255, 0.04)'
             }
           }}
         >

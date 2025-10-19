@@ -27,17 +27,14 @@ export default function SignIn() {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 4
+      gap: 3
     }}>
       {/* Logo/Title */}
-      <Box sx={{ textAlign: 'center', mb: 4 }}>
+      <Box sx={{ textAlign: 'center', mb: 2 }}>
         <Typography variant="h3" sx={{ color: '#ff6b35', fontWeight: 'bold', mb: 2 }}>
           char3 Hub
         </Typography>
-        <Typography variant="h6" sx={{ color: '#e0e0e0', mb: 1 }}>
-          Team Collaboration Dashboard
-        </Typography>
-        <Typography variant="body2" sx={{ color: '#888' }}>
+        <Typography variant="body1" sx={{ color: '#888' }}>
           Sign in with your Trello account to access your workspace
         </Typography>
       </Box>
@@ -49,12 +46,13 @@ export default function SignIn() {
         sx={{
           bgcolor: '#ff6b35',
           color: 'white',
-          px: 4,
-          py: 2,
-          fontSize: '1.1rem',
+          px: 3,
+          py: 1.5,
+          fontSize: '1rem',
           fontWeight: 'bold',
           borderRadius: 2,
-          minWidth: 200,
+          minWidth: 180,
+          textTransform: 'none',
           '&:hover': {
             bgcolor: '#e55a2b'
           },
@@ -70,27 +68,9 @@ export default function SignIn() {
             <Typography>Signing in...</Typography>
           </Box>
         ) : (
-          'Sign in with Trello'
+          'SIGN IN WITH TRELLO'
         )}
       </Button>
-
-
-      {/* Info */}
-      <Box sx={{ textAlign: 'center', maxWidth: 400 }}>
-        <Typography variant="body2" sx={{ color: '#666', fontSize: '0.875rem', mb: 2 }}>
-          You'll be redirected to Trello to authorize access to your boards and cards.
-          Only members of the Char3 workspace will be able to access this dashboard.
-        </Typography>
-        <Typography variant="body2" sx={{ color: '#888', fontSize: '0.8rem' }}>
-          Having trouble?{' '}
-          <Link 
-            href="/auth/token" 
-            sx={{ color: '#ff6b35', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
-          >
-            Try manual token authentication
-          </Link>
-        </Typography>
-      </Box>
 
     </Box>
   );

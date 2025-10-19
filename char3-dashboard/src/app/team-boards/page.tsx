@@ -249,6 +249,14 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
 
   // Handle assigned tasks view
   if (boardType === 'assigned') {
+    console.log('=== ASSIGNED TO ME DEBUG ===');
+    console.log('Current user:', user);
+    console.log('Total cards before filtering:', 
+      (allBoardsData?.designUx?.cards?.length || 0) + 
+      (allBoardsData?.development?.cards?.length || 0) + 
+      (allBoardsData?.accountManagement?.cards?.length || 0)
+    );
+    
     const assignedCards = [
       ...(allBoardsData?.designUx?.cards || []),
       ...(allBoardsData?.development?.cards || []),
@@ -258,9 +266,10 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
       if (!card.members || card.members.length === 0) return false;
       
       const isAssignedToUser = card.members.some((member: any) => 
-        member.fullName === user?.fullName || 
+        member.fullName === user?.name || 
         member.username === user?.username || 
-        member.email === user?.email
+        member.email === user?.email ||
+        member.id === user?.id
       );
       
       if (!isAssignedToUser) return false;
@@ -331,6 +340,9 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
 
       return true;
     });
+    
+    console.log('Cards after filtering:', assignedCards.length);
+    console.log('Sample card members:', assignedCards[0]?.members);
 
     const sortedAssignedCards = sortCards(assignedCards);
 
@@ -1089,7 +1101,10 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                       borderBottom: '1px solid #444',
                       py: 0.75,
                       px: 1.5,
-                      textAlign: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 1,
                       position: 'sticky',
                       top: 0,
                       zIndex: 1
@@ -1111,7 +1126,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                           fontSize: '0.6875rem'
                         }}
                       >
-                        {listCards.length}
+                        ({listCards.length})
                       </Typography>
                     </Box>
                     

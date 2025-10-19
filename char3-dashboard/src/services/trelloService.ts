@@ -495,6 +495,78 @@ class TrelloService {
       throw error;
     }
   }
+
+  // Mark a card as complete (sets dueComplete to true)
+  async markCardComplete(cardId: string, userToken?: string) {
+    try {
+      const response = await axios.put(`${TRELLO_API_BASE}/cards/${cardId}`, null, {
+        params: {
+          ...this.getAuthParams(userToken),
+          dueComplete: true
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error marking card as complete:', error);
+      throw error;
+    }
+  }
+
+  // Archive a card (sets closed to true)
+  async archiveCard(cardId: string, userToken?: string) {
+    try {
+      const response = await axios.put(`${TRELLO_API_BASE}/cards/${cardId}`, null, {
+        params: {
+          ...this.getAuthParams(userToken),
+          closed: true
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error archiving card:', error);
+      throw error;
+    }
+  }
+
+  // Auto-archive cards that have been complete for 7+ days
+  async autoArchiveOldCompletedCards(boardId: string, userToken?: string) {
+    try {
+      // Get all cards from the board
+      const cardsResponse = await axios.get(`${TRELLO_API_BASE}/boards/${boardId}/cards`, {
+        params: {
+          ...this.getAuthParams(userToken),
+          filter: 'open' // Only get non-archived cards
+        }
+      });
+
+      const cards = cardsResponse.data;
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      // Filter cards that are complete and were marked complete 7+ days ago
+      const cardsToArchive = cards.filter((card: any) => {
+        if (!card.dueComplete || !card.due) return false;
+        
+        // Check if the card has been in "Complete" status for 7 days
+        // We'll use the due date as a proxy for when it was completed
+        const dueDate = new Date(card.due);
+        return dueDate < sevenDaysAgo;
+      });
+
+      // Archive each card
+      const archivePromises = cardsToArchive.map((card: any) => 
+        this.archiveCard(card.id, userToken)
+      );
+
+      await Promise.all(archivePromises);
+      
+      console.log(`Auto-archived ${cardsToArchive.length} cards older than 7 days`);
+      return cardsToArchive.length;
+    } catch (error) {
+      console.error('Error auto-archiving old completed cards:', error);
+      throw error;
+    }
+  }
 }
 
 export const trelloService = new TrelloService();

@@ -65,21 +65,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      // Set user to null immediately for instant feedback
       setUser(null);
+      
+      // Redirect immediately
       router.push('/auth/signin');
+      
+      // Then clean up the cookie in the background
+      fetch('/api/auth/logout', { method: 'POST' }).catch(err => {
+        console.error('Background logout error:', err);
+      });
     } catch (error) {
       console.error('Sign out error:', error);
+      // Still redirect even if there's an error
+      router.push('/auth/signin');
     }
   };
 
   const refreshAuth = async () => {
     try {
       const response = await fetch('/api/auth/me');
-      console.log('Refresh auth response:', response.status, response.ok);
       if (response.ok) {
         const userData = await response.json();
-        console.log('Refresh auth - User data received:', userData);
         setUser(userData);
       } else {
         setUser(null);
@@ -95,19 +102,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const checkAuth = async () => {
       try {
         const response = await fetch('/api/auth/me');
-        console.log('Auth check response:', response.status, response.ok);
         if (response.ok) {
           const userData = await response.json();
-          console.log('User data received:', userData);
           setUser(userData);
-          
-          // Check workspace access for real users
-          // Temporarily disabled to debug authentication
-          // const hasAccess = await checkWorkspaceAccess();
-          // if (!hasAccess) {
-          //   alert('You do not have access to the Char3 workspace. Please contact your administrator.');
-          //   await signOut();
-          // }
         } else {
           setUser(null);
         }
@@ -124,23 +121,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for focus events to refresh auth when user returns to tab
     const handleFocus = () => {
       if (!user) {
-        console.log('Window focused, refreshing auth...');
         refreshAuth();
       }
     };
 
-    // Also check auth periodically if no user is set
-    const interval = setInterval(() => {
-      if (!user) {
-        console.log('Periodic auth check...');
-        refreshAuth();
-      }
-    }, 2000); // Check every 2 seconds
-
     window.addEventListener('focus', handleFocus);
     return () => {
       window.removeEventListener('focus', handleFocus);
-      clearInterval(interval);
     };
   }, [user]);
 
@@ -152,8 +139,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshAuth,
     checkWorkspaceAccess,
   };
-  
-  console.log('AuthContext - User:', user, 'isLoading:', isLoading, 'isAuthenticated:', isAuthenticated);
 
   return (
     <AuthContext.Provider value={value}>

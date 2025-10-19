@@ -1062,7 +1062,7 @@ export default function Dashboard() {
     <Box sx={{ 
       width: '100%', 
       height: '100%', 
-      bgcolor: '#1a1a1a', 
+      bgcolor: '#0d0d0d', 
       color: 'white',
       display: 'flex',
       flexDirection: 'column',
@@ -1071,12 +1071,12 @@ export default function Dashboard() {
       {/* Top Header Bar */}
       <Box sx={{ 
         height: 60,
-        bgcolor: '#2a2a2a',
+        bgcolor: '#141414',
         display: 'flex',
         justifyContent: 'flex-end',
         alignItems: 'center',
         px: 2,
-        borderBottom: '1px solid #444'
+        borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
       }}>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button
@@ -1121,21 +1121,23 @@ export default function Dashboard() {
           display: 'flex', 
           flexDirection: 'column', 
           minWidth: 0, 
-          bgcolor: '#2a2a2a', 
+          bgcolor: '#141414', 
           borderRadius: 2, 
           overflow: 'hidden',
-          border: '1px solid #444',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.4)'
         }}>
           {/* Team Collaboration Header */}
           <Box sx={{ 
-            bgcolor: '#2a2a2a',
-            p: 2,
+            bgcolor: 'transparent',
+            px: 3,
+            py: 2.5,
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center'
+            alignItems: 'center',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
           }}>
-            <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold' }}>
+            <Typography variant="h5" sx={{ color: 'rgba(255, 255, 255, 0.95)', fontSize: '1.125rem', fontWeight: 600, letterSpacing: '-0.02em' }}>
               Team Collaboration
             </Typography>
             <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem' }}>
@@ -1155,27 +1157,31 @@ export default function Dashboard() {
 
           {/* Tabs */}
           <Box sx={{ 
-            bgcolor: '#2a2a2a',
+            bgcolor: 'transparent',
             display: 'flex',
-            p: 1
+            px: 2,
+            pt: 1,
+            gap: 0.5
           }}>
             <Box
               onClick={() => setTabValue(0)}
               sx={{
                 flex: 1,
-                py: 1.5,
-                px: 2,
+                py: 1.25,
+                px: 2.5,
                 cursor: 'pointer',
-                bgcolor: tabValue === 0 ? '#f5f5f5' : 'transparent',
-                color: tabValue === 0 ? '#1a1a1a' : '#e0e0e0',
-                fontSize: '0.875rem',
-                fontWeight: tabValue === 0 ? 'bold' : 'normal',
-                borderRadius: 1,
+                bgcolor: tabValue === 0 ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
+                color: tabValue === 0 ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.6)',
+                fontSize: '0.8125rem',
+                fontWeight: tabValue === 0 ? 600 : 400,
+                borderRadius: 1.5,
                 textAlign: 'center',
+                letterSpacing: '-0.01em',
                 '&:hover': {
-                  bgcolor: tabValue === 0 ? '#f5f5f5' : '#333',
+                  bgcolor: tabValue === 0 ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.04)',
+                  color: tabValue === 0 ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.8)',
                 },
-                transition: 'all 0.2s ease'
+                transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
               Weekly Planning
@@ -1184,19 +1190,21 @@ export default function Dashboard() {
               onClick={() => setTabValue(1)}
               sx={{
                 flex: 1,
-                py: 1.5,
-                px: 2,
+                py: 1.25,
+                px: 2.5,
                 cursor: 'pointer',
-                bgcolor: tabValue === 1 ? '#f5f5f5' : 'transparent',
-                color: tabValue === 1 ? '#1a1a1a' : '#e0e0e0',
-                fontSize: '0.875rem',
-                fontWeight: tabValue === 1 ? 'bold' : 'normal',
-                borderRadius: 1,
+                bgcolor: tabValue === 1 ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
+                color: tabValue === 1 ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.6)',
+                fontSize: '0.8125rem',
+                fontWeight: tabValue === 1 ? 600 : 400,
+                borderRadius: 1.5,
                 textAlign: 'center',
+                letterSpacing: '-0.01em',
                 '&:hover': {
-                  bgcolor: tabValue === 1 ? '#f5f5f5' : '#333',
+                  bgcolor: tabValue === 1 ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.04)',
+                  color: tabValue === 1 ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.8)',
                 },
-                transition: 'all 0.2s ease'
+                transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
               Client Deliverables

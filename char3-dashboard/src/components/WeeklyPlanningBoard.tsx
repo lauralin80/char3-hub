@@ -807,10 +807,14 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                         fontWeight: typography.fontWeights.normal,
                         letterSpacing: typography.letterSpacing.normal,
                         mb: 0.5,
-                        display: 'inline-block'
+                        display: 'inline-block',
+                        textTransform: 'uppercase'
                       }}
                     >
-                      {task.boardName || task.boardTag || 'Acct Mgmt'}
+                      {task.boardTag === 'DESIGN/UX' ? 'DESIGN/UX' : 
+                       task.boardTag === 'DEV' ? 'DEV' : 
+                       task.boardTag === 'ACCT MGMT' ? 'ACCT MGMT' : 
+                       task.boardTag || 'ACCT MGMT'}
                     </Box>
                   )}
                   

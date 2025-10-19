@@ -1462,10 +1462,11 @@ export default function Dashboard() {
                       fontSize: '0.6875rem',
                       color: colors.text.secondary,
                       fontWeight: typography.fontWeights.normal,
-                      letterSpacing: typography.letterSpacing.normal
+                      letterSpacing: typography.letterSpacing.normal,
+                      textTransform: 'uppercase'
                     }}
                   >
-                    {task.boardName}
+                    {task.boardTag}
                   </Box>
                   
                   {/* Effort tag if available */}

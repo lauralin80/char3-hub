@@ -782,11 +782,12 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                               fontSize: '0.75rem',
                               color: colors.text.secondary,
                               fontWeight: typography.fontWeights.normal,
-                              letterSpacing: typography.letterSpacing.normal
+                              letterSpacing: typography.letterSpacing.normal,
+                              textTransform: 'uppercase'
                             }}
                           >
-                            {boardName === 'Design/UX' ? 'Design/UX' :
-                             boardName === 'Development' ? 'Development' : 'Acct Mgmt'}
+                            {boardName === 'Design/UX' ? 'DESIGN/UX' :
+                             boardName === 'Development' ? 'DEV' : 'ACCT MGMT'}
                           </Typography>
                         </TableCell>
                       </TableRow>

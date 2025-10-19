@@ -1262,17 +1262,18 @@ export default function Dashboard() {
           </TabPanel>
         </Box>
 
-        {/* Right Master Tasks Panel */}
-        <Box sx={{ 
-          width: 300, 
-          bgcolor: '#141414', 
-          borderRadius: 2,
-          p: 2.5,
-          display: 'flex',
-          flexDirection: 'column',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.4)'
-        }}>
+        {/* Right Master Tasks Panel - Only show for Weekly Planning */}
+        {tabValue === 0 && (
+          <Box sx={{ 
+            width: 300, 
+            bgcolor: '#141414', 
+            borderRadius: 2,
+            p: 2.5,
+            display: 'flex',
+            flexDirection: 'column',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.4)'
+          }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
             <Typography variant="h6" sx={{ color: colors.text.title, fontSize: '0.9375rem', fontWeight: typography.fontWeights.semibold, letterSpacing: typography.letterSpacing.normal }}>
               All Tasks
@@ -1585,6 +1586,7 @@ export default function Dashboard() {
             ))}
           </Box>
         </Box>
+        )}
       </Box>
     </Box>
   );

@@ -553,6 +553,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     >
                       Due Date {sortField === 'due' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </TableCell>
+                    <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Assignee</TableCell>
                     <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Effort</TableCell>
                     <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Labels</TableCell>
                     <TableCell 
@@ -674,6 +675,60 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                               {new Date(card.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                             </Typography>
                           )}
+                        </TableCell>
+                        {/* Assignee */}
+                        <TableCell>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            {card.members && card.members.length > 0 ? (
+                              <>
+                                <Box
+                                  sx={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    bgcolor: getAssigneeColor(card.members[0].fullName),
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '0.625rem',
+                                    color: 'white',
+                                  }}
+                                >
+                                  {card.members[0].fullName.charAt(0).toUpperCase()}
+                                </Box>
+                                <Typography variant="caption" sx={{ 
+                                  color: colors.text.tertiary,
+                                  fontSize: '0.75rem'
+                                }}>
+                                  {card.members[0].fullName}
+                                </Typography>
+                              </>
+                            ) : (
+                              <>
+                                <Box
+                                  sx={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    bgcolor: '#ff6b35',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '0.625rem',
+                                    color: 'white',
+                                  }}
+                                >
+                                  ?
+                                </Box>
+                                <Typography variant="caption" sx={{ 
+                                  color: '#ff6b35',
+                                  fontSize: '0.75rem'
+                                }}>
+                                  Unassigned
+                                </Typography>
+                              </>
+                            )}
+                          </Box>
                         </TableCell>
                         {/* Effort */}
                         <TableCell>
@@ -1384,6 +1439,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     >
                       Due Date {sortField === 'due' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </TableCell>
+                    <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Assignee</TableCell>
                     <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Effort</TableCell>
                     <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Labels</TableCell>
                     <TableCell 
@@ -1485,6 +1541,60 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                               {new Date(card.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                             </Typography>
                           )}
+                        </TableCell>
+                        {/* Assignee */}
+                        <TableCell>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            {card.members && card.members.length > 0 ? (
+                              <>
+                                <Box
+                                  sx={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    bgcolor: getAssigneeColor(card.members[0].fullName),
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '0.625rem',
+                                    color: 'white',
+                                  }}
+                                >
+                                  {card.members[0].fullName.charAt(0).toUpperCase()}
+                                </Box>
+                                <Typography variant="caption" sx={{ 
+                                  color: colors.text.tertiary,
+                                  fontSize: '0.75rem'
+                                }}>
+                                  {card.members[0].fullName}
+                                </Typography>
+                              </>
+                            ) : (
+                              <>
+                                <Box
+                                  sx={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    bgcolor: '#ff6b35',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '0.625rem',
+                                    color: 'white',
+                                  }}
+                                >
+                                  ?
+                                </Box>
+                                <Typography variant="caption" sx={{ 
+                                  color: '#ff6b35',
+                                  fontSize: '0.75rem'
+                                }}>
+                                  Unassigned
+                                </Typography>
+                              </>
+                            )}
+                          </Box>
                         </TableCell>
                         {/* Effort */}
                         <TableCell>

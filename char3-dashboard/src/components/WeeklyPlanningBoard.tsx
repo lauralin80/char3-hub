@@ -526,7 +526,7 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
               sx={{ 
                 flex: 1,
                 p: 1,
-                bgcolor: dragOverDay === day ? '#2a2a2a' : '#1a1a1a',
+                bgcolor: dragOverDay === day ? 'rgba(255, 107, 53, 0.1)' : '#141414',
                 position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',

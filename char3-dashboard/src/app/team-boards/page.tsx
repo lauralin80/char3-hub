@@ -518,12 +518,12 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             >
               <Table sx={{ minWidth: 650 }} aria-label="assigned tasks table">
                 <TableHead>
-                  <TableRow sx={{ bgcolor: '#3a3a3a' }}>
+                  <TableRow sx={{ bgcolor: 'rgba(255, 255, 255, 0.03)' }}>
                     <TableCell 
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -535,7 +535,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -547,7 +547,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -559,7 +559,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -567,13 +567,13 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     >
                       Due Date {sortField === 'due' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid #555' }}>Effort</TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid #555' }}>Labels</TableCell>
+                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Effort</TableCell>
+                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Labels</TableCell>
                     <TableCell 
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -585,7 +585,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -593,8 +593,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     >
                       Project {sortField === 'project' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid #555' }}>Milestone</TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid #555' }}>Board</TableCell>
+                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Milestone</TableCell>
+                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Board</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1074,7 +1074,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             <Box sx={{ 
               display: 'flex',
               flex: 1,
-              bgcolor: '#0d0d0d',
+              bgcolor: '#141414',
               border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: 2,
               overflow: 'auto'
@@ -1096,7 +1096,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   >
                     {/* List Header */}
                     <Box sx={{ 
-                      bgcolor: '#0d0d0d',
+                      bgcolor: '#141414',
                       borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
                       py: 0.75,
                       px: 1.5,
@@ -1323,7 +1323,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             <TableContainer 
               component={Paper} 
               sx={{ 
-                bgcolor: '#0d0d0d', 
+                bgcolor: '#141414', 
                 border: '1px solid rgba(255, 255, 255, 0.08)',
                 borderRadius: 2,
                 '& .MuiTable-root': {
@@ -1333,12 +1333,12 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             >
               <Table sx={{ minWidth: 650 }} aria-label="tasks table">
                 <TableHead>
-                  <TableRow sx={{ bgcolor: '#3a3a3a' }}>
+                  <TableRow sx={{ bgcolor: 'rgba(255, 255, 255, 0.03)' }}>
                     <TableCell 
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -1350,7 +1350,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -1362,7 +1362,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -1374,7 +1374,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -1382,13 +1382,13 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     >
                       Due Date {sortField === 'due' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid #555' }}>Effort</TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid #555' }}>Labels</TableCell>
+                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Effort</TableCell>
+                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Labels</TableCell>
                     <TableCell 
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -1400,7 +1400,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                       sx={{ 
                         color: '#e0e0e0', 
                         fontWeight: 'bold', 
-                        borderBottom: '1px solid #555',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         cursor: 'pointer',
                         '&:hover': { bgcolor: '#444' }
                       }}
@@ -1408,7 +1408,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     >
                       Project {sortField === 'project' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid #555' }}>Milestone</TableCell>
+                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Milestone</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

@@ -517,8 +517,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             <TableContainer 
               component={Paper} 
               sx={{ 
-                bgcolor: '#141414', 
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                bgcolor: colors.background.elevated, 
+                border: `1px solid ${colors.border.default}`,
                 borderRadius: 2,
                 '& .MuiTable-root': {
                   borderSpacing: 0
@@ -530,11 +530,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   <TableRow sx={{ bgcolor: 'rgba(255, 255, 255, 0.03)' }}>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('title')}
                     >
@@ -542,11 +542,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     </TableCell>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('cardNumber')}
                     >
@@ -554,11 +554,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     </TableCell>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('status')}
                     >
@@ -566,25 +566,25 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     </TableCell>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('due')}
                     >
                       Due Date {sortField === 'due' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Effort</TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Labels</TableCell>
+                    <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Effort</TableCell>
+                    <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Labels</TableCell>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('client')}
                     >
@@ -592,18 +592,18 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     </TableCell>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('project')}
                     >
                       Project {sortField === 'project' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Milestone</TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Board</TableCell>
+                    <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Milestone</TableCell>
+                    <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Board</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1342,8 +1342,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             <TableContainer 
               component={Paper} 
               sx={{ 
-                bgcolor: '#141414', 
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                bgcolor: colors.background.elevated, 
+                border: `1px solid ${colors.border.default}`,
                 borderRadius: 2,
                 '& .MuiTable-root': {
                   borderSpacing: 0
@@ -1355,11 +1355,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   <TableRow sx={{ bgcolor: 'rgba(255, 255, 255, 0.03)' }}>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('title')}
                     >
@@ -1367,11 +1367,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     </TableCell>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('cardNumber')}
                     >
@@ -1379,11 +1379,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     </TableCell>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('status')}
                     >
@@ -1391,25 +1391,25 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     </TableCell>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('due')}
                     >
                       Due Date {sortField === 'due' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Effort</TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Labels</TableCell>
+                    <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Effort</TableCell>
+                    <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Labels</TableCell>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('client')}
                     >
@@ -1417,17 +1417,17 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     </TableCell>
                     <TableCell 
                       sx={{ 
-                        color: '#e0e0e0', 
-                        fontWeight: 'bold', 
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        color: colors.text.secondary, 
+                        fontWeight: typography.fontWeights.normal, 
+                        borderBottom: `1px solid ${colors.border.default}`,
                         cursor: 'pointer',
-                        '&:hover': { bgcolor: '#444' }
+                        '&:hover': { bgcolor: colors.background.card }
                       }}
                       onClick={() => handleSort('project')}
                     >
                       Project {sortField === 'project' && (sortDirection === 'asc' ? '↑' : '↓')}
                     </TableCell>
-                    <TableCell sx={{ color: '#e0e0e0', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>Milestone</TableCell>
+                    <TableCell sx={{ color: colors.text.secondary, fontWeight: typography.fontWeights.normal, borderBottom: `1px solid ${colors.border.default}` }}>Milestone</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

@@ -696,7 +696,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             <Typography
                               variant="body2"
                               sx={{
-                                color: (!card.dueComplete && new Date(card.due) < new Date()) ? '#ff6b35' : '#e0e0e0',
+                                color: (!card.dueComplete && new Date(card.due) < new Date()) ? '#ff6b35' : '#888',
                                 fontSize: '0.875rem',
                               }}
                             >
@@ -1566,7 +1566,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             <Typography
                               variant="body2"
                               sx={{
-                                color: (!card.dueComplete && new Date(card.due) < new Date()) ? '#ff6b35' : '#e0e0e0',
+                                color: (!card.dueComplete && new Date(card.due) < new Date()) ? '#ff6b35' : '#888',
                                 fontSize: '0.875rem',
                               }}
                             >

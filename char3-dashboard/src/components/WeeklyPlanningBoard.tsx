@@ -842,7 +842,7 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                       <Typography 
                         variant="caption" 
                         sx={{ 
-                          color: '#ccc',
+                          color: (!task.dueComplete && (typeof task.dueDate === 'string' ? new Date(task.dueDate) : task.dueDate) < new Date()) ? '#ff6b35' : '#888',
                           fontSize: '0.625rem',
                           display: 'block',
                           textDecoration: isTaskCompleted(task) ? 'line-through' : 'none',

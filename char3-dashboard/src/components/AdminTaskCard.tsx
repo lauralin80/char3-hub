@@ -287,7 +287,7 @@ export function AdminTaskCard({ task, onUpdate, onArchive }: AdminTaskCardProps)
           <Typography 
             variant="caption" 
             sx={{ 
-              color: '#888',
+              color: (!task.completed && task.dueDate < new Date()) ? '#ff6b35' : '#888',
               fontSize: '0.625rem',
               fontWeight: 'bold',
               backgroundColor: 'rgba(42, 42, 42, 0.9)',

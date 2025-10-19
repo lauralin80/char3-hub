@@ -20,18 +20,23 @@ import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/ico
 import { useAuth } from '@/contexts/AuthContext';
 import { trelloService } from '@/services/trelloService';
 import { colors, typography, transitions } from '@/styles/theme';
+import { useStore } from '@/store/useStore';
+
+// Cache duration: 5 minutes
+const CACHE_DURATION = 5 * 60 * 1000;
 
 export default function AccountManagement() {
   const { user, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [allBoardsData, setAllBoardsData] = useState<any>(null);
   const [selectedClient, setSelectedClient] = useState<string>('');
   const [clients, setClients] = useState<string[]>([]);
   const [deliverables, setDeliverables] = useState<any[]>([]);
   const [accountTasks, setAccountTasks] = useState<any[]>([]);
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Get cached data from store
+  const { allBoardsData, allBoardsDataTimestamp, setAllBoardsData } = useStore();
 
   // Redirect to sign-in if not authenticated
   useEffect(() => {
@@ -40,63 +45,72 @@ export default function AccountManagement() {
     }
   }, [isAuthLoading, user, router]);
 
-  // Load data only once
+  // Load data with caching
   useEffect(() => {
-    let isMounted = true;
-    
-    const loadData = async () => {
-      if (!user || dataLoaded) return;
+    const loadData = async (forceRefresh = false) => {
+      if (!user) return;
       
+      // Check if we have valid cached data
+      const now = Date.now();
+      const isCacheValid = allBoardsData && 
+                          allBoardsDataTimestamp && 
+                          (now - allBoardsDataTimestamp < CACHE_DURATION);
+      
+      if (isCacheValid && !forceRefresh) {
+        // Use cached data
+        console.log('Using cached data');
+        extractClientsFromData(allBoardsData);
+        setLoading(false);
+        return;
+      }
+      
+      // Fetch fresh data
       try {
-        setDataLoaded(true);
+        console.log('Fetching fresh data from Trello');
         const data = await trelloService.getAllBoardsData();
         
-        if (!isMounted) return;
-        
+        // Cache the data in store
         setAllBoardsData(data);
-
-        // Extract unique clients from Account Management board
-        const clientsSet = new Set<string>();
-        const accountMgmtBoard = data.accountManagement;
         
-        if (accountMgmtBoard?.customFields) {
-          const clientField = accountMgmtBoard.customFields.find((cf: any) => cf.name === 'Client');
-          if (clientField?.options) {
-            clientField.options.forEach((opt: any) => {
-              if (opt.value?.text) {
-                clientsSet.add(opt.value.text);
-              }
-            });
-          }
-        }
-
-        setClients(Array.from(clientsSet).sort());
+        // Extract clients
+        extractClientsFromData(data);
         setLoading(false);
         setError(null);
       } catch (error: any) {
         console.error('Error loading data:', error);
-        if (isMounted) {
-          setDataLoaded(false); // Reset flag so user can retry
-          setLoading(false);
-          
-          // Check if it's a rate limit error
-          if (error?.response?.status === 429) {
-            setError('Too many requests. Please wait a few minutes and try again.');
-          } else {
-            setError('Failed to load data. Please try again.');
-          }
+        setLoading(false);
+        
+        // Check if it's a rate limit error
+        if (error?.response?.status === 429) {
+          setError('Too many requests. Please wait a few minutes and try again.');
+        } else {
+          setError('Failed to load data. Please try again.');
         }
       }
     };
 
-    if (user && !dataLoaded) {
+    const extractClientsFromData = (data: any) => {
+      const clientsSet = new Set<string>();
+      const accountMgmtBoard = data.accountManagement;
+      
+      if (accountMgmtBoard?.customFields) {
+        const clientField = accountMgmtBoard.customFields.find((cf: any) => cf.name === 'Client');
+        if (clientField?.options) {
+          clientField.options.forEach((opt: any) => {
+            if (opt.value?.text) {
+              clientsSet.add(opt.value.text);
+            }
+          });
+        }
+      }
+      
+      setClients(Array.from(clientsSet).sort());
+    };
+
+    if (user) {
       loadData();
     }
-    
-    return () => {
-      isMounted = false;
-    };
-  }, [user, dataLoaded]);
+  }, [user, allBoardsData, allBoardsDataTimestamp, setAllBoardsData]);
 
   // Filter deliverables and account tasks when client is selected
   useEffect(() => {
@@ -228,7 +242,7 @@ export default function AccountManagement() {
           variant="outlined"
           onClick={() => {
             setError(null);
-            setDataLoaded(false);
+            setAllBoardsData(null); // Clear cache to force refresh
             setLoading(true);
           }}
           sx={{

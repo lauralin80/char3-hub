@@ -46,6 +46,8 @@ interface DashboardStore {
     cards: any[];
     customFields: any[];
   } | null;
+  allBoardsData: any | null;
+  allBoardsDataTimestamp: number | null;
   isLoading: boolean;
   error: string | null;
   
@@ -55,6 +57,7 @@ interface DashboardStore {
   setMembers: (members: Array<{ id: string; fullName: string; username: string }>) => void;
   setListIds: (listIds: { deliverables: string; adminTasks: string }) => void;
   setWeeklyPlanningData: (data: any) => void;
+  setAllBoardsData: (data: any) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   
@@ -73,6 +76,8 @@ export const useStore = create<DashboardStore>((set, get) => ({
   members: [],
   listIds: { deliverables: '', adminTasks: '' },
   weeklyPlanningData: null,
+  allBoardsData: null,
+  allBoardsDataTimestamp: null,
   isLoading: false,
   error: null,
 
@@ -81,6 +86,7 @@ export const useStore = create<DashboardStore>((set, get) => ({
   setMembers: (members) => set({ members }),
   setListIds: (listIds) => set({ listIds }),
   setWeeklyPlanningData: (weeklyPlanningData) => set({ weeklyPlanningData }),
+  setAllBoardsData: (data) => set({ allBoardsData: data, allBoardsDataTimestamp: Date.now() }),
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
 

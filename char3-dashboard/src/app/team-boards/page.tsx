@@ -219,9 +219,37 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
   };
 
   const getAssigneeColor = (name: string) => {
-    // Only use orange for Unassigned, otherwise use subtle gray
+    // Orange for Unassigned
     if (!name || name === 'Unassigned') return '#ff6b35';
-    return 'rgba(255, 255, 255, 0.15)'; // Subtle gray for all assigned users
+    
+    // Create a hash from the name for consistent color assignment
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    // Refined color palette with good contrast
+    const colors = [
+      '#4caf50', // Green
+      '#2196f3', // Blue
+      '#9c27b0', // Purple
+      '#f44336', // Red
+      '#ff9800', // Orange
+      '#00bcd4', // Cyan
+      '#e91e63', // Pink
+      '#3f51b5', // Indigo
+      '#009688', // Teal
+      '#ff5722', // Deep Orange
+    ];
+    
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  const getInitials = (name: string) => {
+    if (!name || name === 'Unassigned') return '?';
+    const parts = name.split(' ').filter(p => p.length > 0);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
   };
 
   const getLabelColor = (color: string, name?: string) => {
@@ -686,18 +714,19 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                     width: 20,
                                     height: 20,
                                     borderRadius: '50%',
-                                    bgcolor: getAssigneeColor(card.members[0].fullName),
+                                    bgcolor: `${getAssigneeColor(card.members[0].fullName)}33`,
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     fontSize: '0.625rem',
-                                    color: 'white',
+                                    color: getAssigneeColor(card.members[0].fullName),
+                                    fontWeight: 600,
                                   }}
                                 >
-                                  {card.members[0].fullName.charAt(0).toUpperCase()}
+                                  {getInitials(card.members[0].fullName)}
                                 </Box>
                                 <Typography variant="caption" sx={{ 
-                                  color: colors.text.tertiary,
+                                  color: getAssigneeColor(card.members[0].fullName),
                                   fontSize: '0.75rem'
                                 }}>
                                   {card.members[0].fullName}
@@ -710,12 +739,13 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                     width: 20,
                                     height: 20,
                                     borderRadius: '50%',
-                                    bgcolor: '#ff6b35',
+                                    bgcolor: '#ff6b3533',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     fontSize: '0.625rem',
-                                    color: 'white',
+                                    color: '#ff6b35',
+                                    fontWeight: 600,
                                   }}
                                 >
                                   ?
@@ -1305,18 +1335,19 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                       width: 20,
                                       height: 20,
                                       borderRadius: '50%',
-                                      bgcolor: getAssigneeColor(card.members[0].fullName),
+                                      bgcolor: `${getAssigneeColor(card.members[0].fullName)}33`,
                                       display: 'flex',
                                       alignItems: 'center',
                                       justifyContent: 'center',
                                       fontSize: '0.625rem',
-                                      color: 'white',
+                                      color: getAssigneeColor(card.members[0].fullName),
+                                      fontWeight: 600,
                                     }}
                                   >
-                                    {card.members[0].fullName.charAt(0).toUpperCase()}
+                                    {getInitials(card.members[0].fullName)}
                                   </Box>
                                   <Typography variant="caption" sx={{ 
-                                    color: colors.text.tertiary,
+                                    color: getAssigneeColor(card.members[0].fullName),
                                     fontSize: '0.6875rem'
                                   }}>
                                     {card.members[0].fullName}
@@ -1333,18 +1364,19 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                       width: 20,
                                       height: 20,
                                       borderRadius: '50%',
-                                      bgcolor: '#ff6b35',
+                                      bgcolor: '#ff6b3533',
                                       display: 'flex',
                                       alignItems: 'center',
                                       justifyContent: 'center',
                                       fontSize: '0.625rem',
-                                      color: 'white',
+                                      color: '#ff6b35',
+                                      fontWeight: 600,
                                     }}
                                   >
-                                    U
+                                    ?
                                   </Box>
                                   <Typography variant="caption" sx={{ 
-                                    color: '#e0e0e0', 
+                                    color: '#ff6b35', 
                                     fontSize: '0.6875rem'
                                   }}>
                                     Unassigned
@@ -1552,18 +1584,19 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                     width: 20,
                                     height: 20,
                                     borderRadius: '50%',
-                                    bgcolor: getAssigneeColor(card.members[0].fullName),
+                                    bgcolor: `${getAssigneeColor(card.members[0].fullName)}33`,
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     fontSize: '0.625rem',
-                                    color: 'white',
+                                    color: getAssigneeColor(card.members[0].fullName),
+                                    fontWeight: 600,
                                   }}
                                 >
-                                  {card.members[0].fullName.charAt(0).toUpperCase()}
+                                  {getInitials(card.members[0].fullName)}
                                 </Box>
                                 <Typography variant="caption" sx={{ 
-                                  color: colors.text.tertiary,
+                                  color: getAssigneeColor(card.members[0].fullName),
                                   fontSize: '0.75rem'
                                 }}>
                                   {card.members[0].fullName}
@@ -1576,12 +1609,13 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                     width: 20,
                                     height: 20,
                                     borderRadius: '50%',
-                                    bgcolor: '#ff6b35',
+                                    bgcolor: '#ff6b3533',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     fontSize: '0.625rem',
-                                    color: 'white',
+                                    color: '#ff6b35',
+                                    fontWeight: 600,
                                   }}
                                 >
                                   ?

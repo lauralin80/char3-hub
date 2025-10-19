@@ -60,9 +60,37 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
   };
 
   const getAssigneeColor = (name: string) => {
-    // Only use orange for Unassigned, otherwise use subtle gray
+    // Orange for Unassigned
     if (!name || name === 'Unassigned') return '#ff6b35';
-    return 'rgba(255, 255, 255, 0.15)'; // Subtle gray for all assigned users
+    
+    // Create a hash from the name for consistent color assignment
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    // Refined color palette with good contrast
+    const colors = [
+      '#4caf50', // Green
+      '#2196f3', // Blue
+      '#9c27b0', // Purple
+      '#f44336', // Red
+      '#ff9800', // Orange
+      '#00bcd4', // Cyan
+      '#e91e63', // Pink
+      '#3f51b5', // Indigo
+      '#009688', // Teal
+      '#ff5722', // Deep Orange
+    ];
+    
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  const getInitials = (name: string) => {
+    if (!name || name === 'Unassigned') return '?';
+    const parts = name.split(' ').filter(p => p.length > 0);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
   };
 
   const handleCardClick = (taskId: string, e: React.MouseEvent) => {
@@ -834,23 +862,23 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                           width: 16,
                           height: 16,
                           borderRadius: '50%',
-                          bgcolor: getAssigneeColor(task.assignee),
+                          bgcolor: `${getAssigneeColor(task.assignee)}33`,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           fontSize: '0.5rem',
-                          color: 'white',
-                          fontWeight: 'bold'
+                          color: getAssigneeColor(task.assignee),
+                          fontWeight: 600
                         }}
                       >
-                        {task.assignee.charAt(0).toUpperCase()}
+                        {getInitials(task.assignee)}
                       </Box>
                       <Typography 
                         variant="caption" 
                         sx={{ 
                           color: getAssigneeColor(task.assignee),
                           fontSize: '0.625rem',
-                          fontWeight: 'bold',
+                          fontWeight: 600,
                           textDecoration: isTaskCompleted(task) ? 'line-through' : 'none',
                           opacity: isTaskCompleted(task) ? 0.7 : 1
                         }}

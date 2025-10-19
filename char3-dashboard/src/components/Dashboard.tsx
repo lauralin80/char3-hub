@@ -35,31 +35,37 @@ export default function Dashboard() {
   const [tabValue, setTabValue] = useState(0);
   
   const getAssigneeColor = (name: string) => {
+    // Orange for Unassigned
     if (!name || name === 'Unassigned') return '#ff6b35';
     
-    // Create a simple hash from the name to get consistent colors
+    // Create a hash from the name for consistent color assignment
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
     
-    // Use the hash to select from a predefined color palette
+    // Refined color palette with good contrast
     const colors = [
       '#4caf50', // Green
-      '#ff9800', // Orange
+      '#2196f3', // Blue
       '#9c27b0', // Purple
       '#f44336', // Red
-      '#2196f3', // Blue
-      '#ffeb3b', // Yellow
-      '#795548', // Brown
-      '#607d8b', // Blue Grey
-      '#00bfff', // Bright Sky Blue (Laura's color)
+      '#ff9800', // Orange
+      '#00bcd4', // Cyan
       '#e91e63', // Pink
       '#3f51b5', // Indigo
       '#009688', // Teal
+      '#ff5722', // Deep Orange
     ];
     
     return colors[Math.abs(hash) % colors.length];
+  };
+
+  const getInitials = (name: string) => {
+    if (!name || name === 'Unassigned') return '?';
+    const parts = name.split(' ').filter(p => p.length > 0);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
   };
 
   const getLabelColor = (color: string, name?: string) => {
@@ -1567,18 +1573,18 @@ export default function Dashboard() {
                       width: 16,
                       height: 16,
                       borderRadius: '50%',
-                      bgcolor: getAssigneeColor(task.assignee),
+                      bgcolor: `${getAssigneeColor(task.assignee || 'Unassigned')}33`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '0.625rem',
-                      color: 'white',
-                      fontWeight: 'bold'
+                      color: getAssigneeColor(task.assignee || 'Unassigned'),
+                      fontWeight: 600
                     }}
                   >
-                    {task.assignee ? task.assignee.charAt(0).toUpperCase() : '?'}
+                    {getInitials(task.assignee || 'Unassigned')}
                   </Box>
-                  <Typography variant="body2" sx={{ color: '#e0e0e0', fontSize: '0.75rem' }}>
+                  <Typography variant="body2" sx={{ color: getAssigneeColor(task.assignee || 'Unassigned'), fontSize: '0.75rem' }}>
                     {task.assignee || 'Unassigned'}
                   </Typography>
                 </Box>

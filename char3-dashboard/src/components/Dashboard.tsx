@@ -1244,36 +1244,35 @@ export default function Dashboard() {
 
           {/* Tab Panels */}
         <TabPanel value={tabValue} index={0}>
-          <WeeklyPlanningBoard 
-            adminTasks={allAdminTasks}
-            allBoardsData={allBoardsData}
-            onUpdateTask={handleUpdateAdminTask}
-            onArchiveTask={handleArchiveAdminTask}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-            onMoveTask={handleMoveTask}
-            onMoveTaskStart={handleMoveTaskStart}
-            onMoveTaskEnd={handleMoveTaskEnd}
-            onRefresh={refreshData}
-          />
-        </TabPanel>
-          <TabPanel value={tabValue} index={1}>
-            <DeliverablesBoard />
-          </TabPanel>
-        </Box>
-
-        {/* Right Master Tasks Panel - Only show for Weekly Planning */}
-        {tabValue === 0 && (
-          <Box sx={{ 
-            width: 300, 
-            bgcolor: '#141414', 
-            borderRadius: 2,
-            p: 2.5,
-            display: 'flex',
-            flexDirection: 'column',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.4)'
-          }}>
+          <Box sx={{ display: 'flex', gap: 2, flex: 1, minHeight: 0 }}>
+            {/* Weekly Planning Board */}
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <WeeklyPlanningBoard 
+                adminTasks={allAdminTasks}
+                allBoardsData={allBoardsData}
+                onUpdateTask={handleUpdateAdminTask}
+                onArchiveTask={handleArchiveAdminTask}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onMoveTask={handleMoveTask}
+                onMoveTaskStart={handleMoveTaskStart}
+                onMoveTaskEnd={handleMoveTaskEnd}
+                onRefresh={refreshData}
+              />
+            </Box>
+            
+            {/* All Tasks Panel */}
+            <Box sx={{ 
+              width: 300, 
+              bgcolor: '#1a1a1a', 
+              borderRadius: 2,
+              p: 2.5,
+              display: 'flex',
+              flexDirection: 'column',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
+              minHeight: 0
+            }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
             <Typography variant="h6" sx={{ color: colors.text.title, fontSize: '0.9375rem', fontWeight: typography.fontWeights.semibold, letterSpacing: typography.letterSpacing.normal }}>
               All Tasks
@@ -1585,8 +1584,14 @@ export default function Dashboard() {
               </Box>
             ))}
           </Box>
+            </Box>
           </Box>
-        )}
+        </TabPanel>
+        
+        <TabPanel value={tabValue} index={1}>
+          <DeliverablesBoard />
+        </TabPanel>
+        </Box>
       </Box>
     </Box>
   );

@@ -110,7 +110,8 @@ export default function AccountManagement() {
     if (user) {
       loadData();
     }
-  }, [user, allBoardsData, allBoardsDataTimestamp, setAllBoardsData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]); // Only run when user changes
 
   // Filter deliverables and account tasks when client is selected
   useEffect(() => {
@@ -240,10 +241,12 @@ export default function AccountManagement() {
         </Typography>
         <Button
           variant="outlined"
-          onClick={() => {
+          onClick={async () => {
             setError(null);
-            setAllBoardsData(null); // Clear cache to force refresh
             setLoading(true);
+            // Wait 2 seconds before retrying to avoid immediate rate limit
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            setAllBoardsData(null); // Clear cache to force refresh
           }}
           sx={{
             color: colors.accent.orange,

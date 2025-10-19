@@ -1674,87 +1674,102 @@ export default function TeamBoards() {
             Choose a board to view and manage tasks
           </Typography>
 
-          {/* Board Selection - List Style */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, maxWidth: 400 }}>
+          {/* Board Selection Cards */}
+          <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
             {/* Assigned to Me */}
             <Box
               onClick={() => setSelectedBoard('assigned')}
               sx={{
-                px: 2,
-                py: 1.5,
-                borderRadius: 1.5,
-                bgcolor: 'transparent',
-                border: 'none',
+                width: 240,
+                height: 140,
+                bgcolor: '#141414',
+                borderRadius: 2,
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 cursor: 'pointer',
-                color: colors.text.secondary,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                overflow: 'hidden',
                 '&:hover': {
-                  bgcolor: colors.background.input,
-                  color: colors.text.primary
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.15)',
+                  borderColor: 'rgba(255, 107, 53, 0.5)'
                 },
-                transition: transitions.default
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              <Typography sx={{ 
-                fontSize: '0.875rem',
-                fontWeight: typography.fontWeights.normal,
-                letterSpacing: typography.letterSpacing.normal
-              }}>
-                Assigned to Me
-              </Typography>
+              <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+                <Typography variant="h4" sx={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 600, fontSize: '1.125rem', letterSpacing: '-0.01em' }}>
+                  Assigned to Me
+                </Typography>
+              </Box>
             </Box>
 
             {/* Design/UX Board */}
             <Box
               onClick={() => setSelectedBoard('design')}
               sx={{
-                px: 2,
-                py: 1.5,
-                borderRadius: 1.5,
-                bgcolor: 'transparent',
-                border: 'none',
+                width: 240,
+                height: 140,
+                bgcolor: '#141414',
+                borderRadius: 2,
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 cursor: 'pointer',
-                color: colors.text.secondary,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                overflow: 'hidden',
                 '&:hover': {
-                  bgcolor: colors.background.input,
-                  color: colors.text.primary
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.15)',
+                  borderColor: 'rgba(255, 107, 53, 0.5)'
                 },
-                transition: transitions.default
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              <Typography sx={{ 
-                fontSize: '0.875rem',
-                fontWeight: typography.fontWeights.normal,
-                letterSpacing: typography.letterSpacing.normal
-              }}>
-                Design/UX
-              </Typography>
+              <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+                <Typography variant="h4" sx={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 600, fontSize: '1.125rem', letterSpacing: '-0.01em' }}>
+                  Design/UX
+                </Typography>
+              </Box>
             </Box>
 
             {/* Development Board */}
             <Box
               onClick={() => setSelectedBoard('development')}
               sx={{
-                px: 2,
-                py: 1.5,
-                borderRadius: 1.5,
-                bgcolor: 'transparent',
-                border: 'none',
+                width: 240,
+                height: 140,
+                bgcolor: '#141414',
+                borderRadius: 2,
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 cursor: 'pointer',
-                color: colors.text.secondary,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                overflow: 'hidden',
                 '&:hover': {
-                  bgcolor: colors.background.input,
-                  color: colors.text.primary
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.15)',
+                  borderColor: 'rgba(255, 107, 53, 0.5)'
                 },
-                transition: transitions.default
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              <Typography sx={{ 
-                fontSize: '0.875rem',
-                fontWeight: typography.fontWeights.normal,
-                letterSpacing: typography.letterSpacing.normal
-              }}>
-                Development
-              </Typography>
+              <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+                <Typography variant="h4" sx={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 600, fontSize: '1.125rem', letterSpacing: '-0.01em' }}>
+                  Development
+                </Typography>
+              </Box>
             </Box>
           </Box>
         </Box>

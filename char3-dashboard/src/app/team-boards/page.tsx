@@ -648,7 +648,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             variant="body2"
                             sx={{
                               color: '#e0e0e0',
-                              fontWeight: 'bold',
+,
                               fontSize: '0.875rem',
                               maxWidth: '300px',
                               overflow: 'hidden',
@@ -666,7 +666,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             sx={{
                               color: '#bbb',
                               fontSize: '0.875rem',
-                              fontWeight: 'bold'
                             }}
                           >
                             #{card.idShort}
@@ -677,9 +676,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                           <Typography
                             variant="body2"
                             sx={{
-                              color: '#e0e0e0',
+                              color: '#bbb',
                               fontSize: '0.875rem',
-                              fontWeight: 'bold'
                             }}
                           >
                             {(card.dueComplete || card.closed) ? 'Completed' : 
@@ -695,7 +693,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                               sx={{
                                 color: (!card.dueComplete && new Date(card.due) < new Date()) ? '#ff6b35' : '#e0e0e0',
                                 fontSize: '0.875rem',
-                                fontWeight: 'bold'
                               }}
                             >
                               {new Date(card.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
@@ -1288,7 +1285,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                       justifyContent: 'center',
                                       fontSize: '0.625rem',
                                       color: 'white',
-                                      fontWeight: 'bold'
                                     }}
                                   >
                                     {card.members[0].fullName.charAt(0).toUpperCase()}
@@ -1317,7 +1313,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                       justifyContent: 'center',
                                       fontSize: '0.625rem',
                                       color: 'white',
-                                      fontWeight: 'bold'
                                     }}
                                   >
                                     U
@@ -1336,7 +1331,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                 <Typography variant="caption" sx={{ 
                                   color: (!card.dueComplete && new Date(card.due) < new Date()) ? '#ff6b35' : '#888',
                                   fontSize: '0.6875rem',
-                                  fontWeight: 'bold',
+,
                                   lineHeight: 1.2
                                 }}>
                                   {new Date(card.due).toLocaleDateString('en-US', { 
@@ -1473,7 +1468,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             variant="body2"
                             sx={{
                               color: '#e0e0e0',
-                              fontWeight: 'bold',
+,
                               fontSize: '0.875rem',
                               maxWidth: '300px',
                               overflow: 'hidden',
@@ -1491,7 +1486,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             sx={{
                               color: '#bbb',
                               fontSize: '0.875rem',
-                              fontWeight: 'bold'
                             }}
                           >
                             #{card.idShort}
@@ -1502,9 +1496,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                           <Typography
                             variant="body2"
                             sx={{
-                              color: '#e0e0e0',
+                              color: '#bbb',
                               fontSize: '0.875rem',
-                              fontWeight: 'bold'
                             }}
                           >
                             {(card.dueComplete || card.closed) ? 'Completed' : (list?.name || 'Unknown')}
@@ -1518,7 +1511,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                               sx={{
                                 color: (!card.dueComplete && new Date(card.due) < new Date()) ? '#ff6b35' : '#e0e0e0',
                                 fontSize: '0.875rem',
-                                fontWeight: 'bold'
                               }}
                             >
                               {new Date(card.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}

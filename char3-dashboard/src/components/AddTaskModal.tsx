@@ -146,12 +146,31 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
     if (effortField?.options) {
       effortField.options.forEach((opt: any) => {
         if (opt.value?.text) {
+          // Store the text as key and the id as value
           effortOptionsMap.set(opt.value.text, opt.id);
         }
       });
     }
   }
-  const effortOptions = Array.from(effortOptionsMap.keys()).sort();
+  
+  // Custom sort order for effort: XS, S, M, L, XL
+  const effortOrder = ['XS', 'S', 'M', 'L', 'XL'];
+  const effortOptions = Array.from(effortOptionsMap.keys()).sort((a, b) => {
+    const indexA = effortOrder.indexOf(a);
+    const indexB = effortOrder.indexOf(b);
+    
+    // If both are in the custom order, sort by their position
+    if (indexA !== -1 && indexB !== -1) {
+      return indexA - indexB;
+    }
+    
+    // If only one is in the custom order, prioritize it
+    if (indexA !== -1) return -1;
+    if (indexB !== -1) return 1;
+    
+    // If neither is in the custom order, sort alphabetically
+    return a.localeCompare(b);
+  });
 
   // Extract labels from all boards (store full label objects)
   const labelsMap = new Map<string, any>();

@@ -606,13 +606,26 @@ class TrelloService {
     labelId?: string;
   }, userToken?: string) {
     try {
-      // Get the board's lists to find the first list (or default list)
+      // Get the board's lists to find the appropriate default list
       const listsResponse = await axios.get(`${TRELLO_API_BASE}/boards/${cardData.boardId}/lists`, {
         params: this.getAuthParams(userToken),
       });
       
       const lists = listsResponse.data;
-      const targetListId = cardData.listId || lists[0]?.id;
+      
+      // Determine target list based on board
+      let targetListId = cardData.listId;
+      
+      if (!targetListId) {
+        // For Account Management board, default to "👥 Account Tasks" list
+        if (cardData.boardId === this.accountManagementBoardId) {
+          const accountTasksList = lists.find((list: any) => list.name === '👥 Account Tasks');
+          targetListId = accountTasksList?.id || lists[0]?.id;
+        } else {
+          // For other boards, use the first list
+          targetListId = lists[0]?.id;
+        }
+      }
       
       if (!targetListId) {
         throw new Error('No list found on the board');

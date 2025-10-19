@@ -60,7 +60,13 @@ export function SideNavigation() {
   const { user, signOut } = useAuth();
 
   const handleNavigation = (path: string) => {
-    router.push(path);
+    // Force navigation even if on a sub-page of the same section
+    if (pathname?.startsWith(path) && path !== '/') {
+      // If already in this section, force a full navigation to reset state
+      window.location.href = path;
+    } else {
+      router.push(path);
+    }
   };
 
   return (
@@ -85,7 +91,10 @@ export function SideNavigation() {
       {/* Navigation Items */}
       <List sx={{ flex: 1, px: 1.5, py: 0 }}>
         {navigationItems.map((item) => {
-          const isActive = pathname === item.path;
+          // Check if current path matches exactly or starts with the item path (for sub-pages)
+          const isActive = item.path === '/' 
+            ? pathname === item.path 
+            : pathname?.startsWith(item.path);
           
           return (
             <ListItem key={item.id} disablePadding sx={{ mb: 0.5 }}>

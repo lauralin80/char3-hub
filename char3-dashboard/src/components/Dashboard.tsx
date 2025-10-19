@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Alert } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
 import { useStore } from '@/store/useStore';
 import { trelloService } from '@/services/trelloService';
 import { DeliverablesBoard } from './DeliverablesBoard';
@@ -1127,33 +1126,12 @@ export default function Dashboard() {
       overflow: 'hidden'
     }}>
       {/* Top Header Bar */}
+      {/* Empty header */}
       <Box sx={{ 
         height: 60,
         bgcolor: '#141414',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        px: 2,
         borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
       }}>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button
-            size="small"
-            startIcon={<AddIcon />}
-            onClick={() => setAddTaskModalOpen(true)}
-            sx={{
-              bgcolor: '#4caf50',
-              color: 'white',
-              fontSize: '0.75rem',
-              px: 1,
-              py: 0.5,
-              minWidth: 'auto',
-              '&:hover': { bgcolor: '#45a049' }
-            }}
-          >
-            Add Task
-          </Button>
-        </Box>
       </Box>
 
       {/* Main Content Area */}
@@ -1446,6 +1424,29 @@ export default function Dashboard() {
               }}
             >
               Clear
+            </Button>
+            
+            <Box sx={{ flex: 1 }} />
+            
+            <Button
+              onClick={() => setAddTaskModalOpen(true)}
+              size="small"
+              variant="outlined"
+              sx={{
+                color: '#4caf50',
+                borderColor: '#4caf50',
+                fontSize: '0.75rem',
+                px: 2,
+                py: 0.5,
+                minWidth: 'auto',
+                height: '32px',
+                '&:hover': { 
+                  borderColor: '#45a049',
+                  bgcolor: 'rgba(76, 175, 80, 0.08)'
+                }
+              }}
+            >
+              Add Task
             </Button>
           </Box>
 

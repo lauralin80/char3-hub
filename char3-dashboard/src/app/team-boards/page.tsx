@@ -6,6 +6,7 @@ import { Box, Typography, Button, Chip, Table, TableBody, TableCell, TableContai
 import { trelloService } from '@/services/trelloService';
 import { useAuth } from '@/contexts/AuthContext';
 import { colors, typography, transitions } from '@/styles/theme';
+import { AddTaskModal, TaskData } from '@/components/AddTaskModal';
 
 // Board View Component
 interface BoardViewProps {
@@ -23,6 +24,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
   const [sortField, setSortField] = useState<string>('due');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [viewMode, setViewMode] = useState<'kanban' | 'table'>('kanban');
+  const [addTaskModalOpen, setAddTaskModalOpen] = useState(false);
   const { user } = useAuth();
 
   // Helper function to extract custom field values
@@ -130,8 +132,34 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
     setSelectedProject('');
     setSelectedStatus('');
     setSelectedTaskStatus('open');
-    setSortField('due');
-    setSortDirection('asc');
+  };
+
+  const handleCreateTask = async (taskData: TaskData) => {
+    try {
+      // Build card data object
+      const cardDataToSend: any = {
+        title: taskData.title,
+        description: taskData.description,
+        boardId: taskData.board,
+      };
+
+      // Only add optional fields if they have values
+      if (taskData.client) cardDataToSend.client = taskData.client;
+      if (taskData.project) cardDataToSend.project = taskData.project;
+      if (taskData.milestone) cardDataToSend.milestone = taskData.milestone;
+      if (taskData.effort) cardDataToSend.effort = taskData.effort;
+      if (taskData.assignee) cardDataToSend.assignee = taskData.assignee;
+      if (taskData.label) cardDataToSend.labelId = taskData.label;
+
+      // Create the card in Trello
+      await trelloService.createCard(cardDataToSend, user?.trelloToken);
+
+      // Refresh the page to show the new card
+      window.location.reload();
+    } catch (error) {
+      console.error('Error creating task:', error);
+      throw error;
+    }
   };
 
   const handleSort = (field: string) => {
@@ -511,6 +539,26 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 }}
               >
                 Clear Filters
+              </Button>
+              
+              <Button
+                onClick={() => setAddTaskModalOpen(true)}
+                size="small"
+                variant="outlined"
+                sx={{
+                  color: '#4caf50',
+                  borderColor: '#4caf50',
+                  fontSize: '0.75rem',
+                  px: 2,
+                  py: 1,
+                  minWidth: 'auto',
+                  '&:hover': { 
+                    borderColor: '#45a049',
+                    bgcolor: 'rgba(76, 175, 80, 0.08)'
+                  }
+                }}
+              >
+                Add Task
               </Button>
             </Box>
 
@@ -1140,6 +1188,26 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             >
               Clear Filters
             </Button>
+            
+            <Button
+              onClick={() => setAddTaskModalOpen(true)}
+              size="small"
+              variant="outlined"
+              sx={{
+                color: '#4caf50',
+                borderColor: '#4caf50',
+                fontSize: '0.75rem',
+                px: 2,
+                py: 1,
+                minWidth: 'auto',
+                '&:hover': { 
+                  borderColor: '#45a049',
+                  bgcolor: 'rgba(76, 175, 80, 0.08)'
+                }
+              }}
+            >
+              Add Task
+            </Button>
           </Box>
         </Box>
 
@@ -1713,6 +1781,14 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
           )}
         </Box>
       </Box>
+      
+      {/* Add Task Modal */}
+      <AddTaskModal
+        open={addTaskModalOpen}
+        onClose={() => setAddTaskModalOpen(false)}
+        onSubmit={handleCreateTask}
+        allBoardsData={allBoardsData}
+      />
     </Box>
   );
 }

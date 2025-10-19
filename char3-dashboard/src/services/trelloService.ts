@@ -586,6 +586,129 @@ class TrelloService {
       throw error;
     }
   }
+
+  async createCard(cardData: {
+    title: string;
+    description?: string;
+    boardId: string;
+    listId?: string;
+    client?: string;
+    project?: string;
+    milestone?: string;
+    effort?: string;
+    assignee?: string;
+    labelId?: string;
+  }, userToken?: string) {
+    try {
+      // Get the board's lists to find the first list (or default list)
+      const listsResponse = await axios.get(`${TRELLO_API_BASE}/boards/${cardData.boardId}/lists`, {
+        params: this.getAuthParams(userToken),
+      });
+      
+      const lists = listsResponse.data;
+      const targetListId = cardData.listId || lists[0]?.id;
+      
+      if (!targetListId) {
+        throw new Error('No list found on the board');
+      }
+
+      // Create the card
+      const cardResponse = await axios.post(`${TRELLO_API_BASE}/cards`, null, {
+        params: {
+          ...this.getAuthParams(userToken),
+          name: cardData.title,
+          desc: cardData.description || '',
+          idList: targetListId,
+        },
+      });
+
+      const newCard = cardResponse.data;
+
+      // Add label if provided
+      if (cardData.labelId) {
+        await axios.post(`${TRELLO_API_BASE}/cards/${newCard.id}/idLabels`, null, {
+          params: {
+            ...this.getAuthParams(userToken),
+            value: cardData.labelId,
+          },
+        });
+      }
+
+      // Add assignee if provided
+      if (cardData.assignee) {
+        // First, get all board members
+        const membersResponse = await axios.get(`${TRELLO_API_BASE}/boards/${cardData.boardId}/members`, {
+          params: this.getAuthParams(userToken),
+        });
+        
+        const member = membersResponse.data.find((m: any) => m.fullName === cardData.assignee);
+        if (member) {
+          await axios.post(`${TRELLO_API_BASE}/cards/${newCard.id}/idMembers`, null, {
+            params: {
+              ...this.getAuthParams(userToken),
+              value: member.id,
+            },
+          });
+        }
+      }
+
+      // Add custom fields if provided
+      const customFieldsResponse = await axios.get(`${TRELLO_API_BASE}/boards/${cardData.boardId}/customFields`, {
+        params: this.getAuthParams(userToken),
+      });
+
+      const customFields = customFieldsResponse.data;
+
+      if (cardData.client) {
+        const clientField = customFields.find((cf: any) => cf.name === 'Client');
+        if (clientField) {
+          await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${clientField.id}/item`, {
+            value: { text: cardData.client },
+          }, {
+            params: this.getAuthParams(userToken),
+          });
+        }
+      }
+
+      if (cardData.project) {
+        const projectField = customFields.find((cf: any) => cf.name === 'Project');
+        if (projectField) {
+          await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${projectField.id}/item`, {
+            value: { text: cardData.project },
+          }, {
+            params: this.getAuthParams(userToken),
+          });
+        }
+      }
+
+      if (cardData.milestone) {
+        const milestoneField = customFields.find((cf: any) => cf.name === 'Milestone');
+        if (milestoneField) {
+          await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${milestoneField.id}/item`, {
+            value: { text: cardData.milestone },
+          }, {
+            params: this.getAuthParams(userToken),
+          });
+        }
+      }
+
+      if (cardData.effort) {
+        const effortField = customFields.find((cf: any) => cf.name === 'Effort');
+        if (effortField) {
+          await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${effortField.id}/item`, {
+            value: { text: cardData.effort },
+          }, {
+            params: this.getAuthParams(userToken),
+          });
+        }
+      }
+
+      return newCard;
+    } catch (error) {
+      console.error('Error creating card:', error);
+      throw error;
+    }
+  }
 }
 
 export const trelloService = new TrelloService();

@@ -7,7 +7,9 @@ import { useStore } from '@/store/useStore';
 import { trelloService } from '@/services/trelloService';
 import { DeliverablesBoard } from './DeliverablesBoard';
 import { WeeklyPlanningBoard } from './WeeklyPlanningBoard';
+import { AddTaskModal, TaskData } from './AddTaskModal';
 import { colors, typography, transitions } from '@/styles/theme';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -33,6 +35,8 @@ function TabPanel(props: TabPanelProps) {
 
 export default function Dashboard() {
   const [tabValue, setTabValue] = useState(0);
+  const [addTaskModalOpen, setAddTaskModalOpen] = useState(false);
+  const { user } = useAuth();
   
   const getAssigneeColor = (name: string) => {
     // Orange for Unassigned
@@ -496,6 +500,42 @@ export default function Dashboard() {
       
     } catch (error) {
       console.error('Error moving task end date:', error);
+    }
+  };
+
+  // Handle creating a new task
+  const handleCreateTask = async (taskData: TaskData) => {
+    try {
+      // Find the label ID if a label was selected
+      let labelId: string | undefined;
+      if (taskData.label) {
+        const allLabels = [
+          ...(allBoardsData?.accountManagement?.labels || []),
+          ...(allBoardsData?.designUx?.labels || []),
+          ...(allBoardsData?.development?.labels || [])
+        ];
+        const label = allLabels.find((l: any) => l.name === taskData.label);
+        labelId = label?.id;
+      }
+
+      // Create the card in Trello
+      await trelloService.createCard({
+        title: taskData.title,
+        description: taskData.description,
+        boardId: taskData.board,
+        client: taskData.client,
+        project: taskData.project,
+        milestone: taskData.milestone,
+        effort: taskData.effort,
+        assignee: taskData.assignee,
+        labelId: labelId
+      }, user?.trelloToken);
+
+      // Refresh the data
+      await loadData();
+    } catch (error) {
+      console.error('Error creating task:', error);
+      throw error;
     }
   };
 
@@ -1107,6 +1147,7 @@ export default function Dashboard() {
           <Button
             size="small"
             startIcon={<AddIcon />}
+            onClick={() => setAddTaskModalOpen(true)}
             sx={{
               bgcolor: '#4caf50',
               color: 'white',
@@ -1579,6 +1620,14 @@ export default function Dashboard() {
         </TabPanel>
         </Box>
       </Box>
+
+      {/* Add Task Modal */}
+      <AddTaskModal
+        open={addTaskModalOpen}
+        onClose={() => setAddTaskModalOpen(false)}
+        onSubmit={handleCreateTask}
+        allBoardsData={allBoardsData}
+      />
     </Box>
   );
 }

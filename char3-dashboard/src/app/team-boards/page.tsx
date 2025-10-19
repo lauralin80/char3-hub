@@ -401,7 +401,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             {/* Filters */}
             <Box sx={{ mb: 3 }}>
               {/* Top Row: Search and Task Status */}
-              <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
                 <input
                   type="text"
                   placeholder="Search tasks..."
@@ -410,14 +410,24 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   style={{
                     flex: 1,
                     maxWidth: '300px',
-                    padding: '8px 12px',
-                    backgroundColor: '#3a3a3a',
-                    border: '1px solid #555',
-                    borderRadius: '4px',
-                    color: 'white',
-                    fontSize: '0.875rem',
+                    padding: '9px 12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '6px',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontSize: '0.8125rem',
                     outline: 'none',
-                    height: '40px'
+                    fontWeight: 400,
+                    letterSpacing: '-0.01em',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 107, 53, 0.5)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.04)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
                   }}
                 />
                 
@@ -426,14 +436,16 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   onChange={(e) => setSelectedTaskStatus(e.target.value)}
                   style={{
                     minWidth: '140px',
-                    padding: '8px 12px',
-                    backgroundColor: '#3a3a3a',
-                    border: '1px solid #555',
-                    borderRadius: '4px',
-                    color: 'white',
-                    fontSize: '0.875rem',
+                    padding: '9px 12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '6px',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontSize: '0.75rem',
                     outline: 'none',
-                    height: '40px'
+                    height: 'auto',
+                    fontWeight: 400,
+                    letterSpacing: '-0.01em'
                   }}
                 >
                   <option value="open">Open Tasks</option>
@@ -443,20 +455,23 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
               </Box>
 
               {/* Bottom Row: Other Filters */}
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
                 <select
                   value={selectedClient}
                   onChange={(e) => setSelectedClient(e.target.value)}
                   style={{
-                    minWidth: '140px',
-                    padding: '8px 12px',
-                    backgroundColor: '#3a3a3a',
-                    border: '1px solid #555',
-                    borderRadius: '4px',
-                    color: 'white',
-                    fontSize: '0.875rem',
+                    flex: 1,
+                    minWidth: '120px',
+                    padding: '9px 12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '6px',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontSize: '0.75rem',
                     outline: 'none',
-                    height: '40px'
+                    height: 'auto',
+                    fontWeight: 400,
+                    letterSpacing: '-0.01em'
                   }}
                 >
                   <option value="">All Clients</option>
@@ -469,15 +484,18 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   value={selectedProject}
                   onChange={(e) => setSelectedProject(e.target.value)}
                   style={{
-                    minWidth: '140px',
-                    padding: '8px 12px',
-                    backgroundColor: '#3a3a3a',
-                    border: '1px solid #555',
-                    borderRadius: '4px',
-                    color: 'white',
-                    fontSize: '0.875rem',
+                    flex: 1,
+                    minWidth: '120px',
+                    padding: '9px 12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '6px',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontSize: '0.75rem',
                     outline: 'none',
-                    height: '40px'
+                    height: 'auto',
+                    fontWeight: 400,
+                    letterSpacing: '-0.01em'
                   }}
                 >
                   <option value="">All Projects</option>
@@ -494,9 +512,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     color: 'white',
                     fontSize: '0.75rem',
                     px: 2,
-                    py: 0.5,
+                    py: 1,
                     minWidth: 'auto',
-                    height: '40px',
                     '&:hover': { bgcolor: '#45a049' }
                   }}
                 >
@@ -941,7 +958,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
           {/* Filters */}
           <Box sx={{ mb: 2 }}>
             {/* Top Row: Search and Task Status */}
-            <Box sx={{ display: 'flex', gap: 2, mb: 1.5, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
               <input
                 type="text"
                 placeholder="Search tasks..."
@@ -950,14 +967,24 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 style={{
                   flex: 1,
                   maxWidth: '300px',
-                  padding: '8px 12px',
-                  backgroundColor: '#3a3a3a',
-                  border: '1px solid #555',
-                  borderRadius: '4px',
-                  color: 'white',
-                  fontSize: '0.875rem',
+                  padding: '9px 12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '6px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.8125rem',
                   outline: 'none',
-                  height: '40px'
+                  fontWeight: 400,
+                  letterSpacing: '-0.01em',
+                  transition: 'all 0.15s ease'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 107, 53, 0.5)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.04)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
                 }}
               />
               
@@ -966,14 +993,16 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 onChange={(e) => setSelectedTaskStatus(e.target.value)}
                 style={{
                   minWidth: '140px',
-                  padding: '8px 12px',
-                  backgroundColor: '#3a3a3a',
-                  border: '1px solid #555',
-                  borderRadius: '4px',
-                  color: 'white',
-                  fontSize: '0.875rem',
+                  padding: '9px 12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '6px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.75rem',
                   outline: 'none',
-                  height: '40px'
+                  height: 'auto',
+                  fontWeight: 400,
+                  letterSpacing: '-0.01em'
                 }}
               >
                 <option value="open">Open Tasks</option>
@@ -983,20 +1012,23 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             </Box>
 
             {/* Bottom Row: Other Filters */}
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
               <select
                 value={selectedClient}
                 onChange={(e) => setSelectedClient(e.target.value)}
                 style={{
-                  minWidth: '140px',
-                  padding: '8px 12px',
-                  backgroundColor: '#3a3a3a',
-                  border: '1px solid #555',
-                  borderRadius: '4px',
-                  color: 'white',
-                  fontSize: '0.875rem',
+                  flex: 1,
+                  minWidth: '120px',
+                  padding: '9px 12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '6px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.75rem',
                   outline: 'none',
-                  height: '40px'
+                  height: 'auto',
+                  fontWeight: 400,
+                  letterSpacing: '-0.01em'
                 }}
               >
                 <option value="">All Clients</option>
@@ -1009,15 +1041,18 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 value={selectedProject}
                 onChange={(e) => setSelectedProject(e.target.value)}
                 style={{
-                  minWidth: '140px',
-                  padding: '8px 12px',
-                  backgroundColor: '#3a3a3a',
-                  border: '1px solid #555',
-                  borderRadius: '4px',
-                  color: 'white',
-                  fontSize: '0.875rem',
+                  flex: 1,
+                  minWidth: '120px',
+                  padding: '9px 12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '6px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.75rem',
                   outline: 'none',
-                  height: '40px'
+                  height: 'auto',
+                  fontWeight: 400,
+                  letterSpacing: '-0.01em'
                 }}
               >
                 <option value="">All Projects</option>
@@ -1030,15 +1065,18 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
                 style={{
-                  minWidth: '140px',
-                  padding: '8px 12px',
-                  backgroundColor: '#3a3a3a',
-                  border: '1px solid #555',
-                  borderRadius: '4px',
-                  color: 'white',
-                  fontSize: '0.875rem',
+                  flex: 1,
+                  minWidth: '120px',
+                  padding: '9px 12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '6px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.75rem',
                   outline: 'none',
-                  height: '40px'
+                  height: 'auto',
+                  fontWeight: 400,
+                  letterSpacing: '-0.01em'
                 }}
               >
                 <option value="">All Status</option>
@@ -1055,9 +1093,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   color: 'white',
                   fontSize: '0.75rem',
                   px: 2,
-                  py: 0.5,
+                  py: 1,
                   minWidth: 'auto',
-                  height: '40px',
                   '&:hover': { bgcolor: '#45a049' }
                 }}
               >

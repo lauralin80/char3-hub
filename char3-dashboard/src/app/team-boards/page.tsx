@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Box, Typography, Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
 import { trelloService } from '@/services/trelloService';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -1599,10 +1599,26 @@ export default function TeamBoards() {
         height: '100vh', 
         bgcolor: '#0d0d0d', 
         display: 'flex', 
+        flexDirection: 'column',
         alignItems: 'center', 
-        justifyContent: 'center' 
+        justifyContent: 'center',
+        gap: 2
       }}>
-        <Typography variant="h5" sx={{ color: '#e0e0e0' }}>
+        <CircularProgress 
+          size={32} 
+          sx={{ 
+            color: '#ff6b35',
+            '& .MuiCircularProgress-circle': {
+              strokeLinecap: 'round',
+            }
+          }} 
+        />
+        <Typography variant="h6" sx={{ 
+          color: 'rgba(255, 255, 255, 0.7)', 
+          fontSize: '0.9375rem',
+          fontWeight: 500,
+          letterSpacing: '-0.01em'
+        }}>
           Loading Team Boards...
         </Typography>
       </Box>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { AdminTaskCard } from './AdminTaskCard';
 import { trelloService } from '../services/trelloService';
+import { colors, typography, transitions } from '@/styles/theme';
 
 interface AdminTask {
   id: string;
@@ -510,8 +511,8 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
               <Typography 
                 variant="body2" 
                 sx={{ 
-                  color: 'white',
-                  fontWeight: 'bold',
+                  color: colors.text.title,
+                  fontWeight: typography.fontWeights.semibold,
                   fontSize: '0.875rem'
                 }}
               >

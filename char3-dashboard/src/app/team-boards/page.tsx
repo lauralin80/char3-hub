@@ -233,7 +233,12 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
     return colors[Math.abs(hash) % colors.length];
   };
 
-  const getLabelColor = (color: string) => {
+  const getLabelColor = (color: string, name?: string) => {
+    // Check for "Need More Info" label first
+    if (name && name.toLowerCase().includes('need more info')) {
+      return '#8b6db8'; // Darker purple for better contrast
+    }
+    
     const colorMap: { [key: string]: string } = {
       'orange': '#ff6b35', 'red': '#eb5a46', 'green': '#61bd4f', 'blue': '#0079bf',
       'yellow': '#f2d600', 'purple': '#c377e0', 'pink': '#ff78cb', 'sky': '#00c2e0',
@@ -335,49 +340,47 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
         <Box sx={{ 
           height: 60,
           bgcolor: '#2a2a2a',
+          borderBottom: '1px solid #444',
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
-          px: 2,
-          borderBottom: '1px solid #444'
+          px: 2
         }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button 
-              onClick={onBack} 
-              variant="outlined" 
-              sx={{ 
-                color: '#ff6b35', 
-                borderColor: '#ff6b35',
-                '&:hover': { 
-                  borderColor: '#ff8a65',
-                  bgcolor: 'rgba(255, 107, 53, 0.1)'
-                }
-              }}
-            >
-              ← Back to Boards
-            </Button>
-            <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold' }}>
-              Assigned to Me
-            </Typography>
-            <Chip 
-              label={`${sortedAssignedCards.length} tasks`} 
-              size="small" 
-              sx={{ 
-                bgcolor: '#ff6b35', 
-                color: '#fff', 
-                fontSize: '0.75rem',
-                height: '24px'
-              }} 
-            />
-          </Box>
-          <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem' }}>
-            Table view with advanced filtering and sorting
-          </Typography>
+          <Button 
+            onClick={onBack} 
+            variant="outlined" 
+            sx={{ 
+              color: '#ff6b35', 
+              borderColor: '#ff6b35',
+              '&:hover': { 
+                borderColor: '#ff8a65',
+                bgcolor: 'rgba(255, 107, 53, 0.1)'
+              }
+            }}
+          >
+            ← Back to Boards
+          </Button>
         </Box>
 
         {/* Main Content */}
         <Box sx={{ flex: 1, overflow: 'auto', bgcolor: '#2a2a2a', m: 2, borderRadius: 2 }}>
           <Box sx={{ p: 3 }}>
+            {/* Title and Task Count */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold' }}>
+                Assigned to Me
+              </Typography>
+              <Chip 
+                label={`${sortedAssignedCards.length} tasks`} 
+                size="small" 
+                sx={{ 
+                  bgcolor: '#ff6b35', 
+                  color: '#fff', 
+                  fontSize: '0.75rem',
+                  height: '24px'
+                }} 
+              />
+            </Box>
+
             <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem', mb: 3 }}>
               All your assigned tasks across all boards
             </Typography>
@@ -701,7 +704,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                   key={label.id}
                                   variant="body2"
                                   sx={{
-                                    color: getLabelColor(label.color),
+                                    color: getLabelColor(label.color, label.name),
                                     fontSize: '0.75rem',
                                     fontWeight: 'bold',
                                     textTransform: 'uppercase'
@@ -833,100 +836,99 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
       <Box sx={{ 
         height: 60,
         bgcolor: '#2a2a2a',
+        borderBottom: '1px solid #444',
         display: 'flex',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        px: 2,
-        borderBottom: '1px solid #444'
+        px: 2
       }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Button 
-            onClick={onBack} 
-            variant="outlined" 
-            sx={{ 
-              color: '#ff6b35', 
-              borderColor: '#ff6b35',
-              '&:hover': { 
-                borderColor: '#ff8a65',
-                bgcolor: 'rgba(255, 107, 53, 0.1)'
-              }
-            }}
-          >
-            ← Back to Boards
-          </Button>
-          <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold' }}>
-            {boardName} Board
-          </Typography>
-          
-          {/* View Toggle - Next to Title */}
-          <Box sx={{ display: 'flex', gap: 0.5 }}>
-            <Button
-              onClick={() => setViewMode('kanban')}
-              size="small"
-              sx={{
-                bgcolor: viewMode === 'kanban' ? '#ff6b35' : 'transparent',
-                color: viewMode === 'kanban' ? '#fff' : '#888',
-                border: '1px solid #555',
-                minWidth: 'auto',
-                px: 1.5,
-                py: 0.5,
-                fontSize: '0.75rem',
-                '&:hover': {
-                  bgcolor: viewMode === 'kanban' ? '#ff8a65' : '#333',
-                  borderColor: '#ff6b35'
-                }
-              }}
-            >
-              Board
-            </Button>
-            <Button
-              onClick={() => setViewMode('table')}
-              size="small"
-              sx={{
-                bgcolor: viewMode === 'table' ? '#ff6b35' : 'transparent',
-                color: viewMode === 'table' ? '#fff' : '#888',
-                border: '1px solid #555',
-                minWidth: 'auto',
-                px: 1.5,
-                py: 0.5,
-                fontSize: '0.75rem',
-                '&:hover': {
-                  bgcolor: viewMode === 'table' ? '#ff8a65' : '#333',
-                  borderColor: '#ff6b35'
-                }
-              }}
-            >
-              List
-            </Button>
-          </Box>
-          
-          <Chip 
-            label={`${sortedFilteredCards.length} tasks`} 
-            size="small" 
-            sx={{ 
-              bgcolor: '#ff6b35', 
-              color: '#fff', 
-              fontSize: '0.75rem',
-              height: '24px'
-            }} 
-          />
-        </Box>
-        <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem' }}>
-          {viewMode === 'kanban' ? 'Kanban board view with advanced filtering' : 'Table view with advanced filtering and sorting'}
-        </Typography>
+        <Button 
+          onClick={onBack} 
+          variant="outlined" 
+          sx={{ 
+            color: '#ff6b35', 
+            borderColor: '#ff6b35',
+            '&:hover': { 
+              borderColor: '#ff8a65',
+              bgcolor: 'rgba(255, 107, 53, 0.1)'
+            }
+          }}
+        >
+          ← Back to Boards
+        </Button>
       </Box>
 
       {/* Main Content */}
-      <Box sx={{ flex: 1, overflow: 'auto', bgcolor: '#2a2a2a', m: 2, borderRadius: 2 }}>
-        <Box sx={{ p: 3 }}>
-          <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem', mb: 3 }}>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', bgcolor: '#2a2a2a', m: 2, borderRadius: 2 }}>
+        {/* Fixed Header Section */}
+        <Box sx={{ p: 2, pb: 0 }}>
+          {/* Title, View Toggle, and Task Count */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+            <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold' }}>
+              {boardName} Board
+            </Typography>
+            
+            {/* View Toggle */}
+            <Box sx={{ display: 'flex', gap: 0.5 }}>
+              <Button
+                onClick={() => setViewMode('kanban')}
+                size="small"
+                sx={{
+                  bgcolor: viewMode === 'kanban' ? '#ff6b35' : 'transparent',
+                  color: viewMode === 'kanban' ? '#fff' : '#888',
+                  border: '1px solid #555',
+                  minWidth: 'auto',
+                  px: 1.5,
+                  py: 0.5,
+                  fontSize: '0.75rem',
+                  '&:hover': {
+                    bgcolor: viewMode === 'kanban' ? '#ff8a65' : '#333',
+                    borderColor: '#ff6b35'
+                  }
+                }}
+              >
+                Board
+              </Button>
+              <Button
+                onClick={() => setViewMode('table')}
+                size="small"
+                sx={{
+                  bgcolor: viewMode === 'table' ? '#ff6b35' : 'transparent',
+                  color: viewMode === 'table' ? '#fff' : '#888',
+                  border: '1px solid #555',
+                  minWidth: 'auto',
+                  px: 1.5,
+                  py: 0.5,
+                  fontSize: '0.75rem',
+                  '&:hover': {
+                    bgcolor: viewMode === 'table' ? '#ff8a65' : '#333',
+                    borderColor: '#ff6b35'
+                  }
+                }}
+              >
+                List
+              </Button>
+            </Box>
+            
+            <Chip 
+              label={`${sortedFilteredCards.length} tasks`} 
+              size="small" 
+              sx={{ 
+                bgcolor: '#ff6b35', 
+                color: '#fff', 
+                fontSize: '0.75rem',
+                height: '24px'
+              }} 
+            />
+          </Box>
+
+          <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem', mb: 2 }}>
             All tasks from the {boardName} board
           </Typography>
 
           {/* Filters */}
-          <Box sx={{ mb: 3 }}>
+          <Box sx={{ mb: 2 }}>
             {/* Top Row: Search and Task Status */}
-            <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', gap: 2, mb: 1.5, alignItems: 'center' }}>
               <input
                 type="text"
                 placeholder="Search tasks..."
@@ -1050,19 +1052,21 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
               </Button>
             </Box>
           </Box>
+        </Box>
 
+        {/* Scrollable Content Area */}
+        <Box sx={{ flex: 1, overflow: 'hidden', p: 2, pt: 0, display: 'flex', flexDirection: 'column' }}>
           {/* Conditional Rendering based on View Mode */}
           {viewMode === 'kanban' ? (
             /* Kanban Board View - Trello List-based Swim Lanes */
             <Box sx={{ 
               display: 'flex',
+              flex: 1,
               bgcolor: '#1a1a1a',
               border: '1px solid #444',
               borderRadius: 2,
               overflow: 'auto',
-              height: 'calc(100vh - 250px)',
-              width: '100%',
-              p: 2
+              p: 1.5
             }}>
               {boardData.lists.map((list: any, index: number) => {
                 const listCards = filteredCards.filter((card: any) => card.idList === list.id);
@@ -1071,8 +1075,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   <Box
                     key={list.id}
                     sx={{
-                      flex: 1,
-                      minWidth: 200,
+                      flex: '1 1 0',
+                      minWidth: 180,
                       borderRight: index < boardData.lists.length - 1 ? '1px solid #444' : 'none',
                       display: 'flex',
                       flexDirection: 'column',
@@ -1083,10 +1087,11 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     <Box sx={{ 
                       bgcolor: '#1a1a1a',
                       borderBottom: '1px solid #444',
-                      py: 1,
-                      px: 2,
+                      py: 0.75,
+                      px: 1.5,
                       textAlign: 'center',
-                      position: 'relative',
+                      position: 'sticky',
+                      top: 0,
                       zIndex: 1
                     }}>
                       <Typography 
@@ -1094,7 +1099,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                         sx={{ 
                           color: '#e0e0e0',
                           fontWeight: 'bold',
-                          fontSize: '0.875rem'
+                          fontSize: '0.8125rem'
                         }}
                       >
                         {list.name}
@@ -1103,20 +1108,22 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                         variant="caption" 
                         sx={{ 
                           color: '#888',
-                          fontSize: '0.75rem'
+                          fontSize: '0.6875rem'
                         }}
                       >
-                        {listCards.length} tasks
+                        {listCards.length}
                       </Typography>
                     </Box>
                     
                     {/* Cards Container */}
                     <Box sx={{ 
                       flex: 1,
-                      p: 1,
+                      p: 0.75,
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: 1
+                      gap: 0.75,
+                      overflowY: 'auto',
+                      overflowX: 'hidden'
                     }}>
                       {listCards.map((card: any) => {
                         const clientName = extractCustomFieldValue(card.customFieldItems, boardData.customFields, 'Client');
@@ -1129,12 +1136,15 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             key={card.id}
                             onClick={() => window.open(`https://trello.com/c/${card.id}`, '_blank')}
                             sx={{
-                              p: 2,
+                              p: 1,
                               bgcolor: '#2a2a2a',
                               borderRadius: 1,
                               border: '1px solid #444',
                               cursor: 'pointer',
                               transition: 'all 0.2s ease',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: 0.375,
                               '&:hover': { 
                                 bgcolor: '#333',
                                 borderColor: '#ff6b35',
@@ -1143,69 +1153,18 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                               }
                             }}
                           >
-                            {/* Card Title */}
-                            <Typography variant="body2" sx={{ 
-                              color: '#e0e0e0', 
-                              fontWeight: 'bold', 
-                              mb: 1,
-                              fontSize: '0.875rem',
-                              lineHeight: 1.3
-                            }}>
-                              {card.name}
-                            </Typography>
-                            
-                            {/* Client */}
-                            {clientName && (
-                              <Typography variant="caption" sx={{ 
-                                color: '#888',
-                                fontSize: '0.75rem',
-                                display: 'block',
-                                mb: 0.5
-                              }}>
-                                {clientName}
-                              </Typography>
-                            )}
-                            
-                            {/* Project */}
-                            {projectName && (
-                              <Typography variant="caption" sx={{ 
-                                color: '#888',
-                                fontSize: '0.75rem',
-                                display: 'block',
-                                mb: 0.5
-                              }}>
-                                {projectName}
-                              </Typography>
-                            )}
-
-                            {/* Due Date */}
-                            {card.due && (
-                              <Typography variant="caption" sx={{ 
-                                color: new Date(card.due) < new Date() ? '#ff6b35' : '#888',
-                                fontSize: '0.75rem',
-                                fontWeight: 'bold',
-                                display: 'block',
-                                mb: 1
-                              }}>
-                                Due: {new Date(card.due).toLocaleDateString('en-US', { 
-                                  month: 'short', 
-                                  day: 'numeric'
-                                })}
-                              </Typography>
-                            )}
-
-                            {/* Labels */}
+                            {/* Labels at top */}
                             {card.labels && card.labels.length > 0 && (
-                              <Box sx={{ display: 'flex', gap: 0.5, mb: 1, flexWrap: 'wrap' }}>
-                                {card.labels.slice(0, 2).map((label: any) => (
+                              <Box sx={{ display: 'flex', gap: 0.375, flexWrap: 'wrap', mb: 0.25 }}>
+                                {card.labels.map((label: any) => (
                                   <Box
                                     key={label.id}
                                     sx={{
                                       px: 0.5,
                                       py: 0.25,
-                                      bgcolor: getLabelColor(label.color),
-                                      borderRadius: 0.25,
-                                      fontSize: '0.625rem',
+                                      bgcolor: getLabelColor(label.color, label.name),
+                                      borderRadius: 0.375,
+                                      fontSize: '0.5rem',
                                       color: 'white',
                                       fontWeight: 'bold',
                                       textTransform: 'uppercase'
@@ -1214,50 +1173,128 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                     {label.name}
                                   </Box>
                                 ))}
-                                {card.labels.length > 2 && (
-                                  <Typography variant="caption" sx={{ 
-                                    color: '#888', 
-                                    fontSize: '0.625rem'
-                                  }}>
-                                    +{card.labels.length - 2}
-                                  </Typography>
-                                )}
                               </Box>
+                            )}
+                            
+                            {/* Card Title */}
+                            <Typography variant="body2" sx={{ 
+                              color: '#e0e0e0', 
+                              fontWeight: 'bold', 
+                              fontSize: '0.8125rem',
+                              lineHeight: 1.2,
+                              mb: 0.25
+                            }}>
+                              {card.name}
+                            </Typography>
+                            
+                            {/* Client - Project */}
+                            {(clientName || projectName) && (
+                              <Typography variant="caption" sx={{ 
+                                color: '#888',
+                                fontSize: '0.6875rem',
+                                display: 'block',
+                                lineHeight: 1.2
+                              }}>
+                                {clientName && projectName ? `${clientName} - ${projectName}` : clientName || projectName}
+                              </Typography>
                             )}
 
-                            {/* Assignee */}
-                            {card.members && card.members.length > 0 && (
-                              <Box sx={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: 0.5,
-                                mt: 'auto'
+                            {/* Milestone */}
+                            {milestone && (
+                              <Typography variant="caption" sx={{ 
+                                color: '#888',
+                                fontSize: '0.6875rem',
+                                display: 'block',
+                                lineHeight: 1.2
                               }}>
-                                <Box
-                                  sx={{
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: '50%',
-                                    bgcolor: getAssigneeColor(card.members[0].fullName),
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontSize: '0.625rem',
-                                    color: 'white',
-                                    fontWeight: 'bold'
-                                  }}
-                                >
-                                  {card.members[0].fullName.charAt(0).toUpperCase()}
-                                </Box>
-                                <Typography variant="caption" sx={{ 
-                                  color: '#bbb', 
-                                  fontSize: '0.75rem',
-                                  fontWeight: 'bold'
-                                }}>
-                                  {card.members[0].fullName}
-                                </Typography>
-                              </Box>
+                                {milestone}
+                              </Typography>
                             )}
+
+                            {/* Bottom section with assignee and due date */}
+                            <Box sx={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'space-between',
+                              mt: 0.5
+                            }}>
+                              {/* Assignee */}
+                              {card.members && card.members.length > 0 ? (
+                                <Box sx={{ 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  gap: 0.5
+                                }}>
+                                  <Box
+                                    sx={{
+                                      width: 20,
+                                      height: 20,
+                                      borderRadius: '50%',
+                                      bgcolor: getAssigneeColor(card.members[0].fullName),
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      fontSize: '0.625rem',
+                                      color: 'white',
+                                      fontWeight: 'bold'
+                                    }}
+                                  >
+                                    {card.members[0].fullName.charAt(0).toUpperCase()}
+                                  </Box>
+                                  <Typography variant="caption" sx={{ 
+                                    color: '#e0e0e0', 
+                                    fontSize: '0.6875rem'
+                                  }}>
+                                    {card.members[0].fullName}
+                                  </Typography>
+                                </Box>
+                              ) : (
+                                <Box sx={{ 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  gap: 0.5
+                                }}>
+                                  <Box
+                                    sx={{
+                                      width: 20,
+                                      height: 20,
+                                      borderRadius: '50%',
+                                      bgcolor: '#ff6b35',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      fontSize: '0.625rem',
+                                      color: 'white',
+                                      fontWeight: 'bold'
+                                    }}
+                                  >
+                                    U
+                                  </Box>
+                                  <Typography variant="caption" sx={{ 
+                                    color: '#e0e0e0', 
+                                    fontSize: '0.6875rem'
+                                  }}>
+                                    Unassigned
+                                  </Typography>
+                                </Box>
+                              )}
+
+                              {/* Due Date */}
+                              {card.due && (
+                                <Typography variant="caption" sx={{ 
+                                  color: (!card.dueComplete && new Date(card.due) < new Date()) ? '#ff6b35' : '#888',
+                                  fontSize: '0.6875rem',
+                                  fontWeight: 'bold',
+                                  lineHeight: 1.2
+                                }}>
+                                  {new Date(card.due).toLocaleDateString('en-US', { 
+                                    month: 'short', 
+                                    day: 'numeric',
+                                    year: new Date(card.due).getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+                                  })}
+                                </Typography>
+                              )}
+                            </Box>
                           </Box>
                         );
                       })}
@@ -1459,7 +1496,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                   key={label.id}
                                   variant="body2"
                                   sx={{
-                                    color: getLabelColor(label.color),
+                                    color: getLabelColor(label.color, label.name),
                                     fontSize: '0.75rem',
                                     fontWeight: 'bold',
                                     textTransform: 'uppercase'
@@ -1569,27 +1606,20 @@ export default function TeamBoards() {
 
   return (
     <Box sx={{ height: '100vh', bgcolor: '#1a1a1a', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      {/* Header */}
+      {/* Header - Empty */}
       <Box sx={{ 
         height: 60,
         bgcolor: '#2a2a2a',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        px: 2,
         borderBottom: '1px solid #444'
-      }}>
-        <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold' }}>
-          Team Boards
-        </Typography>
-        <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem' }}>
-          Select a board to view tasks
-        </Typography>
-      </Box>
+      }} />
 
       {/* Main Content */}
       <Box sx={{ flex: 1, overflow: 'auto', bgcolor: '#2a2a2a', m: 2, borderRadius: 2 }}>
         <Box sx={{ p: 3 }}>
+          {/* Title */}
+          <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold', mb: 1 }}>
+            Team Boards
+          </Typography>
           <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem', mb: 3 }}>
             Choose a board to view and manage tasks
           </Typography>
@@ -1601,10 +1631,10 @@ export default function TeamBoards() {
               onClick={() => setSelectedBoard('assigned')}
               sx={{
                 width: 240,
-                height: 180,
-                bgcolor: '#1a1a1a',
+                height: 140,
+                bgcolor: '#2a2a2a',
                 borderRadius: 2,
-                border: '2px solid #ff6b35',
+                border: '1px solid #444',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -1613,34 +1643,17 @@ export default function TeamBoards() {
                 position: 'relative',
                 overflow: 'hidden',
                 '&:hover': {
-                  bgcolor: '#222',
-                  transform: 'translateY(-4px)',
-                  boxShadow: '0 8px 32px rgba(255, 107, 53, 0.4)',
-                  borderColor: '#ff8a65'
+                  bgcolor: '#333',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.2)',
+                  borderColor: '#ff6b35'
                 },
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              {/* Background Pattern */}
-              <Box sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 107, 53, 0.05) 100%)',
-                opacity: 0.3
-              }} />
-
               <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                <Typography variant="h4" sx={{ color: '#ff6b35', fontWeight: 'bold', mb: 1, fontSize: '1.5rem' }}>
+                <Typography variant="h4" sx={{ color: '#e0e0e0', fontWeight: 'bold', fontSize: '1.25rem' }}>
                   Assigned to Me
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#888', textAlign: 'center', fontSize: '0.9rem' }}>
-                  Your personal task list
-                </Typography>
-                <Typography variant="caption" sx={{ color: '#666', display: 'block', mt: 1 }}>
-                  Table view with filtering
                 </Typography>
               </Box>
             </Box>
@@ -1650,10 +1663,10 @@ export default function TeamBoards() {
               onClick={() => setSelectedBoard('design')}
               sx={{
                 width: 240,
-                height: 180,
-                bgcolor: '#1a1a1a',
+                height: 140,
+                bgcolor: '#2a2a2a',
                 borderRadius: 2,
-                border: '2px solid #9c27b0',
+                border: '1px solid #444',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -1662,34 +1675,17 @@ export default function TeamBoards() {
                 position: 'relative',
                 overflow: 'hidden',
                 '&:hover': {
-                  bgcolor: '#222',
-                  transform: 'translateY(-4px)',
-                  boxShadow: '0 8px 32px rgba(156, 39, 176, 0.4)',
-                  borderColor: '#ba68c8'
+                  bgcolor: '#333',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.2)',
+                  borderColor: '#ff6b35'
                 },
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              {/* Background Pattern */}
-              <Box sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%)',
-                opacity: 0.3
-              }} />
-
               <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                <Typography variant="h4" sx={{ color: '#9c27b0', fontWeight: 'bold', mb: 1, fontSize: '1.5rem' }}>
+                <Typography variant="h4" sx={{ color: '#e0e0e0', fontWeight: 'bold', fontSize: '1.25rem' }}>
                   Design/UX
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#888', textAlign: 'center', fontSize: '0.9rem' }}>
-                  Design and UX tasks
-                </Typography>
-                <Typography variant="caption" sx={{ color: '#666', display: 'block', mt: 1 }}>
-                  Kanban & table views
                 </Typography>
               </Box>
             </Box>
@@ -1699,10 +1695,10 @@ export default function TeamBoards() {
               onClick={() => setSelectedBoard('development')}
               sx={{
                 width: 240,
-                height: 180,
-                bgcolor: '#1a1a1a',
+                height: 140,
+                bgcolor: '#2a2a2a',
                 borderRadius: 2,
-                border: '2px solid #2196f3',
+                border: '1px solid #444',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -1711,34 +1707,17 @@ export default function TeamBoards() {
                 position: 'relative',
                 overflow: 'hidden',
                 '&:hover': {
-                  bgcolor: '#222',
-                  transform: 'translateY(-4px)',
-                  boxShadow: '0 8px 32px rgba(33, 150, 243, 0.4)',
-                  borderColor: '#42a5f5'
+                  bgcolor: '#333',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.2)',
+                  borderColor: '#ff6b35'
                 },
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              {/* Background Pattern */}
-              <Box sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%)',
-                opacity: 0.3
-              }} />
-
               <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                <Typography variant="h4" sx={{ color: '#2196f3', fontWeight: 'bold', mb: 1, fontSize: '1.5rem' }}>
+                <Typography variant="h4" sx={{ color: '#e0e0e0', fontWeight: 'bold', fontSize: '1.25rem' }}>
                   Development
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#888', textAlign: 'center', fontSize: '0.9rem' }}>
-                  Development tasks
-                </Typography>
-                <Typography variant="caption" sx={{ color: '#666', display: 'block', mt: 1 }}>
-                  Kanban & table views
                 </Typography>
               </Box>
             </Box>

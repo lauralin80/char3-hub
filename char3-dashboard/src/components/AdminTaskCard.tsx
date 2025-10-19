@@ -30,7 +30,12 @@ export function AdminTaskCard({ task, onUpdate, onArchive }: AdminTaskCardProps)
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
-  const getLabelColor = (color: string) => {
+  const getLabelColor = (color: string, name?: string) => {
+    // Check for "Need More Info" label first
+    if (name && name.toLowerCase().includes('need more info')) {
+      return '#8b6db8'; // Darker purple for better contrast
+    }
+    
     const colorMap: { [key: string]: string } = {
       'orange': '#ff6b35',
       'red': '#eb5a46',
@@ -181,7 +186,7 @@ export function AdminTaskCard({ task, onUpdate, onArchive }: AdminTaskCardProps)
               sx={{
                 px: 0.5,
                 py: 0.25,
-                bgcolor: getLabelColor(label.color),
+                bgcolor: getLabelColor(label.color, label.name),
                 borderRadius: 0.25,
                 fontSize: '0.5rem',
                 color: 'white',

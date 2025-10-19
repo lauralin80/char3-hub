@@ -20,23 +20,20 @@ import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/ico
 import { useAuth } from '@/contexts/AuthContext';
 import { trelloService } from '@/services/trelloService';
 import { colors, typography, transitions } from '@/styles/theme';
-import { useStore } from '@/store/useStore';
-
-// Cache duration: 5 minutes
-const CACHE_DURATION = 5 * 60 * 1000;
+import { useAllBoardsData } from '@/hooks/useAllBoardsData';
 
 export default function AccountManagement() {
   const { user, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [clientsLoading, setClientsLoading] = useState(true);
   const [selectedClient, setSelectedClient] = useState<string>('');
   const [clients, setClients] = useState<string[]>([]);
   const [deliverables, setDeliverables] = useState<any[]>([]);
   const [accountTasks, setAccountTasks] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [clientsError, setClientsError] = useState<string | null>(null);
   
-  // Get cached data from store
-  const { allBoardsData, allBoardsDataTimestamp, setAllBoardsData } = useStore();
+  // Use global cached data
+  const { data: allBoardsData, loading: boardsLoading, error: boardsError } = useAllBoardsData();
 
   // Redirect to sign-in if not authenticated
   useEffect(() => {
@@ -45,74 +42,34 @@ export default function AccountManagement() {
     }
   }, [isAuthLoading, user, router]);
 
-  // Load ONLY client list on initial page load (super lightweight - 1 API call)
+  // Extract client list from cached board data
   useEffect(() => {
-    const loadClients = async () => {
-      if (!user) return;
-      
-      try {
-        console.log('Fetching client list only');
-        // This makes ONLY 1 API call to get custom field options
-        const clientList = await trelloService.getCustomFieldOptions(
-          process.env.NEXT_PUBLIC_TRELLO_BOARD_ID || '',
-          'Client'
-        );
-        
-        setClients(clientList.sort());
-        setLoading(false);
-        setError(null);
-      } catch (error: any) {
-        console.error('Error loading clients:', error);
-        setLoading(false);
-        
-        if (error?.response?.status === 429) {
-          setError('Too many requests. Please wait a few minutes and try again.');
-        } else {
-          setError('Failed to load client list. Please try again.');
-        }
-      }
-    };
+    if (!allBoardsData) return;
+    
+    const accountMgmtBoard = allBoardsData.accountManagement;
+    if (!accountMgmtBoard?.customFields) return;
+    
+    const clientField = accountMgmtBoard.customFields.find((cf: any) => cf.name === 'Client');
+    if (!clientField?.options) return;
+    
+    const clientList = clientField.options
+      .map((opt: any) => opt.value?.text)
+      .filter((text: string) => text)
+      .sort();
+    
+    setClients(clientList);
+    setClientsLoading(false);
+  }, [allBoardsData]);
 
-    if (user) {
-      loadClients();
-    }
-  }, [user]);
-
-  // Load full board data ONLY when a client is selected
+  // Filter deliverables and tasks when client is selected
   useEffect(() => {
-    if (!selectedClient) {
+    if (!selectedClient || !allBoardsData?.accountManagement) {
       setDeliverables([]);
       setAccountTasks([]);
       return;
     }
 
-    const loadClientData = async () => {
-      // Check if we have valid cached data
-      const now = Date.now();
-      const isCacheValid = allBoardsData && 
-                          allBoardsDataTimestamp && 
-                          (now - allBoardsDataTimestamp < CACHE_DURATION);
-      
-      let dataToUse = allBoardsData;
-      
-      // Only fetch if we don't have cached data
-      if (!isCacheValid) {
-        try {
-          console.log('Fetching full board data for selected client');
-          const data = await trelloService.getAllBoardsData();
-          setAllBoardsData(data);
-          dataToUse = data;
-        } catch (error) {
-          console.error('Error loading board data:', error);
-          return;
-        }
-      } else {
-        console.log('Using cached board data');
-      }
-      
-      if (!dataToUse?.accountManagement) return;
-      
-      const accountMgmtBoard = dataToUse.accountManagement;
+    const accountMgmtBoard = allBoardsData.accountManagement;
       
       // Helper function to extract custom field value
       const extractCustomFieldValue = (card: any, fieldName: string) => {
@@ -161,12 +118,12 @@ export default function AccountManagement() {
         labels: card.labels || []
       });
 
-      setDeliverables(deliverablesCards.map(enhanceCard));
-      setAccountTasks(accountTasksCards.map(enhanceCard));
-    };
+    setDeliverables(deliverablesCards.map(enhanceCard));
+    setAccountTasks(accountTasksCards.map(enhanceCard));
+  }, [selectedClient, allBoardsData]);
 
-    loadClientData();
-  }, [selectedClient, allBoardsData, allBoardsDataTimestamp, setAllBoardsData]);
+  const loading = clientsLoading || boardsLoading;
+  const error = clientsError || boardsError;
 
   if (isAuthLoading) {
     return (
@@ -229,12 +186,8 @@ export default function AccountManagement() {
         </Typography>
         <Button
           variant="outlined"
-          onClick={async () => {
-            setError(null);
-            setLoading(true);
-            // Wait 2 seconds before retrying to avoid immediate rate limit
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            setAllBoardsData(null); // Clear cache to force refresh
+          onClick={() => {
+            window.location.reload();
           }}
           sx={{
             color: colors.accent.orange,

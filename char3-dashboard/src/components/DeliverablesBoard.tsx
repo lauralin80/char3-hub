@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useStore } from '@/store/useStore';
 import { ClientColumn } from './ClientColumn';
+import { colors, typography, transitions } from '@/styles/theme';
 
 export function DeliverablesBoard() {
   const boardRef = useRef<HTMLDivElement>(null);

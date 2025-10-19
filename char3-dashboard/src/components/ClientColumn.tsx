@@ -7,6 +7,7 @@ import { AdminTaskCard } from './AdminTaskCard';
 import { InlineForm } from './InlineForm';
 import { useStore } from '@/store/useStore';
 import { trelloService } from '@/services/trelloService';
+import { colors, typography, transitions } from '@/styles/theme';
 
 interface ClientColumnProps {
   client: {

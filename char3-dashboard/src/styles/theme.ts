@@ -27,11 +27,12 @@ export const colors = {
     secondary: 'rgba(255, 255, 255, 0.7)',  // Secondary text
     tertiary: 'rgba(255, 255, 255, 0.5)',   // Tertiary text (labels, counts)
     disabled: 'rgba(255, 255, 255, 0.4)',   // Disabled text
-    title: 'rgba(255, 255, 255, 0.8)',      // Section titles (slightly dimmed)
+    title: '#e0e0e0',      // Section titles (matches client deliverables)
   },
 
   // Accent colors
   accent: {
+    orange: '#ff6b35',         // Char3 orange (primary)
     primary: '#ff6b35',        // Char3 orange
     primaryHover: '#e55a2b',   // Orange hover
     primaryLight: 'rgba(255, 107, 53, 0.1)',   // Orange tint

@@ -1632,10 +1632,10 @@ export default function TeamBoards() {
       <Box sx={{ flex: 1, overflow: 'auto', bgcolor: '#141414', m: 2, borderRadius: 2 }}>
         <Box sx={{ p: 3 }}>
           {/* Title */}
-          <Typography variant="h5" sx={{ color: '#e0e0e0', fontSize: '1.25rem', fontWeight: 'bold', mb: 1 }}>
+          <Typography variant="h5" sx={{ color: 'rgba(255, 255, 255, 0.95)', fontSize: '1.5rem', fontWeight: 600, letterSpacing: '-0.02em', mb: 1 }}>
             Team Boards
           </Typography>
-          <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem', mb: 3 }}>
+          <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.875rem', fontWeight: 400, mb: 4 }}>
             Choose a board to view and manage tasks
           </Typography>
 
@@ -1658,16 +1658,16 @@ export default function TeamBoards() {
                 position: 'relative',
                 overflow: 'hidden',
                 '&:hover': {
-                  bgcolor: '#333',
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
                   transform: 'translateY(-2px)',
-                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.2)',
-                  borderColor: '#ff6b35'
+                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.15)',
+                  borderColor: 'rgba(255, 107, 53, 0.5)'
                 },
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
               <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                <Typography variant="h4" sx={{ color: '#e0e0e0', fontWeight: 'bold', fontSize: '1.25rem' }}>
+                <Typography variant="h4" sx={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 600, fontSize: '1.125rem', letterSpacing: '-0.01em' }}>
                   Assigned to Me
                 </Typography>
               </Box>
@@ -1690,16 +1690,16 @@ export default function TeamBoards() {
                 position: 'relative',
                 overflow: 'hidden',
                 '&:hover': {
-                  bgcolor: '#333',
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
                   transform: 'translateY(-2px)',
-                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.2)',
-                  borderColor: '#ff6b35'
+                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.15)',
+                  borderColor: 'rgba(255, 107, 53, 0.5)'
                 },
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
               <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                <Typography variant="h4" sx={{ color: '#e0e0e0', fontWeight: 'bold', fontSize: '1.25rem' }}>
+                <Typography variant="h4" sx={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 600, fontSize: '1.125rem', letterSpacing: '-0.01em' }}>
                   Design/UX
                 </Typography>
               </Box>
@@ -1722,16 +1722,16 @@ export default function TeamBoards() {
                 position: 'relative',
                 overflow: 'hidden',
                 '&:hover': {
-                  bgcolor: '#333',
+                  bgcolor: 'rgba(255, 255, 255, 0.04)',
                   transform: 'translateY(-2px)',
-                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.2)',
-                  borderColor: '#ff6b35'
+                  boxShadow: '0 4px 20px rgba(255, 107, 53, 0.15)',
+                  borderColor: 'rgba(255, 107, 53, 0.5)'
                 },
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
               <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                <Typography variant="h4" sx={{ color: '#e0e0e0', fontWeight: 'bold', fontSize: '1.25rem' }}>
+                <Typography variant="h4" sx={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 600, fontSize: '1.125rem', letterSpacing: '-0.01em' }}>
                   Development
                 </Typography>
               </Box>

@@ -59,37 +59,9 @@ export function AdminTaskCard({ task, onUpdate, onArchive }: AdminTaskCardProps)
   };
 
   const getAssigneeColor = (name: string) => {
+    // Only use orange for Unassigned, otherwise use subtle gray
     if (!name || name === 'Unassigned') return '#ff6b35';
-    
-    // Create a simple hash from the name to get consistent colors
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    
-    // Use the hash to select from a predefined color palette
-    const colors = [
-      '#4caf50', // Green
-      '#ff9800', // Orange
-      '#9c27b0', // Purple
-      '#f44336', // Red
-      '#2196f3', // Blue
-      '#ffeb3b', // Yellow
-      '#795548', // Brown
-      '#607d8b', // Blue Grey
-      '#00bfff', // Bright Sky Blue (Laura's color)
-      '#e91e63', // Pink
-      '#3f51b5', // Indigo
-      '#009688', // Teal
-    ];
-    
-    const colorIndex = Math.abs(hash) % colors.length;
-    const selectedColor = colors[colorIndex];
-    
-    // Debug logging
-    console.log(`Assignee: ${name}, Hash: ${hash}, Index: ${colorIndex}, Color: ${selectedColor}`);
-    
-    return selectedColor;
+    return 'rgba(255, 255, 255, 0.15)'; // Subtle gray for all assigned users
   };
 
   const handleCardClick = (e: React.MouseEvent) => {

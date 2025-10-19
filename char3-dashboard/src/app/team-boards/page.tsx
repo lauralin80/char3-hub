@@ -219,19 +219,9 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
   };
 
   const getAssigneeColor = (name: string) => {
+    // Only use orange for Unassigned, otherwise use subtle gray
     if (!name || name === 'Unassigned') return '#ff6b35';
-    
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    
-    const colors = [
-      '#4caf50', '#ff9800', '#9c27b0', '#f44336', '#2196f3', '#ffeb3b',
-      '#795548', '#607d8b', '#00bfff', '#e91e63', '#3f51b5', '#009688'
-    ];
-    
-    return colors[Math.abs(hash) % colors.length];
+    return 'rgba(255, 255, 255, 0.15)'; // Subtle gray for all assigned users
   };
 
   const getLabelColor = (color: string, name?: string) => {
@@ -1271,7 +1261,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                     {card.members[0].fullName.charAt(0).toUpperCase()}
                                   </Box>
                                   <Typography variant="caption" sx={{ 
-                                    color: '#e0e0e0', 
+                                    color: colors.text.tertiary,
                                     fontSize: '0.6875rem'
                                   }}>
                                     {card.members[0].fullName}

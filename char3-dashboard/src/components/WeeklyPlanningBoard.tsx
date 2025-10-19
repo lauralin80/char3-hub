@@ -736,6 +736,12 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                     <Box sx={{ display: 'flex', gap: 0.5, mb: 0.5, flexWrap: 'wrap' }}>
                       {(task.labels || []).map((label: any, labelIndex: number) => {
                         const labelColor = getLabelColor(label.color, label.name);
+                        const labelName = label.name.toLowerCase().includes('blocked') || 
+                                         label.name.toLowerCase().includes('waiting') || 
+                                         label.name.toLowerCase().includes('need more info') || 
+                                         label.name.toLowerCase().includes('decision')
+                                         ? label.name.toUpperCase() 
+                                         : label.name;
                         return (
                           <Box
                             key={labelIndex}
@@ -750,7 +756,7 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                               letterSpacing: typography.letterSpacing.normal
                             }}
                           >
-                            {label.name}
+                            {labelName}
                           </Box>
                         );
                       })}

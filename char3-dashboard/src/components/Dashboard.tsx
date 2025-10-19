@@ -1511,6 +1511,12 @@ export default function Dashboard() {
                   {/* Labels */}
                   {task.labels && task.labels.length > 0 && (task.labels || []).map((label: any, labelIndex: number) => {
                     const labelColor = getLabelColor(label.color, label.name);
+                    const labelName = label.name.toLowerCase().includes('blocked') || 
+                                     label.name.toLowerCase().includes('waiting') || 
+                                     label.name.toLowerCase().includes('need more info') || 
+                                     label.name.toLowerCase().includes('decision')
+                                     ? label.name.toUpperCase() 
+                                     : label.name;
                     return (
                       <Box
                         key={labelIndex}
@@ -1526,7 +1532,7 @@ export default function Dashboard() {
                           pointerEvents: 'none'
                         }}
                       >
-                        {label.name}
+                        {labelName}
                       </Box>
                     );
                   })}

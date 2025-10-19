@@ -183,6 +183,12 @@ export function AdminTaskCard({ task, onUpdate, onArchive }: AdminTaskCardProps)
         <Box sx={{ display: 'flex', gap: 0.5, mb: 0.5, flexWrap: 'wrap' }}>
           {safeLabels.map((label, index) => {
             const labelColor = getLabelColor(label.color, label.name);
+            const labelName = label.name.toLowerCase().includes('blocked') || 
+                             label.name.toLowerCase().includes('waiting') || 
+                             label.name.toLowerCase().includes('need more info') || 
+                             label.name.toLowerCase().includes('decision')
+                             ? label.name.toUpperCase() 
+                             : label.name;
             return (
               <Box
                 key={index}
@@ -197,7 +203,7 @@ export function AdminTaskCard({ task, onUpdate, onArchive }: AdminTaskCardProps)
                   letterSpacing: typography.letterSpacing.normal
                 }}
               >
-                {label.name}
+                {labelName}
               </Box>
             );
           })}

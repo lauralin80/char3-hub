@@ -722,6 +722,12 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', alignItems: 'center' }}>
                               {card.labels.slice(0, 2).map((label: any) => {
                                 const labelColor = getLabelColor(label.color, label.name);
+                                const labelName = label.name.toLowerCase().includes('blocked') || 
+                                                 label.name.toLowerCase().includes('waiting') || 
+                                                 label.name.toLowerCase().includes('need more info') || 
+                                                 label.name.toLowerCase().includes('decision')
+                                                 ? label.name.toUpperCase() 
+                                                 : label.name;
                                 return (
                                   <Box
                                     key={label.id}
@@ -736,7 +742,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                       letterSpacing: typography.letterSpacing.normal
                                     }}
                                   >
-                                    {label.name}
+                                    {labelName}
                                   </Box>
                                 );
                               })}
@@ -1195,6 +1201,12 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                               <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mb: 0.25 }}>
                                 {card.labels.map((label: any) => {
                                   const labelColor = getLabelColor(label.color, label.name);
+                                  const labelName = label.name.toLowerCase().includes('blocked') || 
+                                                   label.name.toLowerCase().includes('waiting') || 
+                                                   label.name.toLowerCase().includes('need more info') || 
+                                                   label.name.toLowerCase().includes('decision')
+                                                   ? label.name.toUpperCase() 
+                                                   : label.name;
                                   return (
                                     <Box
                                       key={label.id}
@@ -1209,7 +1221,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                         letterSpacing: typography.letterSpacing.normal
                                       }}
                                     >
-                                      {label.name}
+                                      {labelName}
                                     </Box>
                                   );
                                 })}
@@ -1533,6 +1545,12 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', alignItems: 'center' }}>
                               {card.labels.slice(0, 2).map((label: any) => {
                                 const labelColor = getLabelColor(label.color, label.name);
+                                const labelName = label.name.toLowerCase().includes('blocked') || 
+                                                 label.name.toLowerCase().includes('waiting') || 
+                                                 label.name.toLowerCase().includes('need more info') || 
+                                                 label.name.toLowerCase().includes('decision')
+                                                 ? label.name.toUpperCase() 
+                                                 : label.name;
                                 return (
                                   <Box
                                     key={label.id}
@@ -1547,7 +1565,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                       letterSpacing: typography.letterSpacing.normal
                                     }}
                                   >
-                                    {label.name}
+                                    {labelName}
                                   </Box>
                                 );
                               })}

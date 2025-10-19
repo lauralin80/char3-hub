@@ -647,8 +647,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                           <Typography
                             variant="body2"
                             sx={{
-                              color: '#e0e0e0',
-,
+                              color: '#bbb',
                               fontSize: '0.875rem',
                               maxWidth: '300px',
                               overflow: 'hidden',
@@ -1467,8 +1466,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                           <Typography
                             variant="body2"
                             sx={{
-                              color: '#e0e0e0',
-,
+                              color: '#bbb',
                               fontSize: '0.875rem',
                               maxWidth: '300px',
                               overflow: 'hidden',

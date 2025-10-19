@@ -358,20 +358,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
           alignItems: 'center',
           px: 2
         }}>
-          <Button 
-            onClick={onBack} 
-            variant="outlined" 
-            sx={{ 
-              color: '#ff6b35', 
-              borderColor: '#ff6b35',
-              '&:hover': { 
-                borderColor: '#ff8a65',
-                bgcolor: 'rgba(255, 107, 53, 0.1)'
-              }
-            }}
-          >
-            ← Back to Boards
-          </Button>
         </Box>
 
         {/* Main Content */}
@@ -867,20 +853,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
         alignItems: 'center',
         px: 2
       }}>
-        <Button 
-          onClick={onBack} 
-          variant="outlined" 
-          sx={{ 
-            color: '#ff6b35', 
-            borderColor: '#ff6b35',
-            '&:hover': { 
-              borderColor: '#ff8a65',
-              bgcolor: 'rgba(255, 107, 53, 0.1)'
-            }
-          }}
-        >
-          ← Back to Boards
-        </Button>
       </Box>
 
       {/* Main Content */}
@@ -946,10 +918,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
               }} 
             />
           </Box>
-
-          <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.875rem', mb: 2 }}>
-            All tasks from the {boardName} board
-          </Typography>
 
           {/* Filters */}
           <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap', alignItems: 'center' }}>

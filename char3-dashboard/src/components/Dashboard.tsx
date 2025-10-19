@@ -61,6 +61,29 @@ export default function Dashboard() {
     
     return colors[Math.abs(hash) % colors.length];
   };
+
+  const getLabelColor = (color: string, name?: string) => {
+    // Check for "Need More Info" label first
+    if (name && name.toLowerCase().includes('need more info')) {
+      return '#8b6db8'; // Darker purple for better contrast
+    }
+    
+    const colorMap: { [key: string]: string } = {
+      'orange': '#ff6b35',
+      'red': '#eb5a46',
+      'green': '#61bd4f',
+      'blue': '#0079bf',
+      'yellow': '#f2d600',
+      'purple': '#c377e0',
+      'pink': '#ff78cb',
+      'sky': '#00c2e0',
+      'lime': '#51e898',
+      'black': '#344563',
+      'red_dark': '#eb5a46'
+    };
+    return colorMap[color] || '#888';
+  };
+
   const [allAdminTasks, setAllAdminTasks] = useState<any[]>([]);
   const [allBoardTasks, setAllBoardTasks] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');

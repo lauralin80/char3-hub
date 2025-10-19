@@ -33,6 +33,25 @@ class TrelloService {
     return instance;
   }
 
+  // Lightweight function to ONLY get custom field options (like client list)
+  async getCustomFieldOptions(boardId: string, fieldName: string, userToken?: string): Promise<string[]> {
+    try {
+      const customFieldsResponse = await axios.get(`${TRELLO_API_BASE}/boards/${boardId}/customFields`, {
+        params: this.getAuthParams(userToken),
+      });
+
+      const field = customFieldsResponse.data.find((cf: any) => cf.name === fieldName);
+      if (!field?.options) return [];
+
+      return field.options
+        .map((opt: any) => opt.value?.text)
+        .filter((text: string) => text);
+    } catch (error) {
+      console.error(`Error fetching custom field options for ${fieldName}:`, error);
+      return [];
+    }
+  }
+
   async getBoardData(boardId?: string, userToken?: string) {
     const targetBoardId = boardId || this.accountManagementBoardId;
     try {

@@ -508,7 +508,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             <TableContainer 
               component={Paper} 
               sx={{ 
-                bgcolor: '#0d0d0d', 
+                bgcolor: '#141414', 
                 border: '1px solid rgba(255, 255, 255, 0.08)',
                 borderRadius: 2,
                 '& .MuiTable-root': {
@@ -1152,7 +1152,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             onClick={() => window.open(`https://trello.com/c/${card.id}`, '_blank')}
                             sx={{
                               p: 1,
-                              bgcolor: '#141414',
+                              bgcolor: 'rgba(255, 255, 255, 0.06)',
                               borderRadius: 1,
                               border: '1px solid rgba(255, 255, 255, 0.08)',
                               cursor: 'pointer',
@@ -1161,8 +1161,8 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                               flexDirection: 'column',
                               gap: 0.375,
                               '&:hover': { 
-                                bgcolor: '#333',
-                                borderColor: '#ff6b35',
+                                bgcolor: 'rgba(255, 255, 255, 0.08)',
+                                borderColor: 'rgba(255, 107, 53, 0.5)',
                                 transform: 'translateY(-1px)',
                                 boxShadow: '0 2px 8px rgba(255, 107, 53, 0.2)'
                               }

@@ -369,7 +369,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 Assigned to Me
               </Typography>
               <Chip 
-                label={`${sortedAssignedCards.length} tasks`} 
+                label={`${sortedAssignedCards.length} ${sortedAssignedCards.length === 1 ? 'task' : 'tasks'}`} 
                 size="small" 
                 sx={{ 
                   bgcolor: 'rgba(255, 255, 255, 0.06)', 
@@ -921,7 +921,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             </Box>
             
             <Chip 
-              label={`${sortedFilteredCards.length} tasks`} 
+              label={`${sortedFilteredCards.length} ${sortedFilteredCards.length === 1 ? 'task' : 'tasks'}`} 
               size="small" 
               sx={{ 
                 bgcolor: 'rgba(255, 255, 255, 0.06)', 

@@ -70,6 +70,9 @@ export default function AccountManagement() {
     }
 
     const accountMgmtBoard = allBoardsData.accountManagement;
+    
+    // Debug: Show all list names
+    console.log('Available lists:', accountMgmtBoard.lists?.map((l: any) => l.name));
       
       // Helper function to extract custom field value
       const extractCustomFieldValue = (card: any, fieldName: string) => {
@@ -95,7 +98,13 @@ export default function AccountManagement() {
         const cardClient = extractCustomFieldValue(card, 'Client');
         const list = accountMgmtBoard.lists?.find((l: any) => l.id === card.idList);
         const listName = list?.name || '';
-        return cardClient === selectedClient && listName === '🎯 Deliverables';
+        
+        // Debug logging
+        if (cardClient === selectedClient) {
+          console.log('Card for client:', card.name, 'List:', listName, 'Client:', cardClient);
+        }
+        
+        return cardClient === selectedClient && listName === '📦 Deliverables';
       });
 
       // Get account tasks for this client (from Account Management board, Account Tasks list)

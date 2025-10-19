@@ -54,8 +54,10 @@ export function AdminTaskCard({ task, onUpdate, onArchive }: AdminTaskCardProps)
   };
 
   const getInitials = (name: string) => {
-    if (!name) return '?';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    if (!name || name === 'Unassigned') return 'U';
+    const parts = name.split(' ').filter(p => p.length > 0);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
   };
 
   const getAssigneeColor = (name: string) => {

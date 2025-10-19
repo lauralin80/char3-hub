@@ -62,7 +62,7 @@ export default function Dashboard() {
   };
 
   const getInitials = (name: string) => {
-    if (!name || name === 'Unassigned') return '?';
+    if (!name || name === 'Unassigned') return 'U';
     const parts = name.split(' ').filter(p => p.length > 0);
     if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
     return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();

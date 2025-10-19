@@ -460,7 +460,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   value={selectedClient}
                   onChange={(e) => setSelectedClient(e.target.value)}
                   style={{
-                    flex: 1,
                     minWidth: '120px',
                     padding: '9px 12px',
                     backgroundColor: 'rgba(255, 255, 255, 0.04)',
@@ -484,7 +483,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                   value={selectedProject}
                   onChange={(e) => setSelectedProject(e.target.value)}
                   style={{
-                    flex: 1,
                     minWidth: '120px',
                     padding: '9px 12px',
                     backgroundColor: 'rgba(255, 255, 255, 0.04)',
@@ -1017,7 +1015,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 value={selectedClient}
                 onChange={(e) => setSelectedClient(e.target.value)}
                 style={{
-                  flex: 1,
                   minWidth: '120px',
                   padding: '9px 12px',
                   backgroundColor: 'rgba(255, 255, 255, 0.04)',
@@ -1041,7 +1038,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 value={selectedProject}
                 onChange={(e) => setSelectedProject(e.target.value)}
                 style={{
-                  flex: 1,
                   minWidth: '120px',
                   padding: '9px 12px',
                   backgroundColor: 'rgba(255, 255, 255, 0.04)',
@@ -1065,7 +1061,6 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
                 style={{
-                  flex: 1,
                   minWidth: '120px',
                   padding: '9px 12px',
                   backgroundColor: 'rgba(255, 255, 255, 0.04)',

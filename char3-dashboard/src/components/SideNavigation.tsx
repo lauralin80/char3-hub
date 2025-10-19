@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { colors, typography, transitions } from '@/styles/theme';
 
 interface NavigationItem {
   id: string;
@@ -71,13 +72,13 @@ export function SideNavigation() {
         color: 'white',
         display: 'flex',
         flexDirection: 'column',
-        borderRight: '1px solid rgba(255, 255, 255, 0.06)'
+        borderRight: `1px solid ${colors.border.subtle}`
       }}
     >
       {/* Logo/Brand */}
       <Box sx={{ px: 2.5, py: 2.5, mb: 1 }}>
-        <Typography variant="h6" sx={{ color: '#e0e0e0', fontSize: '1.1rem', fontWeight: 600, letterSpacing: '-0.02em' }}>
-          char<span style={{ color: '#ff6b35' }}>3</span> Hub
+        <Typography variant="h6" sx={{ color: colors.text.title, fontSize: '1.1rem', fontWeight: typography.fontWeights.semibold, letterSpacing: typography.letterSpacing.tight }}>
+          char<span style={{ color: colors.accent.orange }}>3</span> Hub
         </Typography>
       </Box>
 
@@ -95,11 +96,11 @@ export function SideNavigation() {
                   py: 1,
                   borderRadius: 1.5,
                   border: 'none',
-                  bgcolor: isActive ? 'rgba(255, 107, 53, 0.12)' : 'transparent',
-                  color: isActive ? '#ff6b35' : 'rgba(255, 255, 255, 0.7)',
+                  bgcolor: isActive ? colors.accent.primaryLight : 'transparent',
+                  color: isActive ? colors.accent.orange : colors.text.secondary,
                   '&:hover': {
-                    bgcolor: isActive ? 'rgba(255, 107, 53, 0.16)' : 'rgba(255, 255, 255, 0.04)',
-                    color: isActive ? '#ff6b35' : 'rgba(255, 255, 255, 0.9)'
+                    bgcolor: isActive ? 'rgba(255, 107, 53, 0.16)' : colors.background.input,
+                    color: isActive ? colors.accent.orange : colors.text.primary
                   },
                   transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
@@ -130,7 +131,7 @@ export function SideNavigation() {
       </List>
 
       {/* User Info & Sign Out */}
-      <Box sx={{ px: 2, py: 2, borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+      <Box sx={{ px: 2, py: 2, borderTop: `1px solid ${colors.border.subtle}` }}>
         {user && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5, px: 0.5 }}>
             <Avatar
@@ -146,8 +147,8 @@ export function SideNavigation() {
             </Avatar>
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Typography variant="body2" sx={{ 
-                color: 'rgba(255, 255, 255, 0.9)', 
-                fontWeight: 600, 
+                color: colors.text.primary, 
+                fontWeight: typography.fontWeights.semibold, 
                 fontSize: '0.8125rem',
                 letterSpacing: '-0.01em',
                 overflow: 'hidden',
@@ -157,7 +158,7 @@ export function SideNavigation() {
                 {user.name}
               </Typography>
               <Typography variant="caption" sx={{ 
-                color: 'rgba(255, 255, 255, 0.5)', 
+                color: colors.text.tertiary, 
                 fontSize: '0.6875rem',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -175,7 +176,7 @@ export function SideNavigation() {
           startIcon={<LogoutIcon sx={{ fontSize: '1rem' }} />}
           sx={{
             width: '100%',
-            color: 'rgba(255, 255, 255, 0.6)',
+            color: colors.text.secondary,
             fontSize: '0.8125rem',
             fontWeight: 400,
             justifyContent: 'flex-start',

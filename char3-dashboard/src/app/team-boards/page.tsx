@@ -866,21 +866,30 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             </Typography>
             
             {/* View Toggle */}
-            <Box sx={{ display: 'flex', gap: 0.5 }}>
+            <Box sx={{ 
+              display: 'inline-flex',
+              bgcolor: 'rgba(255, 255, 255, 0.04)',
+              borderRadius: '6px',
+              p: 0.375,
+              border: '1px solid rgba(255, 255, 255, 0.08)'
+            }}>
               <Button
                 onClick={() => setViewMode('kanban')}
                 size="small"
                 sx={{
                   bgcolor: viewMode === 'kanban' ? '#ff6b35' : 'transparent',
-                  color: viewMode === 'kanban' ? '#fff' : '#888',
-                  border: '1px solid #555',
+                  color: viewMode === 'kanban' ? '#fff' : colors.text.secondary,
+                  border: 'none',
                   minWidth: 'auto',
                   px: 1.5,
                   py: 0.5,
                   fontSize: '0.75rem',
+                  borderRadius: '4px',
+                  fontWeight: typography.fontWeights.normal,
+                  transition: transitions.default,
                   '&:hover': {
-                    bgcolor: viewMode === 'kanban' ? '#ff8a65' : '#333',
-                    borderColor: '#ff6b35'
+                    bgcolor: viewMode === 'kanban' ? '#e55a2b' : 'rgba(255, 255, 255, 0.06)',
+                    color: viewMode === 'kanban' ? '#fff' : colors.text.primary
                   }
                 }}
               >
@@ -891,15 +900,18 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                 size="small"
                 sx={{
                   bgcolor: viewMode === 'table' ? '#ff6b35' : 'transparent',
-                  color: viewMode === 'table' ? '#fff' : '#888',
-                  border: '1px solid #555',
+                  color: viewMode === 'table' ? '#fff' : colors.text.secondary,
+                  border: 'none',
                   minWidth: 'auto',
                   px: 1.5,
                   py: 0.5,
                   fontSize: '0.75rem',
+                  borderRadius: '4px',
+                  fontWeight: typography.fontWeights.normal,
+                  transition: transitions.default,
                   '&:hover': {
-                    bgcolor: viewMode === 'table' ? '#ff8a65' : '#333',
-                    borderColor: '#ff6b35'
+                    bgcolor: viewMode === 'table' ? '#e55a2b' : 'rgba(255, 255, 255, 0.06)',
+                    color: viewMode === 'table' ? '#fff' : colors.text.primary
                   }
                 }}
               >

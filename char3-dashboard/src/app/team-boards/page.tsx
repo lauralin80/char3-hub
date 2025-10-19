@@ -393,7 +393,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
               />
             </Box>
 
-            <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem', mb: 3 }}>
+            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.875rem', mb: 3 }}>
               All your assigned tasks across all boards
             </Typography>
 
@@ -726,7 +726,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                 </Typography>
                               ))}
                               {card.labels.length > 2 && (
-                                <Typography variant="caption" sx={{ color: '#888', fontSize: '0.75rem' }}>
+                                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.75rem' }}>
                                   +{card.labels.length - 2}
                                 </Typography>
                               )}
@@ -933,7 +933,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             />
           </Box>
 
-          <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem', mb: 2 }}>
+          <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.875rem', mb: 2 }}>
             All tasks from the {boardName} board
           </Typography>
 
@@ -1077,8 +1077,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
               bgcolor: '#0d0d0d',
               border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: 2,
-              overflow: 'auto',
-              p: 1.5
+              overflow: 'auto'
             }}>
               {boardData.lists.map((list: any, index: number) => {
                 const listCards = filteredCards.filter((card: any) => card.idList === list.id);
@@ -1089,7 +1088,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                     sx={{
                       flex: '1 1 0',
                       minWidth: 180,
-                      borderRight: index < boardData.lists.length - 1 ? '1px solid #444' : 'none',
+                      borderRight: index < boardData.lists.length - 1 ? '1px solid rgba(255, 255, 255, 0.06)' : 'none',
                       display: 'flex',
                       flexDirection: 'column',
                       position: 'relative'
@@ -1122,8 +1121,9 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                       <Typography 
                         variant="caption" 
                         sx={{ 
-                          color: '#888',
-                          fontSize: '0.6875rem'
+                          color: 'rgba(255, 255, 255, 0.5)',
+                          fontSize: '0.6875rem',
+                          fontWeight: 500
                         }}
                       >
                         ({listCards.length})
@@ -1205,7 +1205,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             {/* Client - Project */}
                             {(clientName || projectName) && (
                               <Typography variant="caption" sx={{ 
-                                color: '#888',
+                                color: 'rgba(255, 255, 255, 0.5)',
                                 fontSize: '0.6875rem',
                                 display: 'block',
                                 lineHeight: 1.2
@@ -1217,7 +1217,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                             {/* Milestone */}
                             {milestone && (
                               <Typography variant="caption" sx={{ 
-                                color: '#888',
+                                color: 'rgba(255, 255, 255, 0.5)',
                                 fontSize: '0.6875rem',
                                 display: 'block',
                                 lineHeight: 1.2
@@ -1521,7 +1521,7 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
                                 </Typography>
                               ))}
                               {card.labels.length > 2 && (
-                                <Typography variant="caption" sx={{ color: '#888', fontSize: '0.75rem' }}>
+                                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.75rem' }}>
                                   +{card.labels.length - 2}
                                 </Typography>
                               )}

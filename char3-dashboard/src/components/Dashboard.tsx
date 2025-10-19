@@ -1241,20 +1241,20 @@ export default function Dashboard() {
         {/* Right Master Tasks Panel */}
         <Box sx={{ 
           width: 300, 
-          bgcolor: '#2a2a2a', 
+          bgcolor: '#141414', 
           borderRadius: 2,
-          p: 2,
+          p: 2.5,
           display: 'flex',
           flexDirection: 'column',
-          border: '1px solid #444',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.4)'
         }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h6" sx={{ color: 'white', fontSize: '1rem' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
+            <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.95)', fontSize: '0.9375rem', fontWeight: 600, letterSpacing: '-0.01em' }}>
               All Tasks
             </Typography>
-            <Typography variant="body2" sx={{ color: '#888', fontSize: '0.75rem' }}>
-              {filteredTasks.length} tasks
+            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.75rem', fontWeight: 500 }}>
+              {filteredTasks.length}
             </Typography>
           </Box>
 
@@ -1267,13 +1267,24 @@ export default function Dashboard() {
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
                 width: '100%',
-                padding: '8px 12px',
-                backgroundColor: '#3a3a3a',
-                border: '1px solid #555',
-                borderRadius: '4px',
-                color: 'white',
-                fontSize: '0.875rem',
-                outline: 'none'
+                padding: '9px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '0.8125rem',
+                outline: 'none',
+                fontWeight: 400,
+                letterSpacing: '-0.01em',
+                transition: 'all 0.15s ease'
+              }}
+              onFocus={(e) => {
+                e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
+                e.target.style.borderColor = 'rgba(255, 107, 53, 0.5)';
+              }}
+              onBlur={(e) => {
+                e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.04)';
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.08)';
               }}
             />
           </Box>
@@ -1286,14 +1297,16 @@ export default function Dashboard() {
               style={{
                 flex: 1,
                 minWidth: '120px',
-                padding: '8px 12px',
-                backgroundColor: '#3a3a3a',
-                border: '1px solid #555',
-                borderRadius: '4px',
-                color: 'white',
+                padding: '9px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '0.75rem',
                 outline: 'none',
-                height: '40px'
+                height: 'auto',
+                fontWeight: 400,
+                letterSpacing: '-0.01em'
               }}
             >
               <option value="">All Clients</option>
@@ -1308,14 +1321,16 @@ export default function Dashboard() {
               style={{
                 flex: 1,
                 minWidth: '120px',
-                padding: '8px 12px',
-                backgroundColor: '#3a3a3a',
-                border: '1px solid #555',
-                borderRadius: '4px',
-                color: 'white',
+                padding: '9px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '0.75rem',
                 outline: 'none',
-                height: '40px'
+                height: 'auto',
+                fontWeight: 400,
+                letterSpacing: '-0.01em'
               }}
             >
               <option value="">All Projects</option>
@@ -1330,14 +1345,16 @@ export default function Dashboard() {
               style={{
                 flex: 1,
                 minWidth: '120px',
-                padding: '8px 12px',
-                backgroundColor: '#3a3a3a',
-                border: '1px solid #555',
-                borderRadius: '4px',
-                color: 'white',
+                padding: '9px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '0.75rem',
                 outline: 'none',
-                height: '40px'
+                height: 'auto',
+                fontWeight: 400,
+                letterSpacing: '-0.01em'
               }}
             >
               <option value="">All Boards</option>
@@ -1352,14 +1369,16 @@ export default function Dashboard() {
               style={{
                 flex: 1,
                 minWidth: '120px',
-                padding: '8px 12px',
-                backgroundColor: '#3a3a3a',
-                border: '1px solid #555',
-                borderRadius: '4px',
-                color: 'white',
+                padding: '9px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '0.75rem',
                 outline: 'none',
-                height: '40px'
+                height: 'auto',
+                fontWeight: 400,
+                letterSpacing: '-0.01em'
               }}
             >
               <option value="">All Assignees</option>

@@ -1185,6 +1185,7 @@ export default function Dashboard() {
             display: 'flex',
             px: 2,
             pt: 1,
+            pb: 1,
             gap: 0.5
           }}>
             <Box

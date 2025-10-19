@@ -1585,7 +1585,7 @@ export default function Dashboard() {
               </Box>
             ))}
           </Box>
-        </Box>
+          </Box>
         )}
       </Box>
     </Box>

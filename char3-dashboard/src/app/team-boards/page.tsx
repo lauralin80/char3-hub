@@ -399,125 +399,118 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
             </Typography>
 
             {/* Filters */}
-            <Box sx={{ mb: 3 }}>
-              {/* Top Row: Search and Task Status */}
-              <Box sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
-                <input
-                  type="text"
-                  placeholder="Search tasks..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{
-                    flex: 1,
-                    maxWidth: '300px',
-                    padding: '9px 12px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '6px',
-                    color: 'rgba(255, 255, 255, 0.9)',
-                    fontSize: '0.8125rem',
-                    outline: 'none',
-                    fontWeight: 400,
-                    letterSpacing: '-0.01em',
-                    transition: 'all 0.15s ease'
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 107, 53, 0.5)';
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.04)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-                  }}
-                />
-                
-                <select
-                  value={selectedTaskStatus}
-                  onChange={(e) => setSelectedTaskStatus(e.target.value)}
-                  style={{
-                    minWidth: '140px',
-                    padding: '9px 12px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '6px',
-                    color: 'rgba(255, 255, 255, 0.9)',
-                    fontSize: '0.75rem',
-                    outline: 'none',
-                    height: 'auto',
-                    fontWeight: 400,
-                    letterSpacing: '-0.01em'
-                  }}
-                >
-                  <option value="open">Open Tasks</option>
-                  <option value="completed">Completed Tasks</option>
-                  <option value="all">All Tasks</option>
-                </select>
-              </Box>
+            <Box sx={{ display: 'flex', gap: 1, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
+              <input
+                type="text"
+                placeholder="Search tasks..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  width: '300px',
+                  padding: '9px 12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '6px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.8125rem',
+                  outline: 'none',
+                  fontWeight: 400,
+                  letterSpacing: '-0.01em',
+                  transition: 'all 0.15s ease'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 107, 53, 0.5)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.04)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                }}
+              />
+              
+              <select
+                value={selectedTaskStatus}
+                onChange={(e) => setSelectedTaskStatus(e.target.value)}
+                style={{
+                  minWidth: '140px',
+                  padding: '9px 12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '6px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.75rem',
+                  outline: 'none',
+                  height: 'auto',
+                  fontWeight: 400,
+                  letterSpacing: '-0.01em'
+                }}
+              >
+                <option value="open">Open Tasks</option>
+                <option value="completed">Completed Tasks</option>
+                <option value="all">All Tasks</option>
+              </select>
 
-              {/* Bottom Row: Other Filters */}
-              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
-                <select
-                  value={selectedClient}
-                  onChange={(e) => setSelectedClient(e.target.value)}
-                  style={{
-                    minWidth: '120px',
-                    padding: '9px 12px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '6px',
-                    color: 'rgba(255, 255, 255, 0.9)',
-                    fontSize: '0.75rem',
-                    outline: 'none',
-                    height: 'auto',
-                    fontWeight: 400,
-                    letterSpacing: '-0.01em'
-                  }}
-                >
-                  <option value="">All Clients</option>
-                  {uniqueClients.map(client => (
-                    <option key={client} value={client}>{client}</option>
-                  ))}
-                </select>
-                
-                <select
-                  value={selectedProject}
-                  onChange={(e) => setSelectedProject(e.target.value)}
-                  style={{
-                    minWidth: '120px',
-                    padding: '9px 12px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '6px',
-                    color: 'rgba(255, 255, 255, 0.9)',
-                    fontSize: '0.75rem',
-                    outline: 'none',
-                    height: 'auto',
-                    fontWeight: 400,
-                    letterSpacing: '-0.01em'
-                  }}
-                >
-                  <option value="">All Projects</option>
-                  {uniqueProjects.map(project => (
-                    <option key={project} value={project}>{project}</option>
-                  ))}
-                </select>
-                
-                <Button
-                  onClick={clearAllFilters}
-                  size="small"
-                  sx={{
-                    bgcolor: '#4caf50',
-                    color: 'white',
-                    fontSize: '0.75rem',
-                    px: 2,
-                    py: 1,
-                    minWidth: 'auto',
-                    '&:hover': { bgcolor: '#45a049' }
-                  }}
-                >
-                  Clear Filters
-                </Button>
-              </Box>
+              <select
+                value={selectedClient}
+                onChange={(e) => setSelectedClient(e.target.value)}
+                style={{
+                  minWidth: '120px',
+                  padding: '9px 12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '6px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.75rem',
+                  outline: 'none',
+                  height: 'auto',
+                  fontWeight: 400,
+                  letterSpacing: '-0.01em'
+                }}
+              >
+                <option value="">All Clients</option>
+                {uniqueClients.map(client => (
+                  <option key={client} value={client}>{client}</option>
+                ))}
+              </select>
+              
+              <select
+                value={selectedProject}
+                onChange={(e) => setSelectedProject(e.target.value)}
+                style={{
+                  minWidth: '120px',
+                  padding: '9px 12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '6px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.75rem',
+                  outline: 'none',
+                  height: 'auto',
+                  fontWeight: 400,
+                  letterSpacing: '-0.01em'
+                }}
+              >
+                <option value="">All Projects</option>
+                {uniqueProjects.map(project => (
+                  <option key={project} value={project}>{project}</option>
+                ))}
+              </select>
+              
+              <Button
+                onClick={clearAllFilters}
+                size="small"
+                sx={{
+                  bgcolor: '#4caf50',
+                  color: 'white',
+                  fontSize: '0.75rem',
+                  px: 2,
+                  py: 1,
+                  minWidth: 'auto',
+                  '&:hover': { bgcolor: '#45a049' }
+                }}
+              >
+                Clear Filters
+              </Button>
             </Box>
 
             {/* Table */}
@@ -954,148 +947,141 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
           </Typography>
 
           {/* Filters */}
-          <Box sx={{ mb: 2 }}>
-            {/* Top Row: Search and Task Status */}
-            <Box sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
-              <input
-                type="text"
-                placeholder="Search tasks..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{
-                  flex: 1,
-                  maxWidth: '300px',
-                  padding: '9px 12px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '6px',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  fontSize: '0.8125rem',
-                  outline: 'none',
-                  fontWeight: 400,
-                  letterSpacing: '-0.01em',
-                  transition: 'all 0.15s ease'
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 107, 53, 0.5)';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.04)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-                }}
-              />
-              
-              <select
-                value={selectedTaskStatus}
-                onChange={(e) => setSelectedTaskStatus(e.target.value)}
-                style={{
-                  minWidth: '140px',
-                  padding: '9px 12px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '6px',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  fontSize: '0.75rem',
-                  outline: 'none',
-                  height: 'auto',
-                  fontWeight: 400,
-                  letterSpacing: '-0.01em'
-                }}
-              >
-                <option value="open">Open Tasks</option>
-                <option value="completed">Completed Tasks</option>
-                <option value="all">All Tasks</option>
-              </select>
-            </Box>
+          <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+            <input
+              type="text"
+              placeholder="Search tasks..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                width: '300px',
+                padding: '9px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '0.8125rem',
+                outline: 'none',
+                fontWeight: 400,
+                letterSpacing: '-0.01em',
+                transition: 'all 0.15s ease'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
+                e.currentTarget.style.borderColor = 'rgba(255, 107, 53, 0.5)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.04)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+              }}
+            />
+            
+            <select
+              value={selectedTaskStatus}
+              onChange={(e) => setSelectedTaskStatus(e.target.value)}
+              style={{
+                minWidth: '140px',
+                padding: '9px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '0.75rem',
+                outline: 'none',
+                height: 'auto',
+                fontWeight: 400,
+                letterSpacing: '-0.01em'
+              }}
+            >
+              <option value="open">Open Tasks</option>
+              <option value="completed">Completed Tasks</option>
+              <option value="all">All Tasks</option>
+            </select>
 
-            {/* Bottom Row: Other Filters */}
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
-              <select
-                value={selectedClient}
-                onChange={(e) => setSelectedClient(e.target.value)}
-                style={{
-                  minWidth: '120px',
-                  padding: '9px 12px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '6px',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  fontSize: '0.75rem',
-                  outline: 'none',
-                  height: 'auto',
-                  fontWeight: 400,
-                  letterSpacing: '-0.01em'
-                }}
-              >
-                <option value="">All Clients</option>
-                {uniqueClients.map(client => (
-                  <option key={client} value={client}>{client}</option>
-                ))}
-              </select>
-              
-              <select
-                value={selectedProject}
-                onChange={(e) => setSelectedProject(e.target.value)}
-                style={{
-                  minWidth: '120px',
-                  padding: '9px 12px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '6px',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  fontSize: '0.75rem',
-                  outline: 'none',
-                  height: 'auto',
-                  fontWeight: 400,
-                  letterSpacing: '-0.01em'
-                }}
-              >
-                <option value="">All Projects</option>
-                {uniqueProjects.map(project => (
-                  <option key={project} value={project}>{project}</option>
-                ))}
-              </select>
-              
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                style={{
-                  minWidth: '120px',
-                  padding: '9px 12px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '6px',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  fontSize: '0.75rem',
-                  outline: 'none',
-                  height: 'auto',
-                  fontWeight: 400,
-                  letterSpacing: '-0.01em'
-                }}
-              >
-                <option value="">All Status</option>
-                {boardData.lists.map((list: any) => (
-                  <option key={list.id} value={list.name}>{list.name}</option>
-                ))}
-              </select>
-              
-              <Button
-                onClick={clearAllFilters}
-                size="small"
-                sx={{
-                  bgcolor: '#4caf50',
-                  color: 'white',
-                  fontSize: '0.75rem',
-                  px: 2,
-                  py: 1,
-                  minWidth: 'auto',
-                  '&:hover': { bgcolor: '#45a049' }
-                }}
-              >
-                Clear Filters
-              </Button>
-            </Box>
+            <select
+              value={selectedClient}
+              onChange={(e) => setSelectedClient(e.target.value)}
+              style={{
+                minWidth: '120px',
+                padding: '9px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '0.75rem',
+                outline: 'none',
+                height: 'auto',
+                fontWeight: 400,
+                letterSpacing: '-0.01em'
+              }}
+            >
+              <option value="">All Clients</option>
+              {uniqueClients.map(client => (
+                <option key={client} value={client}>{client}</option>
+              ))}
+            </select>
+            
+            <select
+              value={selectedProject}
+              onChange={(e) => setSelectedProject(e.target.value)}
+              style={{
+                minWidth: '120px',
+                padding: '9px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '0.75rem',
+                outline: 'none',
+                height: 'auto',
+                fontWeight: 400,
+                letterSpacing: '-0.01em'
+              }}
+            >
+              <option value="">All Projects</option>
+              {uniqueProjects.map(project => (
+                <option key={project} value={project}>{project}</option>
+              ))}
+            </select>
+            
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              style={{
+                minWidth: '120px',
+                padding: '9px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '0.75rem',
+                outline: 'none',
+                height: 'auto',
+                fontWeight: 400,
+                letterSpacing: '-0.01em'
+              }}
+            >
+              <option value="">All Status</option>
+              {boardData.lists.map((list: any) => (
+                <option key={list.id} value={list.name}>{list.name}</option>
+              ))}
+            </select>
+            
+            <Button
+              onClick={clearAllFilters}
+              size="small"
+              sx={{
+                bgcolor: '#4caf50',
+                color: 'white',
+                fontSize: '0.75rem',
+                px: 2,
+                py: 1,
+                minWidth: 'auto',
+                '&:hover': { bgcolor: '#45a049' }
+              }}
+            >
+              Clear Filters
+            </Button>
           </Box>
         </Box>
 

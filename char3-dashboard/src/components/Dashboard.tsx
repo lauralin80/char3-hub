@@ -7,6 +7,7 @@ import { useStore } from '@/store/useStore';
 import { trelloService } from '@/services/trelloService';
 import { DeliverablesBoard } from './DeliverablesBoard';
 import { WeeklyPlanningBoard } from './WeeklyPlanningBoard';
+import { colors, typography, transitions } from '@/styles/theme';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -1137,10 +1138,10 @@ export default function Dashboard() {
             alignItems: 'center',
             borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
           }}>
-            <Typography variant="h5" sx={{ color: 'rgba(255, 255, 255, 0.95)', fontSize: '1.125rem', fontWeight: 600, letterSpacing: '-0.02em' }}>
+            <Typography variant="h5" sx={{ color: colors.text.title, fontSize: '1.125rem', fontWeight: typography.fontWeights.semibold, letterSpacing: typography.letterSpacing.tight }}>
               Team Collaboration
             </Typography>
-            <Typography variant="body2" sx={{ color: '#888', fontSize: '0.875rem' }}>
+            <Typography variant="body2" sx={{ color: colors.text.tertiary, fontSize: '0.875rem' }}>
               {(() => {
                 const today = new Date();
                 // Calculate the end of the week (Saturday)
@@ -1250,10 +1251,10 @@ export default function Dashboard() {
           boxShadow: '0 1px 3px rgba(0,0,0,0.4)'
         }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
-            <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.95)', fontSize: '0.9375rem', fontWeight: 600, letterSpacing: '-0.01em' }}>
+            <Typography variant="h6" sx={{ color: colors.text.title, fontSize: '0.9375rem', fontWeight: typography.fontWeights.semibold, letterSpacing: typography.letterSpacing.normal }}>
               All Tasks
             </Typography>
-            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.75rem', fontWeight: 500 }}>
+            <Typography variant="body2" sx={{ color: colors.text.tertiary, fontSize: '0.75rem', fontWeight: typography.fontWeights.medium }}>
               {filteredTasks.length}
             </Typography>
           </Box>
@@ -1415,11 +1416,11 @@ export default function Dashboard() {
                 sx={{
                   p: 1,
                   mb: 0.75,
-                  bgcolor: '#3a3a3a',
+                  bgcolor: colors.background.card,
                   borderRadius: 1,
-                  border: '1px solid #555',
+                  border: `1px solid ${colors.border.default}`,
                   cursor: 'grab',
-                  '&:hover': { bgcolor: '#444' },
+                  '&:hover': { bgcolor: colors.background.cardHover },
                   '&:active': { cursor: 'grabbing' }
                 }}
               >

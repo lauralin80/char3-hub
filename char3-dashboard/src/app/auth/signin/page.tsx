@@ -22,19 +22,36 @@ export default function SignIn() {
   return (
     <Box sx={{
       height: '100vh',
-      bgcolor: '#1a1a1a',
+      bgcolor: '#0d0d0d',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      gap: 3
+      pt: '20vh',
+      px: 3
     }}>
       {/* Logo/Title */}
-      <Box sx={{ textAlign: 'center', mb: 2 }}>
-        <Typography variant="h3" sx={{ color: '#ff6b35', fontWeight: 'bold', mb: 2 }}>
+      <Box sx={{ textAlign: 'center', mb: 4 }}>
+        <Typography 
+          variant="h3" 
+          sx={{ 
+            color: '#ff6b35', 
+            fontWeight: 600, 
+            fontSize: '2.5rem',
+            letterSpacing: '-0.03em',
+            mb: 2
+          }}
+        >
           char3 Hub
         </Typography>
-        <Typography variant="body1" sx={{ color: '#888' }}>
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            color: 'rgba(255, 255, 255, 0.6)', 
+            fontSize: '0.9375rem',
+            fontWeight: 400,
+            letterSpacing: '-0.01em'
+          }}
+        >
           Sign in with your Trello account to access your workspace
         </Typography>
       </Box>
@@ -46,29 +63,33 @@ export default function SignIn() {
         sx={{
           bgcolor: '#ff6b35',
           color: 'white',
-          px: 3,
+          px: 4,
           py: 1.5,
-          fontSize: '1rem',
-          fontWeight: 'bold',
-          borderRadius: 2,
-          minWidth: 180,
+          fontSize: '0.875rem',
+          fontWeight: 600,
+          borderRadius: 1.5,
+          minWidth: 200,
           textTransform: 'none',
+          letterSpacing: '-0.01em',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
           '&:hover': {
-            bgcolor: '#e55a2b'
+            bgcolor: '#e55a2b',
+            boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)'
           },
           '&:disabled': {
-            bgcolor: '#666',
-            color: '#999'
-          }
+            bgcolor: 'rgba(255, 255, 255, 0.1)',
+            color: 'rgba(255, 255, 255, 0.4)'
+          },
+          transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)'
         }}
       >
         {isLoading ? (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <CircularProgress size={20} sx={{ color: 'white' }} />
-            <Typography>Signing in...</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <CircularProgress size={18} sx={{ color: 'white' }} />
+            <Typography sx={{ fontSize: '0.875rem', fontWeight: 600 }}>Signing in...</Typography>
           </Box>
         ) : (
-          'SIGN IN WITH TRELLO'
+          'Sign in with Trello'
         )}
       </Button>
 

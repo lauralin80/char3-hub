@@ -506,30 +506,23 @@ export default function Dashboard() {
   // Handle creating a new task
   const handleCreateTask = async (taskData: TaskData) => {
     try {
-      // Find the label ID if a label was selected
-      let labelId: string | undefined;
-      if (taskData.label) {
-        const allLabels = [
-          ...(allBoardsData?.accountManagement?.labels || []),
-          ...(allBoardsData?.designUx?.labels || []),
-          ...(allBoardsData?.development?.labels || [])
-        ];
-        const label = allLabels.find((l: any) => l.name === taskData.label);
-        labelId = label?.id;
-      }
-
-      // Create the card in Trello
-      await trelloService.createCard({
+      // Build card data object
+      const cardDataToSend: any = {
         title: taskData.title,
         description: taskData.description,
         boardId: taskData.board,
-        client: taskData.client,
-        project: taskData.project,
-        milestone: taskData.milestone,
-        effort: taskData.effort,
-        assignee: taskData.assignee,
-        labelId: labelId
-      }, user?.trelloToken);
+      };
+
+      // Only add optional fields if they have values
+      if (taskData.client) cardDataToSend.client = taskData.client;
+      if (taskData.project) cardDataToSend.project = taskData.project;
+      if (taskData.milestone) cardDataToSend.milestone = taskData.milestone;
+      if (taskData.effort) cardDataToSend.effort = taskData.effort;
+      if (taskData.assignee) cardDataToSend.assignee = taskData.assignee;
+      if (taskData.label) cardDataToSend.labelId = taskData.label;
+
+      // Create the card in Trello
+      await trelloService.createCard(cardDataToSend, user?.trelloToken);
 
       // Refresh the data
       await loadData();

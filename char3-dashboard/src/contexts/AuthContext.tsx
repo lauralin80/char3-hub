@@ -65,20 +65,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      // Set user to null immediately for instant feedback
+      // Clean up the cookie first
+      await fetch('/api/auth/logout', { method: 'POST' });
+      
+      // Set user to null
       setUser(null);
       
-      // Redirect immediately
-      router.push('/auth/signin');
-      
-      // Then clean up the cookie in the background
-      fetch('/api/auth/logout', { method: 'POST' }).catch(err => {
-        console.error('Background logout error:', err);
-      });
+      // Force a full page reload to clear all state
+      window.location.href = '/auth/signin';
     } catch (error) {
       console.error('Sign out error:', error);
       // Still redirect even if there's an error
-      router.push('/auth/signin');
+      window.location.href = '/auth/signin';
     }
   };
 

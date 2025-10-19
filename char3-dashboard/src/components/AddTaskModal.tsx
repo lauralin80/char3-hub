@@ -33,7 +33,7 @@ export interface TaskData {
   milestone: string;
   effort: string;
   assignee: string;
-  label: string;
+  label: string; // This will be the label ID
   board: string;
 }
 
@@ -53,54 +53,117 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
 
   const [errors, setErrors] = useState<{ title?: string; board?: string }>({});
 
+
+  // Helper function to extract custom field value
+  const extractCustomFieldValue = (card: any, boardData: any, fieldName: string) => {
+    const customField = boardData?.customFields?.find((cf: any) => cf.name === fieldName);
+    if (!customField) return '';
+    const fieldItem = card.customFieldItems?.find((cfi: any) => cfi.idCustomField === customField.id);
+    if (!fieldItem) return '';
+    
+    // Check for text value first
+    if (fieldItem.value?.text) return fieldItem.value.text;
+    if (fieldItem.value) return fieldItem.value;
+    
+    // Check for dropdown/select field (idValue)
+    if (fieldItem.idValue && customField.options) {
+      const option = customField.options.find((opt: any) => opt.id === fieldItem.idValue);
+      return option?.value?.text || '';
+    }
+    
+    return '';
+  };
+
   // Get unique values from boards
   const boards = [
-    { id: allBoardsData?.accountManagement?.id, name: 'Account Management' },
-    { id: allBoardsData?.designUx?.id, name: 'Design/UX' },
-    { id: allBoardsData?.development?.id, name: 'Development' }
+    { id: allBoardsData?.accountManagement?.boardId, name: 'Account Management' },
+    { id: allBoardsData?.designUx?.boardId, name: 'Design/UX' },
+    { id: allBoardsData?.development?.boardId, name: 'Development' }
   ].filter(b => b.id);
 
-  const clients = Array.from(new Set([
-    ...(allBoardsData?.accountManagement?.cards || []),
-    ...(allBoardsData?.designUx?.cards || []),
-    ...(allBoardsData?.development?.cards || [])
-  ].map((card: any) => {
-    const customFields = 
-      allBoardsData?.accountManagement?.cards?.includes(card) ? allBoardsData?.accountManagement?.customFields :
-      allBoardsData?.designUx?.cards?.includes(card) ? allBoardsData?.designUx?.customFields :
-      allBoardsData?.development?.customFields || [];
-    
-    const clientField = customFields?.find((cf: any) => cf.name === 'Client');
-    const clientItem = card.customFieldItems?.find((cfi: any) => cfi.idCustomField === clientField?.id);
-    return clientItem?.value?.text || clientItem?.value || '';
-  }).filter(Boolean))).sort();
+  // Get the selected board data
+  const selectedBoardData = 
+    formData.board === allBoardsData?.accountManagement?.boardId ? allBoardsData.accountManagement :
+    formData.board === allBoardsData?.designUx?.boardId ? allBoardsData.designUx :
+    formData.board === allBoardsData?.development?.boardId ? allBoardsData.development :
+    null;
 
-  const projects = Array.from(new Set([
-    ...(allBoardsData?.accountManagement?.cards || []),
-    ...(allBoardsData?.designUx?.cards || []),
-    ...(allBoardsData?.development?.cards || [])
-  ].map((card: any) => {
-    const customFields = 
-      allBoardsData?.accountManagement?.cards?.includes(card) ? allBoardsData?.accountManagement?.customFields :
-      allBoardsData?.designUx?.cards?.includes(card) ? allBoardsData?.designUx?.customFields :
-      allBoardsData?.development?.customFields || [];
-    
-    const projectField = customFields?.find((cf: any) => cf.name === 'Project');
-    const projectItem = card.customFieldItems?.find((cfi: any) => cfi.idCustomField === projectField?.id);
-    return projectItem?.value?.text || projectItem?.value || '';
-  }).filter(Boolean))).sort();
+  // Extract clients from the selected board only
+  const clientOptionsMap = new Map<string, string>(); // text -> id
+  if (selectedBoardData) {
+    const clientField = selectedBoardData.customFields?.find((cf: any) => cf.name === 'Client');
+    if (clientField?.options) {
+      clientField.options.forEach((opt: any) => {
+        if (opt.value?.text) {
+          clientOptionsMap.set(opt.value.text, opt.id);
+        }
+      });
+    }
+  }
+  const clients = Array.from(clientOptionsMap.keys()).sort();
 
-  const assignees = Array.from(new Set([
-    ...(allBoardsData?.accountManagement?.cards || []),
-    ...(allBoardsData?.designUx?.cards || []),
-    ...(allBoardsData?.development?.cards || [])
-  ].flatMap((card: any) => card.members?.map((m: any) => m.fullName) || []))).sort();
+  // Extract projects from the selected board only
+  const projectOptionsMap = new Map<string, string>(); // text -> id
+  if (selectedBoardData) {
+    const projectField = selectedBoardData.customFields?.find((cf: any) => cf.name === 'Project');
+    if (projectField?.options) {
+      projectField.options.forEach((opt: any) => {
+        if (opt.value?.text) {
+          projectOptionsMap.set(opt.value.text, opt.id);
+        }
+      });
+    }
+  }
+  const projects = Array.from(projectOptionsMap.keys()).sort();
 
-  const labels = Array.from(new Set([
-    ...(allBoardsData?.accountManagement?.labels || []),
-    ...(allBoardsData?.designUx?.labels || []),
-    ...(allBoardsData?.development?.labels || [])
-  ].map((label: any) => label.name).filter(Boolean))).sort();
+  // Extract milestones from all boards
+  const milestonesSet = new Set<string>();
+  [allBoardsData?.accountManagement, allBoardsData?.designUx, allBoardsData?.development].forEach(boardData => {
+    boardData?.cards?.forEach((card: any) => {
+      const milestone = extractCustomFieldValue(card, boardData, 'Milestone');
+      if (milestone) milestonesSet.add(milestone);
+    });
+  });
+  const milestones = Array.from(milestonesSet).sort();
+
+  // Get all unique workspace members from all boards
+  const membersMap = new Map<string, any>();
+  [allBoardsData?.accountManagement, allBoardsData?.designUx, allBoardsData?.development].forEach(boardData => {
+    boardData?.members?.forEach((member: any) => {
+      if (member.fullName && !membersMap.has(member.id)) {
+        membersMap.set(member.id, member);
+      }
+    });
+  });
+  const assignees = Array.from(membersMap.values())
+    .map((m: any) => m.fullName)
+    .sort();
+
+  // Extract effort values from the selected board only
+  const effortOptionsMap = new Map<string, string>(); // text -> id
+  if (selectedBoardData) {
+    const effortField = selectedBoardData.customFields?.find((cf: any) => cf.name === 'Effort');
+    if (effortField?.options) {
+      effortField.options.forEach((opt: any) => {
+        if (opt.value?.text) {
+          effortOptionsMap.set(opt.value.text, opt.id);
+        }
+      });
+    }
+  }
+  const effortOptions = Array.from(effortOptionsMap.keys()).sort();
+
+  // Extract labels from all boards (store full label objects)
+  const labelsMap = new Map<string, any>();
+  [allBoardsData?.accountManagement, allBoardsData?.designUx, allBoardsData?.development].forEach(boardData => {
+    boardData?.labels?.forEach((label: any) => {
+      if (label.name && !labelsMap.has(label.name)) {
+        labelsMap.set(label.name, label);
+      }
+    });
+  });
+  const labels = Array.from(labelsMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+
 
   const handleChange = (field: keyof TaskData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -190,8 +253,8 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
       }}>
         Add New Task
       </DialogTitle>
-      <DialogContent sx={{ pt: 3 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+      <DialogContent sx={{ pt: 3, pb: 3 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
           {/* Title */}
           <TextField
             label="Title"
@@ -304,7 +367,7 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
             >
               <MenuItem value="">None</MenuItem>
               {clients.map(client => (
-                <MenuItem key={client} value={client}>{client}</MenuItem>
+                <MenuItem key={client} value={clientOptionsMap.get(client)}>{client}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -340,47 +403,82 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
             >
               <MenuItem value="">None</MenuItem>
               {projects.map(project => (
-                <MenuItem key={project} value={project}>{project}</MenuItem>
+                <MenuItem key={project} value={projectOptionsMap.get(project)}>{project}</MenuItem>
               ))}
             </Select>
           </FormControl>
 
           {/* Milestone */}
-          <TextField
-            label="Milestone"
-            fullWidth
-            value={formData.milestone}
-            onChange={(e) => handleChange('milestone', e.target.value)}
-            sx={{
-              '& .MuiInputLabel-root': { color: colors.text.secondary },
-              '& .MuiInputLabel-root.Mui-focused': { color: colors.accent.orange },
-              '& .MuiOutlinedInput-root': {
+          <FormControl fullWidth>
+            <InputLabel sx={{ color: colors.text.secondary, '&.Mui-focused': { color: colors.accent.orange } }}>
+              Milestone
+            </InputLabel>
+            <Select
+              value={formData.milestone}
+              onChange={(e) => handleChange('milestone', e.target.value)}
+              label="Milestone"
+              sx={{
                 color: colors.text.primary,
-                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)' },
-                '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.16)' },
-                '&.Mui-focused fieldset': { borderColor: colors.accent.orange }
-              }
-            }}
-          />
+                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.08)' },
+                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.16)' },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: colors.accent.orange }
+              }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    bgcolor: '#1a1a1a',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    '& .MuiMenuItem-root': {
+                      color: colors.text.primary,
+                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
+                      '&.Mui-selected': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
+                    }
+                  }
+                }
+              }}
+            >
+              <MenuItem value="">None</MenuItem>
+              {milestones.map(milestone => (
+                <MenuItem key={milestone} value={milestone}>{milestone}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           {/* Effort */}
-          <TextField
-            label="Effort"
-            fullWidth
-            value={formData.effort}
-            onChange={(e) => handleChange('effort', e.target.value)}
-            placeholder="e.g., 2h, 1d, etc."
-            sx={{
-              '& .MuiInputLabel-root': { color: colors.text.secondary },
-              '& .MuiInputLabel-root.Mui-focused': { color: colors.accent.orange },
-              '& .MuiOutlinedInput-root': {
+          <FormControl fullWidth>
+            <InputLabel sx={{ color: colors.text.secondary, '&.Mui-focused': { color: colors.accent.orange } }}>
+              Effort
+            </InputLabel>
+            <Select
+              value={formData.effort}
+              onChange={(e) => handleChange('effort', e.target.value)}
+              label="Effort"
+              sx={{
                 color: colors.text.primary,
-                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)' },
-                '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.16)' },
-                '&.Mui-focused fieldset': { borderColor: colors.accent.orange }
-              }
-            }}
-          />
+                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.08)' },
+                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.16)' },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: colors.accent.orange }
+              }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    bgcolor: '#1a1a1a',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    '& .MuiMenuItem-root': {
+                      color: colors.text.primary,
+                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
+                      '&.Mui-selected': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
+                    }
+                  }
+                }
+              }}
+            >
+              <MenuItem value="">None</MenuItem>
+              {effortOptions.map(effort => (
+                <MenuItem key={effort} value={effortOptionsMap.get(effort)}>{effort}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           {/* Assignee */}
           <FormControl fullWidth>
@@ -449,7 +547,7 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
             >
               <MenuItem value="">None</MenuItem>
               {labels.map(label => (
-                <MenuItem key={label} value={label}>{label}</MenuItem>
+                <MenuItem key={label.id} value={label.id}>{label.name}</MenuItem>
               ))}
             </Select>
           </FormControl>

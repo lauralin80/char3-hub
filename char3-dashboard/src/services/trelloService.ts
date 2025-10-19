@@ -60,11 +60,17 @@ class TrelloService {
         params: this.getAuthParams(userToken),
       });
 
+      // Get board labels
+      const labelsResponse = await axios.get(`${TRELLO_API_BASE}/boards/${targetBoardId}/labels`, {
+        params: this.getAuthParams(userToken),
+      });
+
       return {
         lists: listsResponse.data,
         cards: cardsResponse.data,
         customFields: customFieldsResponse.data,
         members: membersResponse.data,
+        labels: labelsResponse.data,
       };
     } catch (error) {
       console.error('Error fetching Trello data:', error);
@@ -624,8 +630,8 @@ class TrelloService {
 
       const newCard = cardResponse.data;
 
-      // Add label if provided
-      if (cardData.labelId) {
+      // Add label if provided (skip if empty)
+      if (cardData.labelId && cardData.labelId !== '') {
         await axios.post(`${TRELLO_API_BASE}/cards/${newCard.id}/idLabels`, null, {
           params: {
             ...this.getAuthParams(userToken),
@@ -634,8 +640,8 @@ class TrelloService {
         });
       }
 
-      // Add assignee if provided
-      if (cardData.assignee) {
+      // Add assignee if provided (skip if empty)
+      if (cardData.assignee && cardData.assignee !== '') {
         // First, get all board members
         const membersResponse = await axios.get(`${TRELLO_API_BASE}/boards/${cardData.boardId}/members`, {
           params: this.getAuthParams(userToken),
@@ -659,31 +665,35 @@ class TrelloService {
 
       const customFields = customFieldsResponse.data;
 
-      if (cardData.client) {
+      // Only set custom fields if they have values
+      if (cardData.client && cardData.client !== '') {
         const clientField = customFields.find((cf: any) => cf.name === 'Client');
         if (clientField) {
+          // For dropdown fields, send idValue
           await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${clientField.id}/item`, {
-            value: { text: cardData.client },
+            idValue: cardData.client,
           }, {
             params: this.getAuthParams(userToken),
           });
         }
       }
 
-      if (cardData.project) {
+      if (cardData.project && cardData.project !== '') {
         const projectField = customFields.find((cf: any) => cf.name === 'Project');
         if (projectField) {
+          // For dropdown fields, send idValue
           await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${projectField.id}/item`, {
-            value: { text: cardData.project },
+            idValue: cardData.project,
           }, {
             params: this.getAuthParams(userToken),
           });
         }
       }
 
-      if (cardData.milestone) {
+      if (cardData.milestone && cardData.milestone !== '') {
         const milestoneField = customFields.find((cf: any) => cf.name === 'Milestone');
         if (milestoneField) {
+          // For text fields, send value
           await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${milestoneField.id}/item`, {
             value: { text: cardData.milestone },
           }, {
@@ -692,11 +702,12 @@ class TrelloService {
         }
       }
 
-      if (cardData.effort) {
+      if (cardData.effort && cardData.effort !== '') {
         const effortField = customFields.find((cf: any) => cf.name === 'Effort');
         if (effortField) {
+          // For dropdown fields, send idValue
           await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${effortField.id}/item`, {
-            value: { text: cardData.effort },
+            idValue: cardData.effort,
           }, {
             params: this.getAuthParams(userToken),
           });
@@ -704,8 +715,10 @@ class TrelloService {
       }
 
       return newCard;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating card:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Card data:', cardData);
       throw error;
     }
   }

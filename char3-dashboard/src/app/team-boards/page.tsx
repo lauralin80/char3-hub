@@ -234,12 +234,12 @@ function BoardView({ boardType, allBoardsData, onBack }: BoardViewProps) {
       '#2196f3', // Blue
       '#9c27b0', // Purple
       '#f44336', // Red
-      '#ff9800', // Orange
+      '#ff9800', // Amber
       '#00bcd4', // Cyan
-      '#e91e63', // Pink
+      '#00e5ff', // Bright Cyan
       '#3f51b5', // Indigo
       '#009688', // Teal
-      '#ff5722', // Deep Orange
+      '#ffc107', // Yellow
     ];
     
     return colors[Math.abs(hash) % colors.length];

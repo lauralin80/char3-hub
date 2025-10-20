@@ -21,9 +21,10 @@ export default function CallbackPage() {
           return;
         }
 
-        // Clean the token (remove any whitespace/newlines)
-        const token = rawToken.trim();
-        console.log('Token length:', token.length, 'Raw length:', rawToken.length);
+        // Decode and clean the token (URLSearchParams automatically decodes, but let's be explicit)
+        const decodedToken = decodeURIComponent(rawToken);
+        const token = decodedToken.trim();
+        console.log('Token length:', token.length, 'Raw length:', rawToken.length, 'Decoded length:', decodedToken.length);
 
         // Send the token to our server to create the session
         const response = await fetch('/api/auth/token-login', {

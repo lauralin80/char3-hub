@@ -53,6 +53,49 @@ export default function AccountManagement() {
   // Use global cached data
   const { data: allBoardsData, loading: boardsLoading, error: boardsError } = useAllBoardsData();
 
+  // Label color mapping function
+  const getLabelColor = (color: string, name?: string) => {
+    // Check for "Need More Info" label first
+    if (name && name.toLowerCase().includes('need more info')) {
+      return '#8b6db8'; // Darker purple for better contrast
+    }
+    
+    const colorMap: { [key: string]: string } = {
+      'orange': '#ff6b35',
+      'red': '#eb5a46',
+      'green': '#61bd4f',
+      'blue': '#0079bf',
+      'yellow': '#f2d600',
+      'purple': '#c377e0',
+      'pink': '#ff78cb',
+      'sky': '#00c2e0',
+      'lime': '#51e898',
+      'black': '#344563',
+      'red_dark': '#eb5a46'
+    };
+    return colorMap[color] || '#888';
+  };
+
+  // Assignee color function
+  const getAssigneeColor = (name: string) => {
+    if (!name || name === 'Unassigned') return colors.accent.orange;
+    
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    const assigneeColors = [
+      '#4ade80', // Green
+      '#00d4ff', // Bright Cyan
+      '#c084fc', // Purple
+      '#fb923c', // Orange
+      '#f472b6'  // Pink/Magenta
+    ];
+    
+    return assigneeColors[Math.abs(hash) % assigneeColors.length];
+  };
+
   // Redirect to sign-in if not authenticated
   useEffect(() => {
     if (!isAuthLoading && !user) {
@@ -655,12 +698,38 @@ export default function AccountManagement() {
               justifyContent: 'space-between',
               alignItems: 'center'
             }}>
-              <Typography variant="h5" sx={{ 
-                color: colors.text.title, 
-                fontWeight: typography.fontWeights.semibold
-              }}>
-                {selectedClient}
-              </Typography>
+              <Box>
+                {/* Breadcrumbs */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <Typography 
+                    onClick={() => setSelectedClient('')}
+                    sx={{ 
+                      color: colors.text.tertiary,
+                      fontSize: '0.875rem',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        color: colors.accent.orange
+                      }
+                    }}
+                  >
+                    Client Management
+                  </Typography>
+                  <Typography sx={{ color: colors.text.tertiary, fontSize: '0.875rem' }}>|</Typography>
+                  <Typography sx={{ 
+                    color: colors.text.secondary,
+                    fontSize: '0.875rem'
+                  }}>
+                    {selectedClient}
+                  </Typography>
+                </Box>
+                
+                <Typography variant="h5" sx={{ 
+                  color: colors.text.title, 
+                  fontWeight: typography.fontWeights.semibold
+                }}>
+                  {selectedClient}
+                </Typography>
+              </Box>
               <Button
                 startIcon={<AddIcon />}
                 variant="contained"
@@ -680,7 +749,7 @@ export default function AccountManagement() {
             </Box>
 
             <Box sx={{ flex: 1, overflow: 'auto', p: 3 }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, maxWidth: 1400 }}>
                 {/* Projects Section */}
                 <Box>
                   <Typography variant="h6" sx={{ 
@@ -794,18 +863,20 @@ export default function AccountManagement() {
                       </Box>
                     )}
 
-                    {/* Deliverables for Selected Project */}
-                    <Box sx={{ mb: 3 }}>
-                      <Typography sx={{ 
-                        color: colors.text.secondary, 
-                        fontSize: '0.875rem',
-                        fontWeight: typography.fontWeights.semibold,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        mb: 1.5
-                      }}>
-                        Deliverables ({projects.find(p => p.name === selectedProject)?.deliverables.length || 0})
-                      </Typography>
+                    {/* Deliverables and Milestones Grid */}
+                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 3 }}>
+                      {/* Deliverables Column */}
+                      <Box>
+                        <Typography sx={{ 
+                          color: colors.text.secondary, 
+                          fontSize: '0.875rem',
+                          fontWeight: typography.fontWeights.semibold,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          mb: 1.5
+                        }}>
+                          Deliverables ({projects.find(p => p.name === selectedProject)?.deliverables.length || 0})
+                        </Typography>
                       {projects.find(p => p.name === selectedProject)?.deliverables.length === 0 ? (
                         <Typography sx={{ color: colors.text.tertiary, fontSize: '0.875rem', fontStyle: 'italic' }}>
                           No deliverables
@@ -813,50 +884,52 @@ export default function AccountManagement() {
                       ) : (
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                           {deliverables.filter(d => d.project === selectedProject).map((deliverable) => (
-                          <Card key={deliverable.id} sx={{ 
-                            bgcolor: colors.background.card,
-                            border: `1px solid ${colors.border.default}`,
-                            '&:hover': { bgcolor: colors.background.cardHover }
-                          }}>
-                            <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                                <Typography sx={{ 
-                                  color: colors.text.cardTitle, 
-                                  fontWeight: typography.fontWeights.medium,
-                                  flex: 1
-                                }}>
-                                  {deliverable.name}
-                                </Typography>
-                                <IconButton size="small" sx={{ color: colors.text.secondary }}>
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
-                              </Box>
-                              
-                              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1 }}>
-                                {deliverable.project && (
-                                  <Chip 
-                                    label={deliverable.project} 
-                                    size="small"
-                                    sx={{ 
-                                      bgcolor: 'rgba(255, 255, 255, 0.06)',
-                                      color: colors.text.secondary,
-                                      fontSize: '0.75rem'
+                          <Box 
+                            key={deliverable.id} 
+                            sx={{ 
+                              p: 1.5,
+                              bgcolor: colors.background.card,
+                              border: `1px solid ${colors.border.default}`,
+                              borderRadius: 1,
+                              cursor: 'pointer',
+                              transition: transitions.default,
+                              '&:hover': { 
+                                bgcolor: colors.background.cardHover,
+                                borderColor: colors.border.hover
+                              }
+                            }}
+                          >
+                            <Typography sx={{ 
+                              color: colors.text.cardTitle, 
+                              fontWeight: typography.fontWeights.medium,
+                              fontSize: '0.875rem',
+                              mb: 0.75,
+                              textDecoration: deliverable.isComplete ? 'line-through' : 'none'
+                            }}>
+                              {deliverable.name}
+                            </Typography>
+                            
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
+                              {deliverable.assignee && (
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                  <Box
+                                    sx={{
+                                      width: 6,
+                                      height: 6,
+                                      borderRadius: '50%',
+                                      bgcolor: getAssigneeColor(deliverable.assignee),
+                                      opacity: 0.6
                                     }}
                                   />
-                                )}
-                                {deliverable.assignee && (
-                                  <Chip 
-                                    label={deliverable.assignee} 
-                                    size="small"
-                                    sx={{ 
-                                      bgcolor: 'rgba(255, 255, 255, 0.06)',
-                                      color: colors.text.secondary,
-                                      fontSize: '0.75rem'
-                                    }}
-                                  />
-                                )}
-                              </Box>
-
+                                  <Typography sx={{ 
+                                    color: getAssigneeColor(deliverable.assignee),
+                                    fontSize: '0.75rem',
+                                    opacity: 0.6
+                                  }}>
+                                    {deliverable.assignee}
+                                  </Typography>
+                                </Box>
+                              )}
                               {deliverable.dueDate && (
                                 <Typography sx={{ 
                                   color: deliverable.dueDate < new Date() && !deliverable.isComplete 
@@ -864,18 +937,48 @@ export default function AccountManagement() {
                                     : colors.text.tertiary,
                                   fontSize: '0.75rem'
                                 }}>
-                                  Due: {deliverable.dueDate.toLocaleDateString()}
+                                  {deliverable.dueDate.toLocaleDateString()}
                                 </Typography>
                               )}
-                            </CardContent>
-                          </Card>
+                              {deliverable.labels && deliverable.labels.length > 0 && (
+                                <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                  {deliverable.labels.map((label: any) => {
+                                    const labelColor = getLabelColor(label.color, label.name);
+                                    const labelName = label.name.toLowerCase().includes('blocked') || 
+                                                     label.name.toLowerCase().includes('waiting') || 
+                                                     label.name.toLowerCase().includes('need more info') || 
+                                                     label.name.toLowerCase().includes('decision')
+                                                     ? label.name.toUpperCase() 
+                                                     : label.name;
+                                    return (
+                                      <Box
+                                        key={label.id}
+                                        sx={{
+                                          px: 0.75,
+                                          py: 0.25,
+                                          borderRadius: 1.5,
+                                          bgcolor: `${labelColor}1a`,  // 10% opacity
+                                          fontSize: '0.625rem',
+                                          color: labelColor,
+                                          fontWeight: typography.fontWeights.normal,
+                                          letterSpacing: typography.letterSpacing.normal
+                                        }}
+                                      >
+                                        {labelName}
+                                      </Box>
+                                    );
+                                  })}
+                                </Box>
+                              )}
+                            </Box>
+                          </Box>
                         ))}
                       </Box>
                     )}
-                  </Box>
+                      </Box>
 
-                    {/* Milestones for Selected Project */}
-                    <Box sx={{ mb: 3 }}>
+                      {/* Milestones Column */}
+                      <Box>
                       <Typography sx={{ 
                         color: colors.text.secondary, 
                         fontSize: '0.875rem',
@@ -944,6 +1047,7 @@ export default function AccountManagement() {
                           ))}
                         </Box>
                       )}
+                      </Box>
                     </Box>
                   </Box>
                 )}
@@ -971,64 +1075,104 @@ export default function AccountManagement() {
                       </Typography>
                     </Box>
                   ) : (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                       {accountTasks.map((task) => (
-                          <Card key={task.id} sx={{ 
+                        <Box 
+                          key={task.id} 
+                          sx={{ 
+                            p: 1.5,
                             bgcolor: colors.background.card,
                             border: `1px solid ${colors.border.default}`,
-                            '&:hover': { bgcolor: colors.background.cardHover }
+                            borderRadius: 1,
+                            cursor: 'pointer',
+                            transition: transitions.default,
+                            '&:hover': { 
+                              bgcolor: colors.background.cardHover,
+                              borderColor: colors.border.hover
+                            }
+                          }}
+                        >
+                          <Typography sx={{ 
+                            color: colors.text.cardTitle, 
+                            fontWeight: typography.fontWeights.medium,
+                            fontSize: '0.875rem',
+                            mb: 0.75,
+                            textDecoration: task.isComplete ? 'line-through' : 'none'
                           }}>
-                            <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                            {task.name}
+                          </Typography>
+                          
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
+                            {task.assignee && (
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                <Box
+                                  sx={{
+                                    width: 6,
+                                    height: 6,
+                                    borderRadius: '50%',
+                                    bgcolor: getAssigneeColor(task.assignee),
+                                    opacity: 0.6
+                                  }}
+                                />
                                 <Typography sx={{ 
-                                  color: colors.text.cardTitle, 
-                                  fontWeight: typography.fontWeights.medium,
-                                  flex: 1
+                                  color: getAssigneeColor(task.assignee),
+                                  fontSize: '0.75rem',
+                                  opacity: 0.6
                                 }}>
-                                  {task.name}
+                                  {task.assignee}
                                 </Typography>
-                                <IconButton size="small" sx={{ color: colors.text.secondary }}>
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
                               </Box>
-                              
-                              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1 }}>
-                                {task.effort && (
-                                  <Chip 
-                                    label={task.effort} 
-                                    size="small"
-                                    sx={{ 
-                                      bgcolor: 'rgba(255, 255, 255, 0.06)',
-                                      color: colors.text.secondary,
-                                      fontSize: '0.75rem'
-                                    }}
-                                  />
-                                )}
-                                {task.assignee && (
-                                  <Chip 
-                                    label={task.assignee} 
-                                    size="small"
-                                    sx={{ 
-                                      bgcolor: 'rgba(255, 255, 255, 0.06)',
-                                      color: colors.text.secondary,
-                                      fontSize: '0.75rem'
-                                    }}
-                                  />
-                                )}
+                            )}
+                            {task.effort && (
+                              <Typography sx={{ 
+                                color: colors.text.tertiary,
+                                fontSize: '0.75rem'
+                              }}>
+                                {task.effort}
+                              </Typography>
+                            )}
+                            {task.dueDate && (
+                              <Typography sx={{ 
+                                color: task.dueDate < new Date() && !task.isComplete 
+                                  ? colors.accent.orange 
+                                  : colors.text.tertiary,
+                                fontSize: '0.75rem'
+                              }}>
+                                {task.dueDate.toLocaleDateString()}
+                              </Typography>
+                            )}
+                            {task.labels && task.labels.length > 0 && (
+                              <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                {task.labels.map((label: any) => {
+                                  const labelColor = getLabelColor(label.color, label.name);
+                                  const labelName = label.name.toLowerCase().includes('blocked') || 
+                                                   label.name.toLowerCase().includes('waiting') || 
+                                                   label.name.toLowerCase().includes('need more info') || 
+                                                   label.name.toLowerCase().includes('decision')
+                                                   ? label.name.toUpperCase() 
+                                                   : label.name;
+                                  return (
+                                    <Box
+                                      key={label.id}
+                                      sx={{
+                                        px: 0.75,
+                                        py: 0.25,
+                                        borderRadius: 1.5,
+                                        bgcolor: `${labelColor}1a`,  // 10% opacity
+                                        fontSize: '0.625rem',
+                                        color: labelColor,
+                                        fontWeight: typography.fontWeights.normal,
+                                        letterSpacing: typography.letterSpacing.normal
+                                      }}
+                                    >
+                                      {labelName}
+                                    </Box>
+                                  );
+                                })}
                               </Box>
-
-                              {task.dueDate && (
-                                <Typography sx={{ 
-                                  color: task.dueDate < new Date() && !task.isComplete 
-                                    ? colors.accent.orange 
-                                    : colors.text.tertiary,
-                                  fontSize: '0.75rem'
-                                }}>
-                                  Due: {task.dueDate.toLocaleDateString()}
-                                </Typography>
-                              )}
-                            </CardContent>
-                          </Card>
+                            )}
+                          </Box>
+                        </Box>
                       ))}
                     </Box>
                   )}

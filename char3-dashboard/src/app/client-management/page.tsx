@@ -379,7 +379,7 @@ export default function AccountManagement() {
       }}>
         <CircularProgress size={40} sx={{ color: colors.accent.orange }} />
         <Typography sx={{ color: colors.text.secondary, fontSize: '0.875rem', fontWeight: typography.fontWeights.medium }}>
-          Loading account management...
+          Loading client management...
         </Typography>
       </Box>
     );

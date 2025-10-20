@@ -43,33 +43,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Set secure cookies
-    cookieStore.set('trello_token', token, {
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'lax' as const,
+      path: '/',
       maxAge: 60 * 60 * 24 * 30, // 30 days
-    });
+    };
 
-    cookieStore.set('trello_user_id', userData.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30,
-    });
-
-    cookieStore.set('trello_user_name', userData.fullName, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30,
-    });
-
-    cookieStore.set('trello_user_email', userData.email, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30,
-    });
+    cookieStore.set('trello_token', token, cookieOptions);
+    cookieStore.set('trello_user_id', userData.id, cookieOptions);
+    cookieStore.set('trello_user_name', userData.fullName, cookieOptions);
+    cookieStore.set('trello_user_email', userData.email || '', cookieOptions);
 
     return NextResponse.json({ success: true, user: userData.fullName });
   } catch (error) {

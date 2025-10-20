@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,7 +9,6 @@ export async function POST(request: NextRequest) {
     }
 
     const apiKey = process.env.NEXT_PUBLIC_TRELLO_API_KEY;
-    const cookieStore = await cookies();
 
     if (!apiKey) {
       throw new Error('Missing API key');
@@ -42,21 +40,47 @@ export async function POST(request: NextRequest) {
       };
     }
 
-    // Set secure cookies
-    const cookieOptions = {
+    // Create response with cookies
+    const response = NextResponse.json({ success: true, user: userData.fullName });
+    
+    // Set secure cookies using NextResponse
+    const isProduction = process.env.NODE_ENV === 'production';
+    const cookieOptions = `Path=/; Max-Age=${60 * 60 * 24 * 30}; HttpOnly; SameSite=Lax${isProduction ? '; Secure' : ''}`;
+    
+    response.cookies.set('trello_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax' as const,
+      secure: isProduction,
+      sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-    };
+      maxAge: 60 * 60 * 24 * 30,
+    });
+    
+    response.cookies.set('trello_user_id', userData.id, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30,
+    });
+    
+    response.cookies.set('trello_user_name', userData.fullName, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30,
+    });
+    
+    response.cookies.set('trello_user_email', userData.email || '', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30,
+    });
 
-    cookieStore.set('trello_token', token, cookieOptions);
-    cookieStore.set('trello_user_id', userData.id, cookieOptions);
-    cookieStore.set('trello_user_name', userData.fullName, cookieOptions);
-    cookieStore.set('trello_user_email', userData.email || '', cookieOptions);
-
-    return NextResponse.json({ success: true, user: userData.fullName });
+    console.log('Cookies set successfully');
+    return response;
   } catch (error) {
     console.error('Token login error:', error);
     return NextResponse.json({ error: 'Authentication failed' }, { status: 500 });

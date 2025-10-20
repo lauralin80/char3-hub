@@ -17,6 +17,7 @@ class TrelloService {
     this.designUxBoardId = process.env.NEXT_PUBLIC_TRELLO_DESIGN_UX_BOARD_ID || '';
     this.developmentBoardId = process.env.NEXT_PUBLIC_TRELLO_DEVELOPMENT_BOARD_ID || '';
     this.weeklyPlanningBoardId = process.env.NEXT_PUBLIC_TRELLO_WEEKLY_PLANNING_BOARD_ID || '68ecf7dcff537f9c63519a4d';
+    console.log('[TrelloService] Constructor - API Key:', this.apiKey ? this.apiKey.substring(0, 10) + '...' : 'MISSING');
   }
 
   private getAuthParams(userToken?: string) {

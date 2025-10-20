@@ -34,14 +34,16 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [tabValue, setTabValue] = useState(0);
   
   // Create user-specific Trello service instance
   const userTrelloService = React.useMemo(() => {
     if (user?.trelloToken) {
+      console.log('[Dashboard] Creating user-specific Trello service with token:', user.trelloToken.substring(0, 10) + '...');
       return TrelloService.createUserInstance(user.trelloToken);
     }
+    console.warn('[Dashboard] No user token available, falling back to default service');
     return trelloService; // Fallback to default instance
   }, [user?.trelloToken]);
   
@@ -1071,8 +1073,14 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    // Only load data if user is authenticated and not loading
+    if (!loading && user?.trelloToken) {
+      console.log('[Dashboard] User authenticated, loading data...');
+      loadData();
+    } else if (!loading && !user) {
+      console.warn('[Dashboard] No authenticated user, skipping data load');
+    }
+  }, [loading, user, loadData]);
 
   // Expose refresh function globally for use by other components
   useEffect(() => {

@@ -1234,7 +1234,7 @@ export default function Dashboard() {
                 transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              Client Deliverables
+              Client Deliverables/Admin Tasks
             </Box>
           </Box>
 

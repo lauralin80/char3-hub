@@ -20,9 +20,11 @@ class TrelloService {
   }
 
   private getAuthParams(userToken?: string) {
+    const token = userToken || this.token;
+    console.log('[TrelloService] Using token:', token ? token.substring(0, 10) + '...' + token.substring(token.length - 10) : 'NO TOKEN');
     return {
       key: this.apiKey,
-      token: userToken || this.token,
+      token,
     };
   }
 

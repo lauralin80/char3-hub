@@ -11,8 +11,11 @@ export function middleware(request: NextRequest) {
   // Check for authentication cookie
   const token = request.cookies.get('trello_token');
   
+  console.log(`Middleware check for ${pathname}:`, token ? 'Token found' : 'No token');
+  
   if (!token) {
     // Redirect to sign-in page if not authenticated
+    console.log(`Redirecting to sign-in from ${pathname}`);
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 

@@ -27,11 +27,15 @@ export default function CallbackPage() {
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: 'include', // Ensure cookies are included
           body: JSON.stringify({ token }),
         });
 
         if (response.ok) {
-          // Successfully authenticated, use window.location for faster redirect
+          console.log('Authentication successful, redirecting...');
+          // Wait a brief moment for cookies to be set
+          await new Promise(resolve => setTimeout(resolve, 100));
+          // Successfully authenticated, use window.location for a full page reload
           window.location.href = '/';
         } else {
           const errorData = await response.json();

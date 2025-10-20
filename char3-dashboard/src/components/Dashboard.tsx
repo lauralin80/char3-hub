@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Alert } from '@mui/material';
-import { Refresh as RefreshIcon, Add as AddIcon } from '@mui/icons-material';
 import { useStore } from '@/store/useStore';
 import { trelloService } from '@/services/trelloService';
 import { DeliverablesBoard } from './DeliverablesBoard';
@@ -1099,46 +1098,8 @@ export default function Dashboard() {
       <Box sx={{ 
         height: 60,
         bgcolor: '#141414',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        px: 2,
         borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
-      }}>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button
-            size="small"
-            startIcon={<RefreshIcon />}
-            onClick={loadData}
-            sx={{
-              bgcolor: '#4caf50',
-              color: 'white',
-              fontSize: '0.75rem',
-              px: 1,
-              py: 0.5,
-              minWidth: 'auto',
-              '&:hover': { bgcolor: '#45a049' }
-            }}
-          >
-            Refresh
-          </Button>
-          <Button
-            size="small"
-            startIcon={<AddIcon />}
-            sx={{
-              bgcolor: '#444',
-              color: 'white',
-              fontSize: '0.75rem',
-              px: 1,
-              py: 0.5,
-              minWidth: 'auto',
-              '&:hover': { bgcolor: '#555' }
-            }}
-          >
-            Add Task
-          </Button>
-        </Box>
-      </Box>
+      }} />
 
       {/* Main Content Area */}
       <Box sx={{ flex: 1, minHeight: 0, display: 'flex', gap: 2, p: 2 }}>

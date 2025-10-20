@@ -813,3 +813,4 @@ class TrelloService {
 }
 
 export const trelloService = new TrelloService();
+export { TrelloService };

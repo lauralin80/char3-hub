@@ -8,9 +8,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Token is required' }, { status: 400 });
     }
 
-    // Clean the token (remove any whitespace/newlines)
-    const token = rawToken.trim();
-    console.log('Received token, length:', token.length);
+    // Aggressively clean the token - decode if needed, then remove ALL whitespace
+    let token = rawToken;
+    // Decode if URL-encoded
+    if (token.includes('%')) {
+      token = decodeURIComponent(token);
+    }
+    // Remove ALL whitespace characters (space, newline, tab, etc.)
+    token = token.replace(/\s/g, '');
+    
+    console.log('Received token, length:', token.length, 'starts:', token.substring(0, 10), 'ends:', token.substring(token.length - 10));
 
     const apiKey = process.env.NEXT_PUBLIC_TRELLO_API_KEY;
 

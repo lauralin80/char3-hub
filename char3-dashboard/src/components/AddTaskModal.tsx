@@ -280,13 +280,14 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
       }}>
         Add New Task
       </DialogTitle>
-      <DialogContent sx={{ pt: 4, pb: 3 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+      <DialogContent sx={{ pt: 3, pb: 3 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 2 }}>
           {/* Title */}
           <TextField
             label="Title"
             required
             fullWidth
+            size="small"
             value={formData.title}
             onChange={(e) => handleChange('title', e.target.value)}
             error={!!errors.title}
@@ -307,8 +308,9 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
           <TextField
             label="Description"
             fullWidth
+            size="small"
             multiline
-            rows={3}
+            rows={2}
             value={formData.description}
             onChange={(e) => handleChange('description', e.target.value)}
             sx={{

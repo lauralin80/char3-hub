@@ -1624,6 +1624,7 @@ export default function Dashboard() {
         open={addTaskModalOpen}
         onClose={() => setAddTaskModalOpen(false)}
         onSuccess={refreshData}
+        allBoardsData={allBoardsData}
       />
     </Box>
   );

@@ -210,19 +210,19 @@ export default function Dashboard() {
       // Handle different board types
       if (taskData.boardTag === 'ACCT MGMT') {
         // Admin tasks: set both start and end dates to the same date
-        await trelloService.setPlannedDateRange(taskData.id, dateString, dateString);
+        await userTrelloService.setPlannedDateRange(taskData.id, dateString, dateString);
       } else if (taskData.boardTag === 'DESIGN/UX') {
         // Design/UX tasks: set both start and end dates to the same date
         const designBoardId = allBoardsData?.designUx?.board?.id;
-        await trelloService.setPlannedDateRange(taskData.id, dateString, dateString, designBoardId);
+        await userTrelloService.setPlannedDateRange(taskData.id, dateString, dateString, designBoardId);
       } else if (taskData.boardTag === 'DEV') {
         // Development tasks: set both start and end dates to the same date
         const devBoardId = allBoardsData?.development?.board?.id;
-        await trelloService.setPlannedDateRange(taskData.id, dateString, dateString, devBoardId);
+        await userTrelloService.setPlannedDateRange(taskData.id, dateString, dateString, devBoardId);
       }
       
       // Refresh the data
-      const updatedAllBoardsData = await trelloService.getAllBoardsData();
+      const updatedAllBoardsData = await userTrelloService.getAllBoardsData();
       setAllBoardsData(updatedAllBoardsData);
       
       if (clients && clients.length > 0) {
@@ -283,19 +283,19 @@ export default function Dashboard() {
       // Handle different board types
       if (taskBoardTag === 'ACCT MGMT') {
         // Admin tasks: set both start and end dates to the same date
-        await trelloService.setPlannedDateRange(taskId, dateString, dateString);
+        await userTrelloService.setPlannedDateRange(taskId, dateString, dateString);
       } else if (taskBoardTag === 'DESIGN/UX') {
         // Design/UX tasks: set both start and end dates to the same date
         const designBoardId = allBoardsData?.designUx?.board?.id;
-        await trelloService.setPlannedDateRange(taskId, dateString, dateString, designBoardId);
+        await userTrelloService.setPlannedDateRange(taskId, dateString, dateString, designBoardId);
       } else if (taskBoardTag === 'DEV') {
         // Development tasks: set both start and end dates to the same date
         const devBoardId = allBoardsData?.development?.board?.id;
-        await trelloService.setPlannedDateRange(taskId, dateString, dateString, devBoardId);
+        await userTrelloService.setPlannedDateRange(taskId, dateString, dateString, devBoardId);
       }
       
       // Refresh the data
-      const updatedAllBoardsData = await trelloService.getAllBoardsData();
+      const updatedAllBoardsData = await userTrelloService.getAllBoardsData();
       setAllBoardsData(updatedAllBoardsData);
       
       if (clients && clients.length > 0) {
@@ -386,17 +386,17 @@ export default function Dashboard() {
       
       // Handle different board types
       if (taskBoardTag === 'ACCT MGMT') {
-        await trelloService.setPlannedDateRange(taskId, dateString, currentEndDate);
+        await userTrelloService.setPlannedDateRange(taskId, dateString, currentEndDate);
       } else if (taskBoardTag === 'DESIGN/UX') {
         const designBoardId = allBoardsData?.designUx?.board?.id;
-        await trelloService.setPlannedDateRange(taskId, dateString, currentEndDate, designBoardId);
+        await userTrelloService.setPlannedDateRange(taskId, dateString, currentEndDate, designBoardId);
       } else if (taskBoardTag === 'DEV') {
         const devBoardId = allBoardsData?.development?.board?.id;
-        await trelloService.setPlannedDateRange(taskId, dateString, currentEndDate, devBoardId);
+        await userTrelloService.setPlannedDateRange(taskId, dateString, currentEndDate, devBoardId);
       }
       
       // Refresh the data
-      const updatedAllBoardsData = await trelloService.getAllBoardsData();
+      const updatedAllBoardsData = await userTrelloService.getAllBoardsData();
       setAllBoardsData(updatedAllBoardsData);
       
       if (clients && clients.length > 0) {
@@ -487,17 +487,17 @@ export default function Dashboard() {
       
       // Handle different board types
       if (taskBoardTag === 'ACCT MGMT') {
-        await trelloService.setPlannedDateRange(taskId, currentStartDate, dateString);
+        await userTrelloService.setPlannedDateRange(taskId, currentStartDate, dateString);
       } else if (taskBoardTag === 'DESIGN/UX') {
         const designBoardId = allBoardsData?.designUx?.board?.id;
-        await trelloService.setPlannedDateRange(taskId, currentStartDate, dateString, designBoardId);
+        await userTrelloService.setPlannedDateRange(taskId, currentStartDate, dateString, designBoardId);
       } else if (taskBoardTag === 'DEV') {
         const devBoardId = allBoardsData?.development?.board?.id;
-        await trelloService.setPlannedDateRange(taskId, currentStartDate, dateString, devBoardId);
+        await userTrelloService.setPlannedDateRange(taskId, currentStartDate, dateString, devBoardId);
       }
       
       // Refresh the data
-      const updatedAllBoardsData = await trelloService.getAllBoardsData();
+      const updatedAllBoardsData = await userTrelloService.getAllBoardsData();
       setAllBoardsData(updatedAllBoardsData);
       
       if (clients && clients.length > 0) {
@@ -543,7 +543,7 @@ export default function Dashboard() {
           // If neither start nor end date is set, auto-populate with due date
           if (!hasStartDate && !hasEndDate) {
             const dueDateStr = card.due.split('T')[0]; // Get YYYY-MM-DD part
-            await trelloService.setPlannedDateRange(card.id, dueDateStr, dueDateStr);
+            await userTrelloService.setPlannedDateRange(card.id, dueDateStr, dueDateStr);
           }
         }
       }
@@ -594,14 +594,14 @@ export default function Dashboard() {
             
             if (!existingCard) {
               // Create card in Weekly Planning board
-              await trelloService.createWeeklyPlanningCard(dayList.id, task, 'Admin Task');
+              await userTrelloService.createWeeklyPlanningCard(dayList.id, task, 'Admin Task');
             }
           }
         }
       }
       
       // Refresh weekly planning data after creating cards
-      const updatedWeeklyPlanningData = await trelloService.getWeeklyPlanningBoardData();
+      const updatedWeeklyPlanningData = await userTrelloService.getWeeklyPlanningBoardData();
       setWeeklyPlanningData(updatedWeeklyPlanningData);
     } catch (error) {
       console.error('Error creating weekly planning cards for admin tasks:', error);
@@ -811,7 +811,7 @@ export default function Dashboard() {
 
   const refreshData = React.useCallback(async () => {
     try {
-      const allBoardsDataFromService = await trelloService.getAllBoardsData();
+      const allBoardsDataFromService = await userTrelloService.getAllBoardsData();
       setAllBoardsData(allBoardsDataFromService);
       
       // Process clients and admin tasks (same logic as loadData but without loading screen)
@@ -862,7 +862,7 @@ export default function Dashboard() {
     setError(null);
     
     try {
-      const allBoardsDataFromService = await trelloService.getAllBoardsData();
+      const allBoardsDataFromService = await userTrelloService.getAllBoardsData();
       setAllBoardsData(allBoardsDataFromService);
       
       // Auto-populate admin tasks with due dates
@@ -1004,7 +1004,7 @@ export default function Dashboard() {
 
       // Load Weekly Planning board data
       console.log('Loading Weekly Planning board data...');
-      const weeklyPlanningData = await trelloService.getWeeklyPlanningBoardData();
+      const weeklyPlanningData = await userTrelloService.getWeeklyPlanningBoardData();
       setWeeklyPlanningData(weeklyPlanningData);
       console.log('Weekly Planning data loaded:', weeklyPlanningData);
 
@@ -1049,9 +1049,9 @@ export default function Dashboard() {
       // Update the card in Trello in the background
       if (updates.completed !== undefined) {
         if (updates.completed) {
-          await trelloService.addLabelByName(id, 'Completed', 'green');
+          await userTrelloService.addLabelByName(id, 'Completed', 'green');
         } else {
-          await trelloService.removeLabelByName(id, 'Completed');
+          await userTrelloService.removeLabelByName(id, 'Completed');
         }
       }
       // No refresh needed - the UI updates immediately
@@ -1063,7 +1063,7 @@ export default function Dashboard() {
   const handleArchiveAdminTask = async (id: string) => {
     try {
       // Archive the card in Trello in the background
-      await trelloService.updateCard(id, { closed: true });
+      await userTrelloService.updateCard(id, { closed: true });
       // No refresh needed - the UI updates immediately
     } catch (error) {
       console.error('Error archiving admin task:', error);

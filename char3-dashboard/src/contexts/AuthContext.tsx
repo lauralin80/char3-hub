@@ -115,19 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     checkAuth();
-
-    // Listen for focus events to refresh auth when user returns to tab
-    const handleFocus = () => {
-      if (!user) {
-        refreshAuth();
-      }
-    };
-
-    window.addEventListener('focus', handleFocus);
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-    };
-  }, [user]);
+  }, []); // Run only once on mount
 
   const value: AuthContextType = {
     user,

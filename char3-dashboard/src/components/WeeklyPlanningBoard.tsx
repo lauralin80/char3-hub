@@ -60,32 +60,37 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
   };
 
   const getAssigneeColor = (name: string) => {
-    // Orange for Unassigned
     if (!name || name === 'Unassigned') return '#ff6b35';
     
-    // Create a hash from the name for consistent color assignment
+    // Create a simple hash from the name to get consistent colors
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
     
-    // Refined color palette - 5 colors that cycle
+    // Use the hash to select from a predefined color palette
     const colors = [
       '#4caf50', // Green
-      '#2196f3', // Blue
+      '#ff9800', // Orange
       '#9c27b0', // Purple
-      '#00bcd4', // Cyan
-      '#e91e63', // Magenta
+      '#f44336', // Red
+      '#2196f3', // Blue
+      '#ffeb3b', // Yellow
+      '#795548', // Brown
+      '#607d8b', // Blue Grey
+      '#00bfff', // Bright Sky Blue (Laura's color)
+      '#e91e63', // Pink
+      '#3f51b5', // Indigo
+      '#009688', // Teal
     ];
     
-    return colors[Math.abs(hash) % colors.length];
-  };
-
-  const getInitials = (name: string) => {
-    if (!name || name === 'Unassigned') return 'U';
-    const parts = name.split(' ').filter(p => p.length > 0);
-    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+    const colorIndex = Math.abs(hash) % colors.length;
+    const selectedColor = colors[colorIndex];
+    
+    // Debug logging
+    console.log(`WeeklyPlanningBoard - Assignee: ${name}, Hash: ${hash}, Index: ${colorIndex}, Color: ${selectedColor}`);
+    
+    return selectedColor;
   };
 
   const handleCardClick = (taskId: string, e: React.MouseEvent) => {
@@ -453,7 +458,8 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
       flexDirection: 'column',
       bgcolor: '#0d0d0d',
       overflow: 'hidden',
-      borderRadius: 2
+      borderRadius: 2,
+      minHeight: 'calc(100vh - 200px)'
     }}>
       {/* Scrollable Calendar Grid */}
       <Box sx={{ 
@@ -461,24 +467,24 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
         overflowX: 'auto',
         overflowY: 'auto',
         '&::-webkit-scrollbar': {
-          width: '8px',
-          height: '8px',
+          width: '4px',
+          height: '4px',
         },
         '&::-webkit-scrollbar-track': {
-          background: '#2a2a2a',
+          background: 'transparent',
         },
         '&::-webkit-scrollbar-thumb': {
-          background: '#555',
-          borderRadius: '4px',
+          background: '#0d0d0d',
+          borderRadius: '2px',
         },
         '&::-webkit-scrollbar-thumb:hover': {
-          background: '#666',
+          background: 'rgba(255, 255, 255, 0.1)',
         },
       }}>
         <Box sx={{ 
           display: 'flex',
           bgcolor: '#0d0d0d',
-          minHeight: 'calc(100vh - 200px)',
+          minHeight: '100%',
           minWidth: '100%'
         }}>
         {days.map((day, index) => (
@@ -500,8 +506,9 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
               py: 1,
               px: 2,
               textAlign: 'center',
-              position: 'relative',
-              zIndex: 1
+              position: 'sticky',
+              top: 0,
+              zIndex: 2
             }}>
               <Typography 
                 variant="body2" 
@@ -521,15 +528,31 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
               onDrop={(e) => handleDrop(e, day)}
               sx={{ 
                 flex: 1,
-                p: 1,
+                pt: 1,
+                px: 1,
+                pb: 20,
                 bgcolor: dragOverDay === day ? 'rgba(255, 107, 53, 0.1)' : '#141414',
                 position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 1,
-                minHeight: '100px',
+                minHeight: 0,
+                overflowY: 'auto',
                 border: dragOverDay === day ? '2px dashed #ff6b35' : '2px solid transparent',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                '&::-webkit-scrollbar': {
+                  width: '4px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: 'transparent',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: '#141414',
+                  borderRadius: '2px',
+                },
+                '&::-webkit-scrollbar-thumb:hover': {
+                  background: 'rgba(255, 255, 255, 0.1)',
+                }
               }}
             >
               {/* All planned tasks */}
@@ -837,7 +860,7 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                       <Typography 
                         variant="caption" 
                         sx={{ 
-                          color: (!task.dueComplete && (typeof task.dueDate === 'string' ? new Date(task.dueDate) : task.dueDate) < new Date()) ? '#ff6b35' : '#888',
+                          color: '#ccc',
                           fontSize: '0.625rem',
                           display: 'block',
                           textDecoration: isTaskCompleted(task) ? 'line-through' : 'none',
@@ -857,23 +880,23 @@ export function WeeklyPlanningBoard({ adminTasks, allBoardsData, onUpdateTask, o
                           width: 16,
                           height: 16,
                           borderRadius: '50%',
-                          bgcolor: `${getAssigneeColor(task.assignee)}33`,
+                          bgcolor: getAssigneeColor(task.assignee),
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           fontSize: '0.5rem',
-                          color: getAssigneeColor(task.assignee),
-                          fontWeight: 600
+                          color: 'white',
+                          fontWeight: 'bold'
                         }}
                       >
-                        {getInitials(task.assignee)}
+                        {task.assignee.charAt(0).toUpperCase()}
                       </Box>
                       <Typography 
                         variant="caption" 
                         sx={{ 
                           color: getAssigneeColor(task.assignee),
                           fontSize: '0.625rem',
-                          fontWeight: 600,
+                          fontWeight: 'bold',
                           textDecoration: isTaskCompleted(task) ? 'line-through' : 'none',
                           opacity: isTaskCompleted(task) ? 0.7 : 1
                         }}

@@ -14,7 +14,8 @@ import {
   InputLabel,
   Box,
   Typography,
-  CircularProgress
+  CircularProgress,
+  Autocomplete
 } from '@mui/material';
 import { colors, typography } from '@/styles/theme';
 
@@ -255,6 +256,13 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
       onClose={handleClose}
       maxWidth="sm"
       fullWidth
+      slotProps={{
+        backdrop: {
+          sx: {
+            bgcolor: 'rgba(0, 0, 0, 0.7)'
+          }
+        }
+      }}
       PaperProps={{
         sx: {
           bgcolor: '#1a1a1a',
@@ -272,8 +280,8 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
       }}>
         Add New Task
       </DialogTitle>
-      <DialogContent sx={{ pt: 3, pb: 3 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
+      <DialogContent sx={{ pt: 4, pb: 3 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
           {/* Title */}
           <TextField
             label="Title"
@@ -316,268 +324,292 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
           />
 
           {/* Board */}
-          <FormControl fullWidth required error={!!errors.board}>
-            <InputLabel sx={{ color: colors.text.secondary, '&.Mui-focused': { color: colors.accent.orange } }}>
-              Board
-            </InputLabel>
-            <Select
-              value={formData.board}
-              onChange={(e) => handleChange('board', e.target.value)}
-              label="Board"
-              sx={{
-                color: colors.text.primary,
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.08)' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.16)' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: colors.accent.orange }
-              }}
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    bgcolor: '#1a1a1a',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    '& .MuiMenuItem-root': {
+          <Box>
+            <Autocomplete
+              options={boards}
+              getOptionLabel={(option) => option.name}
+              value={boards.find(b => b.id === formData.board) || null}
+              onChange={(_, newValue) => handleChange('board', newValue?.id || '')}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Board"
+                  required
+                  error={!!errors.board}
+                  helperText={errors.board}
+                  sx={{
+                    '& .MuiInputLabel-root': { color: colors.text.secondary },
+                    '& .MuiInputLabel-root.Mui-focused': { color: colors.accent.orange },
+                    '& .MuiOutlinedInput-root': {
                       color: colors.text.primary,
-                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
-                      '&.Mui-selected': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
+                      '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)' },
+                      '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.16)' },
+                      '&.Mui-focused fieldset': { borderColor: colors.accent.orange }
                     }
+                  }}
+                />
+              )}
+              sx={{
+                '& .MuiAutocomplete-popupIndicator': { color: colors.text.secondary },
+                '& .MuiAutocomplete-clearIndicator': { color: colors.text.secondary }
+              }}
+              ListboxProps={{
+                sx: {
+                  bgcolor: '#1a1a1a',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  '& .MuiAutocomplete-option': {
+                    color: colors.text.primary,
+                    '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
+                    '&[aria-selected="true"]': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
                   }
                 }
               }}
-            >
-              {boards.map(board => (
-                <MenuItem key={board.id} value={board.id}>{board.name}</MenuItem>
-              ))}
-            </Select>
-            {errors.board && (
-              <Typography variant="caption" sx={{ color: '#f44336', mt: 0.5, ml: 1.75 }}>
-                {errors.board}
-              </Typography>
-            )}
-          </FormControl>
+            />
+          </Box>
 
           {/* Client */}
-          <FormControl fullWidth>
-            <InputLabel sx={{ color: colors.text.secondary, '&.Mui-focused': { color: colors.accent.orange } }}>
-              Client
-            </InputLabel>
-            <Select
-              value={formData.client}
-              onChange={(e) => handleChange('client', e.target.value)}
-              label="Client"
-              sx={{
-                color: colors.text.primary,
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.08)' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.16)' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: colors.accent.orange }
-              }}
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    bgcolor: '#1a1a1a',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    '& .MuiMenuItem-root': {
-                      color: colors.text.primary,
-                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
-                      '&.Mui-selected': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
-                    }
+          <Autocomplete
+            options={clients}
+            value={clients.find(c => clientOptionsMap.get(c) === formData.client) || null}
+            onChange={(_, newValue) => handleChange('client', newValue ? clientOptionsMap.get(newValue) || '' : '')}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Client"
+                sx={{
+                  '& .MuiInputLabel-root': { color: colors.text.secondary },
+                  '& .MuiInputLabel-root.Mui-focused': { color: colors.accent.orange },
+                  '& .MuiOutlinedInput-root': {
+                    color: colors.text.primary,
+                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)' },
+                    '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.16)' },
+                    '&.Mui-focused fieldset': { borderColor: colors.accent.orange }
                   }
+                }}
+              />
+            )}
+            sx={{
+              '& .MuiAutocomplete-popupIndicator': { color: colors.text.secondary },
+              '& .MuiAutocomplete-clearIndicator': { color: colors.text.secondary }
+            }}
+            ListboxProps={{
+              sx: {
+                bgcolor: '#1a1a1a',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                '& .MuiAutocomplete-option': {
+                  color: colors.text.primary,
+                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
+                  '&[aria-selected="true"]': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
                 }
-              }}
-            >
-              <MenuItem value="">None</MenuItem>
-              {clients.map(client => (
-                <MenuItem key={client} value={clientOptionsMap.get(client)}>{client}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              }
+            }}
+          />
 
           {/* Project */}
-          <FormControl fullWidth>
-            <InputLabel sx={{ color: colors.text.secondary, '&.Mui-focused': { color: colors.accent.orange } }}>
-              Project
-            </InputLabel>
-            <Select
-              value={formData.project}
-              onChange={(e) => handleChange('project', e.target.value)}
-              label="Project"
-              sx={{
-                color: colors.text.primary,
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.08)' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.16)' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: colors.accent.orange }
-              }}
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    bgcolor: '#1a1a1a',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    '& .MuiMenuItem-root': {
-                      color: colors.text.primary,
-                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
-                      '&.Mui-selected': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
-                    }
+          <Autocomplete
+            options={projects}
+            value={projects.find(p => projectOptionsMap.get(p) === formData.project) || null}
+            onChange={(_, newValue) => handleChange('project', newValue ? projectOptionsMap.get(newValue) || '' : '')}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Project"
+                sx={{
+                  '& .MuiInputLabel-root': { color: colors.text.secondary },
+                  '& .MuiInputLabel-root.Mui-focused': { color: colors.accent.orange },
+                  '& .MuiOutlinedInput-root': {
+                    color: colors.text.primary,
+                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)' },
+                    '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.16)' },
+                    '&.Mui-focused fieldset': { borderColor: colors.accent.orange }
                   }
+                }}
+              />
+            )}
+            sx={{
+              '& .MuiAutocomplete-popupIndicator': { color: colors.text.secondary },
+              '& .MuiAutocomplete-clearIndicator': { color: colors.text.secondary }
+            }}
+            ListboxProps={{
+              sx: {
+                bgcolor: '#1a1a1a',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                '& .MuiAutocomplete-option': {
+                  color: colors.text.primary,
+                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
+                  '&[aria-selected="true"]': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
                 }
-              }}
-            >
-              <MenuItem value="">None</MenuItem>
-              {projects.map(project => (
-                <MenuItem key={project} value={projectOptionsMap.get(project)}>{project}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              }
+            }}
+          />
 
           {/* Milestone */}
-          <FormControl fullWidth>
-            <InputLabel sx={{ color: colors.text.secondary, '&.Mui-focused': { color: colors.accent.orange } }}>
-              Milestone
-            </InputLabel>
-            <Select
-              value={formData.milestone}
-              onChange={(e) => handleChange('milestone', e.target.value)}
-              label="Milestone"
-              sx={{
-                color: colors.text.primary,
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.08)' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.16)' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: colors.accent.orange }
-              }}
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    bgcolor: '#1a1a1a',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    '& .MuiMenuItem-root': {
-                      color: colors.text.primary,
-                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
-                      '&.Mui-selected': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
-                    }
+          <Autocomplete
+            freeSolo
+            options={milestones}
+            value={formData.milestone || null}
+            onChange={(_, newValue) => handleChange('milestone', newValue || '')}
+            onInputChange={(_, newInputValue) => handleChange('milestone', newInputValue)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Milestone"
+                sx={{
+                  '& .MuiInputLabel-root': { color: colors.text.secondary },
+                  '& .MuiInputLabel-root.Mui-focused': { color: colors.accent.orange },
+                  '& .MuiOutlinedInput-root': {
+                    color: colors.text.primary,
+                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)' },
+                    '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.16)' },
+                    '&.Mui-focused fieldset': { borderColor: colors.accent.orange }
                   }
+                }}
+              />
+            )}
+            sx={{
+              '& .MuiAutocomplete-popupIndicator': { color: colors.text.secondary },
+              '& .MuiAutocomplete-clearIndicator': { color: colors.text.secondary }
+            }}
+            ListboxProps={{
+              sx: {
+                bgcolor: '#1a1a1a',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                '& .MuiAutocomplete-option': {
+                  color: colors.text.primary,
+                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
+                  '&[aria-selected="true"]': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
                 }
-              }}
-            >
-              <MenuItem value="">None</MenuItem>
-              {milestones.map(milestone => (
-                <MenuItem key={milestone} value={milestone}>{milestone}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              }
+            }}
+          />
 
           {/* Effort */}
-          <FormControl fullWidth>
-            <InputLabel sx={{ color: colors.text.secondary, '&.Mui-focused': { color: colors.accent.orange } }}>
-              Effort
-            </InputLabel>
-            <Select
-              value={formData.effort}
-              onChange={(e) => handleChange('effort', e.target.value)}
-              label="Effort"
-              sx={{
-                color: colors.text.primary,
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.08)' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.16)' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: colors.accent.orange }
-              }}
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    bgcolor: '#1a1a1a',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    '& .MuiMenuItem-root': {
-                      color: colors.text.primary,
-                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
-                      '&.Mui-selected': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
-                    }
+          <Autocomplete
+            options={effortOptions}
+            value={effortOptions.find(e => effortOptionsMap.get(e) === formData.effort) || null}
+            onChange={(_, newValue) => handleChange('effort', newValue ? effortOptionsMap.get(newValue) || '' : '')}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Effort"
+                sx={{
+                  '& .MuiInputLabel-root': { color: colors.text.secondary },
+                  '& .MuiInputLabel-root.Mui-focused': { color: colors.accent.orange },
+                  '& .MuiOutlinedInput-root': {
+                    color: colors.text.primary,
+                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)' },
+                    '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.16)' },
+                    '&.Mui-focused fieldset': { borderColor: colors.accent.orange }
                   }
+                }}
+              />
+            )}
+            sx={{
+              '& .MuiAutocomplete-popupIndicator': { color: colors.text.secondary },
+              '& .MuiAutocomplete-clearIndicator': { color: colors.text.secondary }
+            }}
+            ListboxProps={{
+              sx: {
+                bgcolor: '#1a1a1a',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                '& .MuiAutocomplete-option': {
+                  color: colors.text.primary,
+                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
+                  '&[aria-selected="true"]': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
                 }
-              }}
-            >
-              <MenuItem value="">None</MenuItem>
-              {effortOptions.map(effort => (
-                <MenuItem key={effort} value={effortOptionsMap.get(effort)}>{effort}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              }
+            }}
+          />
 
           {/* Assignee */}
-          <FormControl fullWidth>
-            <InputLabel sx={{ color: colors.text.secondary, '&.Mui-focused': { color: colors.accent.orange } }}>
-              Assignee
-            </InputLabel>
-            <Select
-              value={formData.assignee}
-              onChange={(e) => handleChange('assignee', e.target.value)}
-              label="Assignee"
-              sx={{
-                color: colors.text.primary,
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.08)' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.16)' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: colors.accent.orange }
-              }}
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    bgcolor: '#1a1a1a',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    '& .MuiMenuItem-root': {
-                      color: colors.text.primary,
-                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
-                      '&.Mui-selected': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
-                    }
+          <Autocomplete
+            options={assignees}
+            value={formData.assignee || null}
+            onChange={(_, newValue) => handleChange('assignee', newValue || '')}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Assignee"
+                sx={{
+                  '& .MuiInputLabel-root': { color: colors.text.secondary },
+                  '& .MuiInputLabel-root.Mui-focused': { color: colors.accent.orange },
+                  '& .MuiOutlinedInput-root': {
+                    color: colors.text.primary,
+                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)' },
+                    '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.16)' },
+                    '&.Mui-focused fieldset': { borderColor: colors.accent.orange }
                   }
+                }}
+              />
+            )}
+            sx={{
+              '& .MuiAutocomplete-popupIndicator': { color: colors.text.secondary },
+              '& .MuiAutocomplete-clearIndicator': { color: colors.text.secondary }
+            }}
+            ListboxProps={{
+              sx: {
+                bgcolor: '#1a1a1a',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                '& .MuiAutocomplete-option': {
+                  color: colors.text.primary,
+                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
+                  '&[aria-selected="true"]': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
                 }
-              }}
-            >
-              <MenuItem value="">None</MenuItem>
-              {assignees.map(assignee => (
-                <MenuItem key={assignee} value={assignee}>{assignee}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              }
+            }}
+          />
 
           {/* Label */}
-          <FormControl fullWidth>
-            <InputLabel sx={{ color: colors.text.secondary, '&.Mui-focused': { color: colors.accent.orange } }}>
-              Label
-            </InputLabel>
-            <Select
-              value={formData.label}
-              onChange={(e) => handleChange('label', e.target.value)}
-              label="Label"
-              sx={{
-                color: colors.text.primary,
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.08)' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.16)' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: colors.accent.orange }
-              }}
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    bgcolor: '#1a1a1a',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    '& .MuiMenuItem-root': {
-                      color: colors.text.primary,
-                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
-                      '&.Mui-selected': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
-                    }
+          <Autocomplete
+            options={labels}
+            getOptionLabel={(option) => option.name}
+            value={labels.find(l => l.id === formData.label) || null}
+            onChange={(_, newValue) => handleChange('label', newValue?.id || '')}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Label"
+                sx={{
+                  '& .MuiInputLabel-root': { color: colors.text.secondary },
+                  '& .MuiInputLabel-root.Mui-focused': { color: colors.accent.orange },
+                  '& .MuiOutlinedInput-root': {
+                    color: colors.text.primary,
+                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)' },
+                    '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.16)' },
+                    '&.Mui-focused fieldset': { borderColor: colors.accent.orange }
                   }
+                }}
+              />
+            )}
+            sx={{
+              '& .MuiAutocomplete-popupIndicator': { color: colors.text.secondary },
+              '& .MuiAutocomplete-clearIndicator': { color: colors.text.secondary }
+            }}
+            ListboxProps={{
+              sx: {
+                bgcolor: '#1a1a1a',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                '& .MuiAutocomplete-option': {
+                  color: colors.text.primary,
+                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' },
+                  '&[aria-selected="true"]': { bgcolor: 'rgba(255, 107, 53, 0.16)' }
                 }
-              }}
-            >
-              <MenuItem value="">None</MenuItem>
-              {labels.map(label => (
-                <MenuItem key={label.id} value={label.id}>{label.name}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              }
+            }}
+          />
         </Box>
       </DialogContent>
       <DialogActions sx={{ p: 2.5, borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
         <Button 
           onClick={handleClose} 
           disabled={loading}
+          size="small"
           sx={{ 
             color: colors.text.secondary,
+            textTransform: 'none',
+            fontSize: '0.875rem',
+            px: 2,
+            py: 0.75,
             '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)' }
           }}
         >
@@ -586,9 +618,14 @@ export function AddTaskModal({ open, onClose, onSubmit, allBoardsData }: AddTask
         <Button 
           onClick={handleSubmit}
           disabled={loading}
+          size="small"
           sx={{
             bgcolor: '#4caf50',
             color: 'white',
+            textTransform: 'none',
+            fontSize: '0.875rem',
+            px: 2,
+            py: 0.75,
             '&:hover': { bgcolor: '#45a049' },
             '&:disabled': { bgcolor: 'rgba(76, 175, 80, 0.3)', color: 'rgba(255, 255, 255, 0.3)' }
           }}

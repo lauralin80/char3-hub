@@ -52,6 +52,43 @@ class TrelloService {
     }
   }
 
+  // Add a new option to a custom field
+  async addCustomFieldOption(boardId: string, fieldName: string, optionValue: string, userToken?: string): Promise<void> {
+    try {
+      // Get the custom field
+      const customFieldsResponse = await axios.get(`${TRELLO_API_BASE}/boards/${boardId}/customFields`, {
+        params: this.getAuthParams(userToken),
+      });
+
+      const field = customFieldsResponse.data.find((cf: any) => cf.name === fieldName);
+      if (!field) {
+        throw new Error(`Custom field "${fieldName}" not found on board`);
+      }
+
+      // Check if the option already exists
+      const existingOptions = field.options || [];
+      const optionExists = existingOptions.some((opt: any) => opt.value?.text === optionValue);
+      
+      if (optionExists) {
+        console.log(`Option "${optionValue}" already exists for field "${fieldName}"`);
+        return;
+      }
+
+      // Add the new option
+      await axios.post(`${TRELLO_API_BASE}/customFields/${field.id}/options`, null, {
+        params: {
+          ...this.getAuthParams(userToken),
+          value: JSON.stringify({ text: optionValue }),
+        },
+      });
+
+      console.log(`Added option "${optionValue}" to field "${fieldName}" on board ${boardId}`);
+    } catch (error) {
+      console.error(`Error adding custom field option for ${fieldName}:`, error);
+      throw error;
+    }
+  }
+
   async getBoardData(boardId?: string, userToken?: string) {
     const targetBoardId = boardId || this.accountManagementBoardId;
     try {
@@ -623,6 +660,7 @@ class TrelloService {
     effort?: string;
     assignee?: string;
     labelId?: string;
+    dueDate?: string;
   }, userToken?: string) {
     try {
       // Get the board's lists to find the appropriate default list
@@ -651,16 +689,28 @@ class TrelloService {
       }
 
       // Create the card
+      const cardParams = {
+        ...this.getAuthParams(userToken),
+        name: cardData.title,
+        desc: cardData.description || '',
+        idList: targetListId,
+        ...(cardData.dueDate && { due: cardData.dueDate }),
+      };
+      
+      console.log('Creating card with params:', {
+        url: `${TRELLO_API_BASE}/cards`,
+        listId: targetListId,
+        cardName: cardData.title,
+        hasToken: !!userToken,
+        hasApiKey: !!this.apiKey,
+      });
+
       const cardResponse = await axios.post(`${TRELLO_API_BASE}/cards`, null, {
-        params: {
-          ...this.getAuthParams(userToken),
-          name: cardData.title,
-          desc: cardData.description || '',
-          idList: targetListId,
-        },
+        params: cardParams,
       });
 
       const newCard = cardResponse.data;
+      console.log('Card created successfully:', newCard.id);
 
       // Add label if provided (skip if empty)
       if (cardData.labelId && cardData.labelId !== '') {
@@ -701,24 +751,30 @@ class TrelloService {
       if (cardData.client && cardData.client !== '') {
         const clientField = customFields.find((cf: any) => cf.name === 'Client');
         if (clientField) {
-          // For dropdown fields, send idValue
-          await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${clientField.id}/item`, {
-            idValue: cardData.client,
-          }, {
-            params: this.getAuthParams(userToken),
-          });
+          // For dropdown fields, find the option ID by text value
+          const clientOption = clientField.options?.find((opt: any) => opt.value?.text === cardData.client);
+          if (clientOption) {
+            await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${clientField.id}/item`, {
+              idValue: clientOption.id,
+            }, {
+              params: this.getAuthParams(userToken),
+            });
+          }
         }
       }
 
       if (cardData.project && cardData.project !== '') {
         const projectField = customFields.find((cf: any) => cf.name === 'Project');
         if (projectField) {
-          // For dropdown fields, send idValue
-          await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${projectField.id}/item`, {
-            idValue: cardData.project,
-          }, {
-            params: this.getAuthParams(userToken),
-          });
+          // For dropdown fields, find the option ID by text value
+          const projectOption = projectField.options?.find((opt: any) => opt.value?.text === cardData.project);
+          if (projectOption) {
+            await axios.put(`${TRELLO_API_BASE}/cards/${newCard.id}/customField/${projectField.id}/item`, {
+              idValue: projectOption.id,
+            }, {
+              params: this.getAuthParams(userToken),
+            });
+          }
         }
       }
 

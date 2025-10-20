@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Alert } from '@mui/material';
+import { Refresh as RefreshIcon, Add as AddIcon } from '@mui/icons-material';
 import { useStore } from '@/store/useStore';
 import { trelloService } from '@/services/trelloService';
 import { DeliverablesBoard } from './DeliverablesBoard';
 import { WeeklyPlanningBoard } from './WeeklyPlanningBoard';
-import { AddTaskModal, TaskData } from './AddTaskModal';
+import { AddTaskModal } from './AddTaskModal';
 import { colors, typography, transitions } from '@/styles/theme';
-import { useAuth } from '@/contexts/AuthContext';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -25,45 +25,43 @@ function TabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`dashboard-tabpanel-${index}`}
       aria-labelledby={`dashboard-tab-${index}`}
+      style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
       {...other}
     >
-      {value === index && <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>{children}</Box>}
+      {value === index && <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>{children}</Box>}
     </div>
   );
 }
 
 export default function Dashboard() {
   const [tabValue, setTabValue] = useState(0);
-  const [addTaskModalOpen, setAddTaskModalOpen] = useState(false);
-  const { user } = useAuth();
   
   const getAssigneeColor = (name: string) => {
-    // Orange for Unassigned
     if (!name || name === 'Unassigned') return '#ff6b35';
     
-    // Create a hash from the name for consistent color assignment
+    // Create a simple hash from the name to get consistent colors
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
     
-    // Refined color palette - 5 colors that cycle
+    // Use the hash to select from a predefined color palette
     const colors = [
       '#4caf50', // Green
-      '#2196f3', // Blue
+      '#ff9800', // Orange
       '#9c27b0', // Purple
-      '#00bcd4', // Cyan
-      '#e91e63', // Magenta
+      '#f44336', // Red
+      '#2196f3', // Blue
+      '#ffeb3b', // Yellow
+      '#795548', // Brown
+      '#607d8b', // Blue Grey
+      '#00bfff', // Bright Sky Blue (Laura's color)
+      '#e91e63', // Pink
+      '#3f51b5', // Indigo
+      '#009688', // Teal
     ];
     
     return colors[Math.abs(hash) % colors.length];
-  };
-
-  const getInitials = (name: string) => {
-    if (!name || name === 'Unassigned') return 'U';
-    const parts = name.split(' ').filter(p => p.length > 0);
-    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
   };
 
   const getLabelColor = (color: string, name?: string) => {
@@ -96,6 +94,7 @@ export default function Dashboard() {
   const [selectedBoard, setSelectedBoard] = useState<string>('');
   const [selectedAssignee, setSelectedAssignee] = useState<string>('');
   const [weeklyPlanningTasks, setWeeklyPlanningTasks] = useState<{[day: string]: any[]}>({});
+  const [addTaskModalOpen, setAddTaskModalOpen] = useState(false);
   const { clients, isLoading, error, setLoading, setError, setClients, setCustomFields, setMembers, setListIds, weeklyPlanningData, setWeeklyPlanningData } = useStore();
   const [allBoardsData, setAllBoardsData] = useState<{
     accountManagement: any;
@@ -499,35 +498,6 @@ export default function Dashboard() {
       
     } catch (error) {
       console.error('Error moving task end date:', error);
-    }
-  };
-
-  // Handle creating a new task
-  const handleCreateTask = async (taskData: TaskData) => {
-    try {
-      // Build card data object
-      const cardDataToSend: any = {
-        title: taskData.title,
-        description: taskData.description,
-        boardId: taskData.board,
-      };
-
-      // Only add optional fields if they have values
-      if (taskData.client) cardDataToSend.client = taskData.client;
-      if (taskData.project) cardDataToSend.project = taskData.project;
-      if (taskData.milestone) cardDataToSend.milestone = taskData.milestone;
-      if (taskData.effort) cardDataToSend.effort = taskData.effort;
-      if (taskData.assignee) cardDataToSend.assignee = taskData.assignee;
-      if (taskData.label) cardDataToSend.labelId = taskData.label;
-
-      // Create the card in Trello
-      await trelloService.createCard(cardDataToSend, user?.trelloToken);
-
-      // Refresh the data
-      await loadData();
-    } catch (error) {
-      console.error('Error creating task:', error);
-      throw error;
     }
   };
 
@@ -1126,12 +1096,48 @@ export default function Dashboard() {
       overflow: 'hidden'
     }}>
       {/* Top Header Bar */}
-      {/* Empty header */}
       <Box sx={{ 
         height: 60,
         bgcolor: '#141414',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        px: 2,
         borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
       }}>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button
+            size="small"
+            startIcon={<RefreshIcon />}
+            onClick={loadData}
+            sx={{
+              bgcolor: '#4caf50',
+              color: 'white',
+              fontSize: '0.75rem',
+              px: 1,
+              py: 0.5,
+              minWidth: 'auto',
+              '&:hover': { bgcolor: '#45a049' }
+            }}
+          >
+            Refresh
+          </Button>
+          <Button
+            size="small"
+            startIcon={<AddIcon />}
+            sx={{
+              bgcolor: '#444',
+              color: 'white',
+              fontSize: '0.75rem',
+              px: 1,
+              py: 0.5,
+              minWidth: 'auto',
+              '&:hover': { bgcolor: '#555' }
+            }}
+          >
+            Add Task
+          </Button>
+        </Box>
       </Box>
 
       {/* Main Content Area */}
@@ -1181,8 +1187,7 @@ export default function Dashboard() {
             bgcolor: 'transparent',
             display: 'flex',
             px: 2,
-            pt: 1,
-            pb: 1,
+            py: 1,
             gap: 0.5
           }}>
             <Box
@@ -1243,8 +1248,7 @@ export default function Dashboard() {
           {/* Tab Panels */}
         <TabPanel value={tabValue} index={0}>
           <Box sx={{ display: 'flex', gap: 2, flex: 1, minHeight: 0 }}>
-            {/* Weekly Planning Board */}
-            <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
               <WeeklyPlanningBoard 
                 adminTasks={allAdminTasks}
                 allBoardsData={allBoardsData}
@@ -1262,7 +1266,7 @@ export default function Dashboard() {
             {/* All Tasks Panel */}
             <Box sx={{ 
               width: 300, 
-              bgcolor: '#1a1a1a', 
+              bgcolor: '#141414', 
               borderRadius: 2,
               p: 2.5,
               display: 'flex',
@@ -1271,356 +1275,355 @@ export default function Dashboard() {
               boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
               minHeight: 0
             }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
-            <Typography variant="h6" sx={{ color: colors.text.title, fontSize: '0.9375rem', fontWeight: typography.fontWeights.semibold, letterSpacing: typography.letterSpacing.normal }}>
-              All Tasks
-            </Typography>
-            <Typography variant="body2" sx={{ color: colors.text.tertiary, fontSize: '0.75rem', fontWeight: typography.fontWeights.medium }}>
-              {filteredTasks.length}
-            </Typography>
-          </Box>
-
-          {/* Search */}
-          <Box sx={{ mb: 2 }}>
-            <input
-              type="text"
-              placeholder="Search tasks..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '9px 12px',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '6px',
-                color: 'rgba(255, 255, 255, 0.9)',
-                fontSize: '0.8125rem',
-                outline: 'none',
-                fontWeight: 400,
-                letterSpacing: '-0.01em',
-                transition: 'all 0.15s ease'
-              }}
-              onFocus={(e) => {
-                e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
-                e.target.style.borderColor = 'rgba(255, 107, 53, 0.5)';
-              }}
-              onBlur={(e) => {
-                e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.04)';
-                e.target.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-              }}
-            />
-          </Box>
-
-          {/* Filters */}
-          <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
-            <select
-              value={selectedClient}
-              onChange={(e) => setSelectedClient(e.target.value)}
-              style={{
-                flex: 1,
-                minWidth: '120px',
-                padding: '9px 12px',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '6px',
-                color: 'rgba(255, 255, 255, 0.9)',
-                fontSize: '0.75rem',
-                outline: 'none',
-                height: 'auto',
-                fontWeight: 400,
-                letterSpacing: '-0.01em'
-              }}
-            >
-              <option value="">All Clients</option>
-              {uniqueClients.map(client => (
-                <option key={client} value={client}>{client}</option>
-              ))}
-            </select>
-            
-            <select
-              value={selectedProject}
-              onChange={(e) => setSelectedProject(e.target.value)}
-              style={{
-                flex: 1,
-                minWidth: '120px',
-                padding: '9px 12px',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '6px',
-                color: 'rgba(255, 255, 255, 0.9)',
-                fontSize: '0.75rem',
-                outline: 'none',
-                height: 'auto',
-                fontWeight: 400,
-                letterSpacing: '-0.01em'
-              }}
-            >
-              <option value="">All Projects</option>
-              {uniqueProjects.map(project => (
-                <option key={project} value={project}>{project}</option>
-              ))}
-            </select>
-            
-            <select
-              value={selectedBoard}
-              onChange={(e) => setSelectedBoard(e.target.value)}
-              style={{
-                flex: 1,
-                minWidth: '120px',
-                padding: '9px 12px',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '6px',
-                color: 'rgba(255, 255, 255, 0.9)',
-                fontSize: '0.75rem',
-                outline: 'none',
-                height: 'auto',
-                fontWeight: 400,
-                letterSpacing: '-0.01em'
-              }}
-            >
-              <option value="">All Boards</option>
-              {uniqueBoards.map(board => (
-                <option key={board} value={board}>{board}</option>
-              ))}
-            </select>
-            
-            <select
-              value={selectedAssignee}
-              onChange={(e) => setSelectedAssignee(e.target.value)}
-              style={{
-                flex: 1,
-                minWidth: '120px',
-                padding: '9px 12px',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '6px',
-                color: 'rgba(255, 255, 255, 0.9)',
-                fontSize: '0.75rem',
-                outline: 'none',
-                height: 'auto',
-                fontWeight: 400,
-                letterSpacing: '-0.01em'
-              }}
-            >
-              <option value="">All Assignees</option>
-              {uniqueAssignees.map(assignee => (
-                <option key={assignee} value={assignee}>{assignee}</option>
-              ))}
-            </select>
-            
-            <Button
-              onClick={clearAllFilters}
-              size="small"
-              sx={{
-                bgcolor: '#4caf50',
-                color: 'white',
-                fontSize: '0.75rem',
-                px: 1,
-                py: 0.5,
-                minWidth: 'auto',
-                height: '32px',
-                '&:hover': { bgcolor: '#45a049' }
-              }}
-            >
-              Clear
-            </Button>
-            
-            <Box sx={{ flex: 1 }} />
-            
-            <Button
-              onClick={() => setAddTaskModalOpen(true)}
-              size="small"
-              variant="outlined"
-              sx={{
-                color: '#4caf50',
-                borderColor: '#4caf50',
-                fontSize: '0.75rem',
-                px: 2,
-                py: 0.5,
-                minWidth: 'auto',
-                height: '32px',
-                '&:hover': { 
-                  borderColor: '#45a049',
-                  bgcolor: 'rgba(76, 175, 80, 0.08)'
-                }
-              }}
-            >
-              Add Task
-            </Button>
-          </Box>
-
-          {/* Task List */}
-          <Box sx={{ flex: 1, overflowY: 'auto' }}>
-            {filteredTasks.map((task, index) => (
-              <Box
-                key={index}
-                draggable
-                onDragStart={(e) => handleDragStart(e, task)}
-                sx={{
-                  p: 1,
-                  mb: 0.75,
-                  bgcolor: colors.background.card,
-                  borderRadius: 1,
-                  border: `1px solid ${colors.border.default}`,
-                  cursor: 'grab',
-                  '&:hover': { bgcolor: colors.background.cardHover },
-                  '&:active': { cursor: 'grabbing' }
-                }}
-              >
-                <Typography variant="body2" sx={{ color: colors.text.cardTitle, fontSize: '0.75rem', mb: 0.5, fontWeight: typography.fontWeights.normal, pointerEvents: 'none' }}>
-                  {task.title}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
+                <Typography variant="h6" sx={{ color: colors.text.title, fontSize: '0.9375rem', fontWeight: typography.fontWeights.semibold, letterSpacing: typography.letterSpacing.normal }}>
+                  All Tasks
                 </Typography>
-                
-                {/* Board Tag */}
-                <Box sx={{ display: 'flex', gap: 0.5, mb: 0.5, flexWrap: 'wrap', pointerEvents: 'none' }}>
-                  <Box
-                    sx={{
-                      px: 1,
-                      py: 0.375,
-                      borderRadius: 1.5,
-                      bgcolor: 'rgba(255, 255, 255, 0.06)',
-                      fontSize: '0.6875rem',
-                      color: colors.text.secondary,
-                      fontWeight: typography.fontWeights.normal,
-                      letterSpacing: typography.letterSpacing.normal,
-                      textTransform: 'uppercase'
-                    }}
-                  >
-                    {task.boardTag}
-                  </Box>
-                  
-                  {/* Effort tag if available */}
-                  {task.effort && (
-                    <Box
-                      sx={{
-                        px: 1,
-                        py: 0.375,
-                        borderRadius: 1.5,
-                        bgcolor: 'rgba(255, 255, 255, 0.06)',
-                        fontSize: '0.6875rem',
-                        color: colors.text.secondary,
-                        fontWeight: typography.fontWeights.normal,
-                        letterSpacing: typography.letterSpacing.normal,
-                        pointerEvents: 'none'
-                      }}
-                    >
-                      {task.effort}
-                    </Box>
-                  )}
-                  
-                  {/* Milestone tag if available */}
-                  {task.milestone && (
-                    <Box
-                      sx={{
-                        px: 1,
-                        py: 0.375,
-                        borderRadius: 1.5,
-                        bgcolor: 'rgba(255, 255, 255, 0.06)',
-                        fontSize: '0.6875rem',
-                        color: colors.text.secondary,
-                        fontWeight: typography.fontWeights.normal,
-                        letterSpacing: typography.letterSpacing.normal,
-                        pointerEvents: 'none'
-                      }}
-                    >
-                      {task.milestone}
-                    </Box>
-                  )}
-                  
-                  
-                  {/* Labels */}
-                  {task.labels && task.labels.length > 0 && (task.labels || []).map((label: any, labelIndex: number) => {
-                    const labelColor = getLabelColor(label.color, label.name);
-                    const labelName = label.name.toLowerCase().includes('blocked') || 
-                                     label.name.toLowerCase().includes('waiting') || 
-                                     label.name.toLowerCase().includes('need more info') || 
-                                     label.name.toLowerCase().includes('decision')
-                                     ? label.name.toUpperCase() 
-                                     : label.name;
-                    return (
-                      <Box
-                        key={labelIndex}
-                        sx={{
-                          px: 0.75,
-                          py: 0.25,
-                          borderRadius: 1.5,
-                          bgcolor: `${labelColor}1a`,  // 10% opacity
-                          fontSize: '0.625rem',
-                          color: labelColor,
-                          fontWeight: typography.fontWeights.normal,
-                          letterSpacing: typography.letterSpacing.normal,
-                          pointerEvents: 'none'
-                        }}
-                      >
-                        {labelName}
-                      </Box>
-                    );
-                  })}
-                </Box>
-                
-                {/* Client - Project Name */}
-                <Typography variant="body2" sx={{ color: '#888', fontSize: '0.75rem', mb: 0.5, pointerEvents: 'none' }}>
-                  {task.client} - {task.project}
+                <Typography variant="body2" sx={{ color: colors.text.tertiary, fontSize: '0.75rem', fontWeight: typography.fontWeights.medium }}>
+                  {filteredTasks.length}
                 </Typography>
-                
-                {/* Due Date */}
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    color: task.dueDate && task.dueDate < new Date() ? '#ff6b35' : '#888', 
+              </Box>
+
+              {/* Search */}
+              <Box sx={{ mb: 2 }}>
+                <input
+                  type="text"
+                  placeholder="Search tasks..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '9px 12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '6px',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontSize: '0.8125rem',
+                    outline: 'none',
+                    fontWeight: 400,
+                    letterSpacing: '-0.01em',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
+                    e.target.style.borderColor = 'rgba(255, 107, 53, 0.5)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.04)';
+                    e.target.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                  }}
+                />
+              </Box>
+
+              {/* Filters */}
+              <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
+                <select
+                  value={selectedClient}
+                  onChange={(e) => setSelectedClient(e.target.value)}
+                  style={{
+                    flex: 1,
+                    minWidth: '120px',
+                    padding: '9px 12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '6px',
+                    color: 'rgba(255, 255, 255, 0.9)',
                     fontSize: '0.75rem',
-                    mb: 0.5,
-                    pointerEvents: 'none'
+                    outline: 'none',
+                    height: 'auto',
+                    fontWeight: 400,
+                    letterSpacing: '-0.01em'
                   }}
                 >
-                  {task.dueDate ? task.dueDate.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric' 
-                  }) : 'No due date'}
-                </Typography>
+                  <option value="">All Clients</option>
+                  {uniqueClients.map(client => (
+                    <option key={client} value={client}>{client}</option>
+                  ))}
+                </select>
                 
-                {/* Assignee (bottom with icon) */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pointerEvents: 'none' }}>
+                <select
+                  value={selectedProject}
+                  onChange={(e) => setSelectedProject(e.target.value)}
+                  style={{
+                    flex: 1,
+                    minWidth: '120px',
+                    padding: '9px 12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '6px',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontSize: '0.75rem',
+                    outline: 'none',
+                    height: 'auto',
+                    fontWeight: 400,
+                    letterSpacing: '-0.01em'
+                  }}
+                >
+                  <option value="">All Projects</option>
+                  {uniqueProjects.map(project => (
+                    <option key={project} value={project}>{project}</option>
+                  ))}
+                </select>
+                
+                <select
+                  value={selectedBoard}
+                  onChange={(e) => setSelectedBoard(e.target.value)}
+                  style={{
+                    flex: 1,
+                    minWidth: '120px',
+                    padding: '9px 12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '6px',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontSize: '0.75rem',
+                    outline: 'none',
+                    height: 'auto',
+                    fontWeight: 400,
+                    letterSpacing: '-0.01em'
+                  }}
+                >
+                  <option value="">All Boards</option>
+                  {uniqueBoards.map(board => (
+                    <option key={board} value={board}>{board}</option>
+                  ))}
+                </select>
+                
+                <select
+                  value={selectedAssignee}
+                  onChange={(e) => setSelectedAssignee(e.target.value)}
+                  style={{
+                    flex: 1,
+                    minWidth: '120px',
+                    padding: '9px 12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '6px',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontSize: '0.75rem',
+                    outline: 'none',
+                    height: 'auto',
+                    fontWeight: 400,
+                    letterSpacing: '-0.01em'
+                  }}
+                >
+                  <option value="">All Assignees</option>
+                  {uniqueAssignees.map(assignee => (
+                    <option key={assignee} value={assignee}>{assignee}</option>
+                  ))}
+                </select>
+                
+                <Button
+                  onClick={clearAllFilters}
+                  size="small"
+                  sx={{
+                    bgcolor: '#4caf50',
+                    color: 'white',
+                    fontSize: '0.75rem',
+                    px: 1,
+                    py: 0.5,
+                    minWidth: 'auto',
+                    height: '32px',
+                    '&:hover': { bgcolor: '#45a049' }
+                  }}
+                >
+                  Clear
+                </Button>
+                
+                <Box sx={{ flex: 1 }} />
+                
+                <Button
+                  onClick={() => setAddTaskModalOpen(true)}
+                  size="small"
+                  variant="outlined"
+                  sx={{
+                    color: '#4caf50',
+                    borderColor: '#4caf50',
+                    fontSize: '0.75rem',
+                    px: 2,
+                    py: 0.5,
+                    minWidth: 'auto',
+                    height: '32px',
+                    '&:hover': { 
+                      borderColor: '#45a049',
+                      bgcolor: 'rgba(76, 175, 80, 0.08)'
+                    }
+                  }}
+                >
+                  Add Task
+                </Button>
+              </Box>
+
+              {/* Task List */}
+              <Box sx={{ flex: 1, overflowY: 'auto', pb: 20 }}>
+                {filteredTasks.map((task, index) => (
                   <Box
+                    key={index}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, task)}
                     sx={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: '50%',
-                      bgcolor: `${getAssigneeColor(task.assignee || 'Unassigned')}33`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.625rem',
-                      color: getAssigneeColor(task.assignee || 'Unassigned'),
-                      fontWeight: 600
+                      p: 1,
+                      mb: 0.75,
+                      bgcolor: colors.background.card,
+                      borderRadius: 1,
+                      border: `1px solid ${colors.border.default}`,
+                      cursor: 'grab',
+                      '&:hover': { bgcolor: colors.background.cardHover },
+                      '&:active': { cursor: 'grabbing' }
                     }}
                   >
-                    {getInitials(task.assignee || 'Unassigned')}
+                    <Typography variant="body2" sx={{ color: colors.text.cardTitle, fontSize: '0.75rem', mb: 0.5, fontWeight: typography.fontWeights.normal, pointerEvents: 'none' }}>
+                      {task.title}
+                    </Typography>
+                    
+                    {/* Board Tag */}
+                    <Box sx={{ display: 'flex', gap: 0.5, mb: 0.5, flexWrap: 'wrap', pointerEvents: 'none' }}>
+                      <Box
+                        sx={{
+                          px: 1,
+                          py: 0.375,
+                          borderRadius: 1.5,
+                          bgcolor: 'rgba(255, 255, 255, 0.06)',
+                          fontSize: '0.6875rem',
+                          color: colors.text.secondary,
+                          fontWeight: typography.fontWeights.normal,
+                          letterSpacing: typography.letterSpacing.normal,
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        {task.boardTag}
+                      </Box>
+                      
+                      {/* Effort tag if available */}
+                      {task.effort && (
+                        <Box
+                          sx={{
+                            px: 1,
+                            py: 0.375,
+                            borderRadius: 1.5,
+                            bgcolor: 'rgba(255, 255, 255, 0.06)',
+                            fontSize: '0.6875rem',
+                            color: colors.text.secondary,
+                            fontWeight: typography.fontWeights.normal,
+                            letterSpacing: typography.letterSpacing.normal,
+                            pointerEvents: 'none'
+                          }}
+                        >
+                          {task.effort}
+                        </Box>
+                      )}
+                      
+                      {/* Milestone tag if available */}
+                      {task.milestone && (
+                        <Box
+                          sx={{
+                            px: 1,
+                            py: 0.375,
+                            borderRadius: 1.5,
+                            bgcolor: 'rgba(255, 255, 255, 0.06)',
+                            fontSize: '0.6875rem',
+                            color: colors.text.secondary,
+                            fontWeight: typography.fontWeights.normal,
+                            letterSpacing: typography.letterSpacing.normal,
+                            pointerEvents: 'none'
+                          }}
+                        >
+                          {task.milestone}
+                        </Box>
+                      )}
+                      
+                      
+                      {/* Labels */}
+                      {task.labels && task.labels.length > 0 && (task.labels || []).map((label: any, labelIndex: number) => {
+                        const labelColor = getLabelColor(label.color, label.name);
+                        const labelName = label.name.toLowerCase().includes('blocked') || 
+                                         label.name.toLowerCase().includes('waiting') || 
+                                         label.name.toLowerCase().includes('need more info') || 
+                                         label.name.toLowerCase().includes('decision')
+                                         ? label.name.toUpperCase() 
+                                         : label.name;
+                        return (
+                          <Box
+                            key={labelIndex}
+                            sx={{
+                              px: 0.75,
+                              py: 0.25,
+                              borderRadius: 1.5,
+                              bgcolor: `${labelColor}1a`,  // 10% opacity
+                              fontSize: '0.625rem',
+                              color: labelColor,
+                              fontWeight: typography.fontWeights.normal,
+                              letterSpacing: typography.letterSpacing.normal,
+                              pointerEvents: 'none'
+                            }}
+                          >
+                            {labelName}
+                          </Box>
+                        );
+                      })}
+                    </Box>
+                    
+                    {/* Client - Project Name */}
+                    <Typography variant="body2" sx={{ color: '#888', fontSize: '0.75rem', mb: 0.5, pointerEvents: 'none' }}>
+                      {task.client} - {task.project}
+                    </Typography>
+                    
+                    {/* Due Date */}
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        color: task.dueDate && task.dueDate < new Date() ? '#ff6b35' : '#888', 
+                        fontSize: '0.75rem',
+                        mb: 0.5,
+                        pointerEvents: 'none'
+                      }}
+                    >
+                      {task.dueDate ? task.dueDate.toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                      }) : 'No due date'}
+                    </Typography>
+                    
+                    {/* Assignee (bottom with icon) */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pointerEvents: 'none' }}>
+                      <Box
+                        sx={{
+                          width: 16,
+                          height: 16,
+                          borderRadius: '50%',
+                          bgcolor: getAssigneeColor(task.assignee),
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.625rem',
+                          color: 'white',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        {task.assignee ? task.assignee.charAt(0).toUpperCase() : '?'}
+                      </Box>
+                      <Typography variant="body2" sx={{ color: '#e0e0e0', fontSize: '0.75rem' }}>
+                        {task.assignee || 'Unassigned'}
+                      </Typography>
+                    </Box>
                   </Box>
-                  <Typography variant="body2" sx={{ color: getAssigneeColor(task.assignee || 'Unassigned'), fontSize: '0.75rem' }}>
-                    {task.assignee || 'Unassigned'}
-                  </Typography>
-                </Box>
+                ))}
               </Box>
-            ))}
-          </Box>
-          </Box>
+            </Box>
           </Box>
         </TabPanel>
-        
-        <TabPanel value={tabValue} index={1}>
-          <DeliverablesBoard />
-        </TabPanel>
+          <TabPanel value={tabValue} index={1}>
+            <DeliverablesBoard />
+          </TabPanel>
         </Box>
+
       </Box>
 
-      {/* Add Task Modal */}
-      <AddTaskModal
+      {/* AddTaskModal */}
+      <AddTaskModal 
         open={addTaskModalOpen}
         onClose={() => setAddTaskModalOpen(false)}
-        onSubmit={handleCreateTask}
-        allBoardsData={allBoardsData}
+        onSuccess={refreshData}
       />
     </Box>
   );

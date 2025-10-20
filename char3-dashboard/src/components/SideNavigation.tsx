@@ -35,22 +35,10 @@ const navigationItems: NavigationItem[] = [
     path: '/team-boards'
   },
   {
-    id: 'account-management',
-    label: 'Account Management',
+    id: 'client-management',
+    label: 'Client Management',
     icon: <PersonIcon />,
-    path: '/account-management'
-  },
-  {
-    id: 'project-management',
-    label: 'Project Management',
-    icon: <AssessmentIcon />,
-    path: '/project-management'
-  },
-  {
-    id: 'client-portals',
-    label: 'Client Portals',
-    icon: <PublicIcon />,
-    path: '/client-portals'
+    path: '/client-management'
   }
 ];
 

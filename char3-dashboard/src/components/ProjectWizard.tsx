@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Button,
   TextField,
   Box,
@@ -17,7 +20,12 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Autocomplete,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
@@ -57,9 +65,9 @@ const inputStyles = {
   '& .MuiOutlinedInput-root': {
     color: colors.text.primary,
     fontSize: '0.875rem',
-    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)' },
-    '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.16)' },
-    '&.Mui-focused fieldset': { borderColor: colors.accent.orange }
+    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.08)' },
+    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.16)' },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: colors.accent.orange }
   },
   '& .MuiInputBase-input::placeholder': {
     color: colors.text.tertiary,
@@ -300,33 +308,138 @@ export default function ProjectWizard({ open, onClose, onProjectCreated, userTok
                 ))}
               </Select>
             </FormControl>
+            <Typography sx={{ 
+              color: colors.text.primary, 
+              fontSize: '0.9375rem',
+              fontWeight: typography.fontWeights.medium,
+              mb: 2,
+              mt: 2
+            }}>
+              If you know the start and end dates for the project, you can enter them now.
+            </Typography>
             <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-              <TextField
-                fullWidth
-                type="date"
+              <DatePicker
                 label="Start Date (optional)"
-                value={projectStartDate}
-                onChange={(e) => setProjectStartDate(e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                sx={inputStyles}
+                value={projectStartDate ? dayjs(projectStartDate) : null}
+                onChange={(newValue) => setProjectStartDate(newValue ? newValue.format('YYYY-MM-DD') : '')}
+                slotProps={{
+                  textField: {
+                    size: 'small',
+                    fullWidth: true,
+                    InputLabelProps: {
+                      sx: {
+                        color: colors.text.secondary,
+                        fontSize: '0.875rem',
+                        '&.Mui-focused': { color: colors.accent.orange }
+                      }
+                    },
+                    sx: {
+                      '& .MuiOutlinedInput-root': {
+                        color: colors.text.primary,
+                        fontSize: '0.875rem',
+                        '& .MuiOutlinedInput-notchedOutline': { 
+                          borderColor: 'rgba(255, 255, 255, 0.2) !important'
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': { 
+                          borderColor: 'rgba(255, 255, 255, 0.3) !important'
+                        },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': { 
+                          borderColor: `${colors.accent.orange} !important`
+                        }
+                      },
+                      '& .MuiSvgIcon-root': { color: 'rgba(255, 255, 255, 0.7)' }
+                    }
+                  },
+                  popper: {
+                    sx: {
+                      '& .MuiPaper-root': {
+                        bgcolor: '#1a1a1a',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        '& .MuiPickersDay-root': {
+                          color: colors.text.primary,
+                          '&:hover': { bgcolor: 'rgba(255, 107, 53, 0.08)' },
+                          '&.Mui-selected': { 
+                            bgcolor: colors.accent.orange,
+                            '&:hover': { bgcolor: colors.accent.orange }
+                          }
+                        },
+                        '& .MuiPickersCalendarHeader-root': { color: colors.text.primary },
+                        '& .MuiDayCalendar-weekDayLabel': { color: colors.text.secondary }
+                      }
+                    }
+                  }
+                }}
               />
-              <TextField
-                fullWidth
-                type="date"
+              <DatePicker
                 label="End Date (optional)"
-                value={projectEndDate}
-                onChange={(e) => setProjectEndDate(e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                sx={inputStyles}
+                value={projectEndDate ? dayjs(projectEndDate) : null}
+                onChange={(newValue) => setProjectEndDate(newValue ? newValue.format('YYYY-MM-DD') : '')}
+                slotProps={{
+                  textField: {
+                    size: 'small',
+                    fullWidth: true,
+                    InputLabelProps: {
+                      sx: {
+                        color: colors.text.secondary,
+                        fontSize: '0.875rem',
+                        '&.Mui-focused': { color: colors.accent.orange }
+                      }
+                    },
+                    sx: {
+                      '& .MuiOutlinedInput-root': {
+                        color: colors.text.primary,
+                        fontSize: '0.875rem',
+                        '& .MuiOutlinedInput-notchedOutline': { 
+                          borderColor: 'rgba(255, 255, 255, 0.2) !important'
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': { 
+                          borderColor: 'rgba(255, 255, 255, 0.3) !important'
+                        },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': { 
+                          borderColor: `${colors.accent.orange} !important`
+                        }
+                      },
+                      '& .MuiSvgIcon-root': { color: 'rgba(255, 255, 255, 0.7)' }
+                    }
+                  },
+                  popper: {
+                    sx: {
+                      '& .MuiPaper-root': {
+                        bgcolor: '#1a1a1a',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        '& .MuiPickersDay-root': {
+                          color: colors.text.primary,
+                          '&:hover': { bgcolor: 'rgba(255, 107, 53, 0.08)' },
+                          '&.Mui-selected': { 
+                            bgcolor: colors.accent.orange,
+                            '&:hover': { bgcolor: colors.accent.orange }
+                          }
+                        },
+                        '& .MuiPickersCalendarHeader-root': { color: colors.text.primary },
+                        '& .MuiDayCalendar-weekDayLabel': { color: colors.text.secondary }
+                      }
+                    }
+                  }
+                }}
               />
             </Box>
+            <Typography sx={{ 
+              color: colors.text.primary, 
+              fontSize: '0.9375rem',
+              fontWeight: typography.fontWeights.medium,
+              mb: 2,
+              mt: 2
+            }}>
+              Add any additional details about the project.
+            </Typography>
             <TextField
               fullWidth
+              size="small"
               label="Description (optional)"
               value={projectDescription}
               onChange={(e) => setProjectDescription(e.target.value)}
               multiline
-              rows={3}
+              rows={2}
               sx={inputStyles}
             />
           </Box>
@@ -354,6 +467,7 @@ export default function ProjectWizard({ open, onClose, onProjectCreated, userTok
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mb: 1.5 }}>
                   <TextField
                     fullWidth
+                    size="small"
                     label="Deliverable Name"
                     value={deliverable.name}
                     onChange={(e) => handleDeliverableChange(index, 'name', e.target.value)}
@@ -374,6 +488,7 @@ export default function ProjectWizard({ open, onClose, onProjectCreated, userTok
                 </Box>
                 <TextField
                   fullWidth
+                  size="small"
                   label="Description (optional)"
                   value={deliverable.description}
                   onChange={(e) => handleDeliverableChange(index, 'description', e.target.value)}
@@ -381,14 +496,57 @@ export default function ProjectWizard({ open, onClose, onProjectCreated, userTok
                   rows={2}
                   sx={{ ...inputStyles, mb: 1.5 }}
                 />
-                <TextField
-                  fullWidth
-                  type="date"
+                <DatePicker
                   label="Due Date (optional)"
-                  value={deliverable.dueDate}
-                  onChange={(e) => handleDeliverableChange(index, 'dueDate', e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                  sx={inputStyles}
+                  value={deliverable.dueDate ? dayjs(deliverable.dueDate) : null}
+                  onChange={(newValue) => handleDeliverableChange(index, 'dueDate', newValue ? newValue.format('YYYY-MM-DD') : '')}
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                      fullWidth: true,
+                      InputLabelProps: {
+                        sx: {
+                          color: colors.text.secondary,
+                          fontSize: '0.875rem',
+                          '&.Mui-focused': { color: colors.accent.orange }
+                        }
+                      },
+                      sx: {
+                        '& .MuiOutlinedInput-root': {
+                          color: colors.text.primary,
+                          fontSize: '0.875rem',
+                          '& .MuiOutlinedInput-notchedOutline': { 
+                            borderColor: 'rgba(255, 255, 255, 0.2) !important'
+                          },
+                          '&:hover .MuiOutlinedInput-notchedOutline': { 
+                            borderColor: 'rgba(255, 255, 255, 0.3) !important'
+                          },
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': { 
+                            borderColor: `${colors.accent.orange} !important`
+                          }
+                        },
+                        '& .MuiSvgIcon-root': { color: 'rgba(255, 255, 255, 0.7)' }
+                      }
+                    },
+                    popper: {
+                      sx: {
+                        '& .MuiPaper-root': {
+                          bgcolor: '#1a1a1a',
+                          border: '1px solid rgba(255, 255, 255, 0.08)',
+                          '& .MuiPickersDay-root': {
+                            color: colors.text.primary,
+                            '&:hover': { bgcolor: 'rgba(255, 107, 53, 0.08)' },
+                            '&.Mui-selected': { 
+                              bgcolor: colors.accent.orange,
+                              '&:hover': { bgcolor: colors.accent.orange }
+                            }
+                          },
+                          '& .MuiPickersCalendarHeader-root': { color: colors.text.primary },
+                          '& .MuiDayCalendar-weekDayLabel': { color: colors.text.secondary }
+                        }
+                      }
+                    }
+                  }}
                 />
               </Box>
             ))}
@@ -449,6 +607,7 @@ export default function ProjectWizard({ open, onClose, onProjectCreated, userTok
                     <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mb: 1.5 }}>
                       <TextField
                         fullWidth
+                        size="small"
                         label="Milestone Name"
                         value={milestone.name}
                         onChange={(e) => handleMilestoneChange(index, 'name', e.target.value)}
@@ -469,6 +628,7 @@ export default function ProjectWizard({ open, onClose, onProjectCreated, userTok
                     </Box>
                     <TextField
                       fullWidth
+                      size="small"
                       label="Description (optional)"
                       value={milestone.description}
                       onChange={(e) => handleMilestoneChange(index, 'description', e.target.value)}
@@ -476,14 +636,57 @@ export default function ProjectWizard({ open, onClose, onProjectCreated, userTok
                       rows={2}
                       sx={{ ...inputStyles, mb: 1.5 }}
                     />
-                    <TextField
-                      fullWidth
-                      type="date"
+                    <DatePicker
                       label="Due Date (optional)"
-                      value={milestone.dueDate}
-                      onChange={(e) => handleMilestoneChange(index, 'dueDate', e.target.value)}
-                      InputLabelProps={{ shrink: true }}
-                      sx={inputStyles}
+                      value={milestone.dueDate ? dayjs(milestone.dueDate) : null}
+                      onChange={(newValue) => handleMilestoneChange(index, 'dueDate', newValue ? newValue.format('YYYY-MM-DD') : '')}
+                      slotProps={{
+                        textField: {
+                          size: 'small',
+                          fullWidth: true,
+                          InputLabelProps: {
+                            sx: {
+                              color: colors.text.secondary,
+                              fontSize: '0.875rem',
+                              '&.Mui-focused': { color: colors.accent.orange }
+                            }
+                          },
+                          sx: {
+                            '& .MuiOutlinedInput-root': {
+                              color: colors.text.primary,
+                              fontSize: '0.875rem',
+                              '& .MuiOutlinedInput-notchedOutline': { 
+                                borderColor: 'rgba(255, 255, 255, 0.2) !important'
+                              },
+                              '&:hover .MuiOutlinedInput-notchedOutline': { 
+                                borderColor: 'rgba(255, 255, 255, 0.3) !important'
+                              },
+                              '&.Mui-focused .MuiOutlinedInput-notchedOutline': { 
+                                borderColor: `${colors.accent.orange} !important`
+                              }
+                            },
+                            '& .MuiSvgIcon-root': { color: 'rgba(255, 255, 255, 0.7)' }
+                          }
+                        },
+                        popper: {
+                          sx: {
+                            '& .MuiPaper-root': {
+                              bgcolor: '#1a1a1a',
+                              border: '1px solid rgba(255, 255, 255, 0.08)',
+                              '& .MuiPickersDay-root': {
+                                color: colors.text.primary,
+                                '&:hover': { bgcolor: 'rgba(255, 107, 53, 0.08)' },
+                                '&.Mui-selected': { 
+                                  bgcolor: colors.accent.orange,
+                                  '&:hover': { bgcolor: colors.accent.orange }
+                                }
+                              },
+                              '& .MuiPickersCalendarHeader-root': { color: colors.text.primary },
+                              '& .MuiDayCalendar-weekDayLabel': { color: colors.text.secondary }
+                            }
+                          }
+                        }
+                      }}
                     />
                   </Box>
                 ))}
@@ -510,14 +713,20 @@ export default function ProjectWizard({ open, onClose, onProjectCreated, userTok
   };
 
   return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
     <Dialog 
       open={open} 
       onClose={handleClose} 
       maxWidth="md" 
       fullWidth
+      slotProps={{
+        backdrop: {
+          sx: { bgcolor: 'rgba(0, 0, 0, 0.7)' }
+        }
+      }}
       PaperProps={{
         sx: {
-          bgcolor: '#0d0d0d',
+          bgcolor: '#1a1a1a',
           border: '1px solid rgba(255, 255, 255, 0.08)',
           borderRadius: '8px'
         }
@@ -647,5 +856,6 @@ export default function ProjectWizard({ open, onClose, onProjectCreated, userTok
         </Box>
       </Box>
     </Dialog>
+    </LocalizationProvider>
   );
 }

@@ -21,10 +21,14 @@ export default function CallbackPage() {
           return;
         }
 
-        // Decode and clean the token (URLSearchParams automatically decodes, but let's be explicit)
-        const decodedToken = decodeURIComponent(rawToken);
+        // Decode and clean the token - decode twice in case it's double-encoded
+        let decodedToken = decodeURIComponent(rawToken);
+        // Check if it's still URL-encoded (contains %XX)
+        if (decodedToken.includes('%')) {
+          decodedToken = decodeURIComponent(decodedToken);
+        }
         const token = decodedToken.trim();
-        console.log('Token length:', token.length, 'Raw length:', rawToken.length, 'Decoded length:', decodedToken.length);
+        console.log('Token length:', token.length, 'Raw length:', rawToken.length, 'Token preview:', token.substring(0, 20) + '...' + token.substring(token.length - 20));
 
         // Send the token to our server to create the session
         const response = await fetch('/api/auth/token-login', {

@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { token } = await request.json();
+    const { token: rawToken } = await request.json();
 
-    if (!token) {
+    if (!rawToken) {
       return NextResponse.json({ error: 'Token is required' }, { status: 400 });
     }
+
+    // Clean the token (remove any whitespace/newlines)
+    const token = rawToken.trim();
+    console.log('Received token, length:', token.length);
 
     const apiKey = process.env.NEXT_PUBLIC_TRELLO_API_KEY;
 

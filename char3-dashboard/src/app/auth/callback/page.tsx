@@ -13,13 +13,17 @@ export default function CallbackPage() {
         // Get the token from the URL fragment
         const hash = window.location.hash.substring(1);
         const params = new URLSearchParams(hash);
-        const token = params.get('token');
+        const rawToken = params.get('token');
 
-        if (!token) {
+        if (!rawToken) {
           console.error('No token found in callback');
           router.push('/auth/error');
           return;
         }
+
+        // Clean the token (remove any whitespace/newlines)
+        const token = rawToken.trim();
+        console.log('Token length:', token.length, 'Raw length:', rawToken.length);
 
         // Send the token to our server to create the session
         const response = await fetch('/api/auth/token-login', {

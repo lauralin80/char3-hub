@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Alert } from '@mui/material';
 import { useStore } from '@/store/useStore';
-import { trelloService } from '@/services/trelloService';
+import { trelloService, TrelloService } from '@/services/trelloService';
+import { useAuth } from '@/contexts/AuthContext';
 import { DeliverablesBoard } from './DeliverablesBoard';
 import { WeeklyPlanningBoard } from './WeeklyPlanningBoard';
 import { AddTaskModal } from './AddTaskModal';
@@ -33,7 +34,16 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const [tabValue, setTabValue] = useState(0);
+  
+  // Create user-specific Trello service instance
+  const userTrelloService = React.useMemo(() => {
+    if (user?.trelloToken) {
+      return TrelloService.createUserInstance(user.trelloToken);
+    }
+    return trelloService; // Fallback to default instance
+  }, [user?.trelloToken]);
   
   const getAssigneeColor = (name: string) => {
     if (!name || name === 'Unassigned') return '#ff6b35';

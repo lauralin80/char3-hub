@@ -1440,13 +1440,18 @@ export default function Dashboard() {
                     key={index}
                     draggable
                     onDragStart={(e) => handleDragStart(e, task)}
+                    onClick={(e) => {
+                      if (!(e.target as HTMLElement).closest('button')) {
+                        window.open(`https://trello.com/c/${task.id}`, '_blank');
+                      }
+                    }}
                     sx={{
                       p: 1,
                       mb: 0.75,
                       bgcolor: colors.background.card,
                       borderRadius: 1,
                       border: `1px solid ${colors.border.default}`,
-                      cursor: 'grab',
+                      cursor: 'pointer',
                       '&:hover': { bgcolor: colors.background.cardHover },
                       '&:active': { cursor: 'grabbing' }
                     }}
